@@ -1,0 +1,19 @@
+{
+  "published": true,
+  "name": "Check Token User",
+  "end_point": "api/v1/users/check_token",
+  "http_method": "GET",
+  "params": [],
+  "header": {
+    "Authorization": "Token",
+    "Accept": "application/vnd.auction_backend.v1",
+    "Content-Type": "application/json"
+  },
+  "examples": [{
+    "request": {},
+    "response": {
+      "message": "Authenticated",
+      "status": 100
+    }
+  }]
+}
