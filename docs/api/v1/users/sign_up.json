@@ -1,0 +1,67 @@
+{
+  "published": true,
+  "name": "Sign Up User",
+  "end_point": "api/v1/users",
+  "http_method": "POST",
+  "params": [
+    {
+      "key": "user[first_name]",
+      "required": true,
+      "type": "string",
+      "description": "first_name"
+    },
+    {
+      "key": "user[last_name]",
+      "required": true,
+      "type": "string",
+      "description": "last_name"
+    },
+    {
+    "key": "user[email]",
+    "required": true,
+    "type": "string",
+    "description": "Email ",
+    "validations": ["Should be valid Email"]
+    },
+    {
+      "key": "user[password]",
+      "required": true,
+      "type": "string",
+      "description": "password",
+      "validations": ["Should be valid password"]
+    },
+    {
+      "key": "user[phone_number]",
+      "required": true,
+      "type": "numeric",
+      "description": "phone number",
+      "validations": ["Should be valid phone_number"]
+    }
+  ],
+  "header": {
+    "Accept": "application/vnd.auction_backend.v1",
+    "Content-Type": "application/json"
+  },
+  "examples": [{
+    "request": {
+      "user":{
+    		"first_name": "John",
+    		"last_name": "Doe",
+    		"email": "john@gmail.com",
+    		"phone_number": 9898989898,
+    		"password": 123456
+    	}
+    },
+    "response": {
+      "user": {
+        "token": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjpudWxsfQ.gETnWdgMpwJM9mwTbvxYZDaLdaCC_te0FnBsANVaANk",
+        "id": 1,
+        "first_name": "John",
+        "last_name": "Doe",
+        "email": "john@gmail.com",
+        "phone_number": "9898989898"
+      },
+      "status": 201
+    }
+  }]
+}

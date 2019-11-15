@@ -1,0 +1,43 @@
+{
+  "published": true,
+  "name": "Sign In User",
+  "end_point": "api/v1/users/sign_in",
+  "http_method": "POST",
+  "params": [
+    {
+    "key": "user[email]",
+    "required": true,
+    "type": "string",
+    "description": "email for login"
+    },
+    {
+      "key": "user[password]",
+      "required": true,
+      "type": "string",
+      "description": "password"
+    }
+  ],
+  "header": {
+    "Accept": "application/vnd.auction_backend.v1",
+    "Content-Type": "application/json"
+  },
+  "examples": [{
+    "request": {
+      "user":{
+      	"email": "john@gmail.com",
+      	"password" : 123456
+      }
+    },
+    "response": {
+      "user": {
+        "token": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxfQ.UORRFcM9xwUvedextcNPeQlb0mZdjUIDmdVm3sglnhQ",
+        "id": 1,
+        "first_name": "John",
+        "last_name": "Doe",
+        "email": "john@gmail.com",
+        "phone_number": "9898989898"
+      },
+      "status": 202
+    }
+  }]
+}
