@@ -13,7 +13,7 @@ class Api::V1::Users::SessionsController < Devise::SessionsController
         render json: {message: "Wrong password. Could not authenticate!", error: "Wrong Password", status: 401}, status: 200
       end
     else
-      render json: { error: 'User does not exist.', status: 404 }, status: 200
+      render json: {message: "User does not exist with this email.", error: 'User does not exist.', status: 404 }, status: 200
     end
   end
 end
