@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Reset password</title>
+</head>
+<body>
+  Here is link to reset your password <%= link_to "Reset Password", api_v1_users_password_new_url(reset_token: @user.auth_token) %>
+</body>
+</html>
