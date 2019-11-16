@@ -10,7 +10,7 @@ Rails.application.routes.draw do
       devise_for :users, controllers:{ sessions: 'api/v1/users/sessions', registrations: 'api/v1/users/registrations' }
       get 'users/forgot_password', to: 'users#forgot_password'
       post 'users/password/new', to: 'users#new_password'
-      get 'users/check_token', to: 'api/v1/users#check'
+      get 'users/check_token', to: 'users#check'
     end
   end
 end
