@@ -11,6 +11,8 @@ Rails.application.routes.draw do
       get 'users/forgot_password', to: 'users#forgot_password'
       post 'users/password/new', to: 'users#new_password'
       get 'users/check_token', to: 'users#check'
+      put 'users/resend_code', to: 'users#resend_verification_code'
+      put 'users/verify', to: 'users#verify_code'
     end
   end
 end
