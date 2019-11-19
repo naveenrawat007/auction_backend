@@ -22,6 +22,25 @@ module Api
           render json: { message: "Could not change password.", error: "Password error.", status: 400}, status: 200
         end
       end
+
+      def verify_code
+        if params[:verification_code]
+          if @current_user.verification_code == params[:verification_code]
+            @current_user.is_verified = true
+            @current_user.save
+            render json: {user: UserSerializer.new(@current_user, root: false), message: "Email verified successfully.", status: 201}, status: 200
+          else
+            render json: {user: UserSerializer.new(@current_user, root: false), message: "Could not verify email.", status: 403}, status: 200
+          end
+        else
+          render json: {message: "Please provide verification code", error: "blank code", status: 403}, status: 200
+        end
+      end
+
+      def resend_verification_code
+        ConfirmationSender.send_confirmation_to(@current_user)
+        render json: {message: "An email containing verification code is sent successfully.", status: 208}, status: 200
+      end
     end
   end
 end
