@@ -30,7 +30,7 @@ module Api
             @current_user.save
             render json: {user: UserSerializer.new(@current_user, root: false), message: "Email verified successfully.", status: 201}, status: 200
           else
-            render json: {user: UserSerializer.new(@current_user, root: false), message: "Could not verify email.", status: 403}, status: 200
+            render json: {user: UserSerializer.new(@current_user, root: false), message: "Could not verify verification code mismatch.", status: 403}, status: 200
           end
         else
           render json: {message: "Please provide verification code", error: "blank code", status: 403}, status: 200

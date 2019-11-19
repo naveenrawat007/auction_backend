@@ -7,10 +7,10 @@ class Api::V1::Users::RegistrationsController < Devise::RegistrationsController
     @old_user ||= User.find_by(phone_number: params[:user][:phone_number])
     if !@old_user
       @user = User.new(configure_sign_up_params)
-      token = JsonWebToken.encode(user_id: @user.id)
-      @user.auth_token = token
       ConfirmationSender.send_confirmation_to(@user)
       if @user.save
+        token = JsonWebToken.encode(user_id: @user.id)
+        @user.auth_token = token
         render json: {user: UserSerializer.new(@user, root: false, serializer_options: {token: token}), status: 201}, status: 200
       else
         render json: { message: "Can not add user.", error: "User save error", status: 400}, status: 200
