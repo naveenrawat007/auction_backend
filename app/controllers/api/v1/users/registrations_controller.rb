@@ -9,6 +9,7 @@ class Api::V1::Users::RegistrationsController < Devise::RegistrationsController
       @user = User.new(configure_sign_up_params)
       token = JsonWebToken.encode(user_id: @user.id)
       @user.auth_token = token
+      ConfirmationSender.send_confirmation_to(@user)
       if @user.save
         render json: {user: UserSerializer.new(@user, root: false, serializer_options: {token: token}), status: 201}, status: 200
       else
