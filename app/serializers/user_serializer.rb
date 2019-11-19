@@ -9,6 +9,7 @@ class UserSerializer < ActiveModel::Serializer
     data[:last_name] = object.last_name
     data[:email] = object.email
     data[:phone_number] = object.phone_number
+    data[:is_verified] = object.is_verified
     data
   end
 end
