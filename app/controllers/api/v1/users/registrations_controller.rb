@@ -11,6 +11,7 @@ class Api::V1::Users::RegistrationsController < Devise::RegistrationsController
       if @user.save
         token = JsonWebToken.encode(user_id: @user.id)
         @user.auth_token = token
+        @user.save
         render json: {user: UserSerializer.new(@user, root: false, serializer_options: {token: token}), status: 201}, status: 200
       else
         render json: { message: "Can not add user.", error: "User save error", status: 400}, status: 200
