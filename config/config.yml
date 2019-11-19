@@ -1,0 +1,5 @@
+
+development:
+  site_url: "http://localhost:3000"
+production:
+  site_url: ""
