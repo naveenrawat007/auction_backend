@@ -4,6 +4,6 @@
 	<title>Reset password</title>
 </head>
 <body>
-  Here is link to reset your password <%= link_to "Reset Password", api_v1_users_password_new_url(reset_token: @user.auth_token) %>
+  Here is link to reset your password <%= link_to "Reset Password", "#{APP_CONFIG['site_url']}/new_password?reset_token=#{@user.auth_token}" %>
 </body>
 </html>
