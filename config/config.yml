@@ -2,4 +2,4 @@
 development:
   site_url: "http://localhost:3000"
 production:
-  site_url: ""
+  site_url: "http://3.14.71.57"
