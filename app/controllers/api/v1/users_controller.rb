@@ -3,7 +3,7 @@ module Api
     class UsersController < MainController
       before_action :authorize_request, except: [:forgot_password]
       def check
-        render json: {message: "Authenticated", status: 100}, status: 200
+        render json: {user: UserSerializer.new(@current_user, root: false, serializer_options: {token: @current_user.auth_token}), message: "Authenticated", status: 100}, status: 200
       end
       def forgot_password
         @user = User.find_by(email: params[:email])
@@ -28,7 +28,7 @@ module Api
           if @current_user.verification_code == params[:verification_code]
             @current_user.is_verified = true
             @current_user.save
-            render json: {user: UserSerializer.new(@current_user, root: false), message: "Email verified successfully.", status: 201}, status: 200
+            render json: {user: UserSerializer.new(@current_user, root: false, serializer_options: {token: @current_user.auth_token}), message: "Email verified successfully.", status: 201}, status: 200
           else
             render json: {user: UserSerializer.new(@current_user, root: false), message: "Could not verify verification code mismatch.", status: 403}, status: 200
           end
