@@ -10,6 +10,14 @@ class UserSerializer < ActiveModel::Serializer
     data[:email] = object.email
     data[:phone_number] = object.phone_number
     data[:is_verified] = object.is_verified
+    data[:company_name] = object.company_name
+    data[:company_phone] = object.company_phone
+    data[:city] = object.city
+    data[:state] = object.state
+    data[:address] = object.address
+    data[:broker_licence] = object.broker_licence
+    data[:realtor_licence] = object.realtor_licence
+    data[:type_attributes] = object.type_attributes
     data
   end
 end
