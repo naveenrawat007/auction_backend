@@ -13,6 +13,8 @@ Rails.application.routes.draw do
       get 'users/check_token', to: 'users#check'
       put 'users/resend_code', to: 'users#resend_verification_code'
       put 'users/verify', to: 'users#verify_code'
+      get 'users/show', to: 'users#show'
+      put "users/update_profile" => "users#update_profile"
     end
   end
 end
