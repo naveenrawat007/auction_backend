@@ -68,7 +68,7 @@ module Api
                 @current_user.type_attributes = type_attributes_permitter
                 @current_user.save
               end
-              render json: {user: UserSerializer.new(current_user, root: false, serializer_options: {token: @current_user.auth_token}),message: "Profile updated successfully", status:200} and return
+              render json: {user: UserSerializer.new(@current_user, root: false, serializer_options: {token: @current_user.auth_token}),message: "Profile updated successfully", status:200} and return
             else
               render json: {message: "Could not update", status: 406} and return
             end
