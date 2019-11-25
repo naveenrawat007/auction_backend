@@ -17,7 +17,7 @@ class Api::V1::Users::RegistrationsController < Devise::RegistrationsController
         render json: { message: "Can not add user.", error: "User save error", status: 400}, status: 200
       end
     else
-      render json: { message: "User already exist with this email or phone_number.", error: "User exists", status: 409}, status: 200
+      render json: { message: "User already exist with this email or phone number.", error: "User exists", status: 409}, status: 200
     end
   end
 

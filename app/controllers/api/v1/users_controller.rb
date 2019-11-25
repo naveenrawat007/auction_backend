@@ -33,7 +33,7 @@ module Api
             @current_user.save
             render json: {user: UserSerializer.new(@current_user, root: false, serializer_options: {token: @current_user.auth_token}), message: "Email verified successfully.", status: 201}, status: 200
           else
-            render json: {user: UserSerializer.new(@current_user, root: false), message: "Could not verify verification code mismatch.", status: 403}, status: 200
+            render json: {user: UserSerializer.new(@current_user, root: false), message: "Invalid code.", status: 403}, status: 200
           end
         else
           render json: {message: "Please provide verification code", error: "blank code", status: 403}, status: 200
@@ -42,7 +42,7 @@ module Api
 
       def resend_verification_code
         ConfirmationSender.send_confirmation_to(@current_user)
-        render json: {message: "An email containing verification code is sent successfully.", status: 208}, status: 200
+        render json: {message: "Code is successfully sent to your email address and phone number.", status: 208}, status: 200
       end
       def update_profile
         if params[:user][:email].blank? == false || params[:user][:phone].blank? == false
