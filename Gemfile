@@ -71,3 +71,4 @@ gem 'active_model_serializers', '~> 0.10.0'
 gem "sidekiq", '5.2.1'
 gem 'sidekiq-cron'
 gem 'twilio-ruby', '~> 5.22.1'
+gem "paperclip", "~> 6.0.0"
