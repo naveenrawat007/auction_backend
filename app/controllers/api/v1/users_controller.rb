@@ -50,7 +50,18 @@ module Api
           old_user ||= User.find_by(email: params[:user][:phone_number])
           if old_user
             if old_user.id == @current_user.id || !old_user
-              if @current_user.update(update_params)
+              if params[:user][:old_password].blank? == false && params[:user][:password].blank? == false && params[:user][:confirm_password].blank? == false
+                if @current_user.valid_password?(params[:user][:old_password])
+                  @current_user.password = params[:user][:password]
+                  if @current_user.save
+                    render json: {user: UserSerializer.new(@current_user, root: false, serializer_options: {token: @current_user.auth_token}),message: "Password updated successfully", status:200} and return
+                  else
+                    render json: {user: UserSerializer.new(@current_user, root: false, serializer_options: {token: @current_user.auth_token}),message: "Password can't be updated", status: 400} and return
+                  end
+                else
+                  render json: {message: "Wrong password.", status: 400} and return
+                end
+              elsif @current_user.update(update_params)
                 if params[:user][:type_attributes].blank? == false
                   @current_user.type_attributes = type_attributes_permitter
                   @current_user.save
