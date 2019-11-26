@@ -15,6 +15,7 @@ Rails.application.routes.draw do
       put 'users/verify', to: 'users#verify_code'
       get 'users/show', to: 'users#show'
       put "users/update_profile" => "users#update_profile"
+      put "users/update_image" => 'users#update_image'
     end
   end
 end
