@@ -1,5 +1,7 @@
 
 development:
   site_url: "http://localhost:3000"
+  backend_site_url: "http://localhost:3001"
 production:
   site_url: "http://3.14.71.57"
+  backend_site_url: "http://3.14.71.57:8008"
