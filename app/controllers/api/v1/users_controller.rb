@@ -89,6 +89,23 @@ module Api
         end
       end
 
+      def update_image
+        if @current_user.photo
+          if @current_user.photo.update(image: params[:user_image])
+            render json: {user: UserSerializer.new(@current_user, root: false, serializer_options: {token: @current_user.auth_token}),message: "Image updated successfully", status:200} and return
+          else
+            render json: {user: UserSerializer.new(@current_user, root: false, serializer_options: {token: @current_user.auth_token}),message: "Image can't be updated", status: 400} and return
+          end
+        else
+          photo = @current_user.build_photo(image: params[:user_image])
+          if photo.save
+            render json: {user: UserSerializer.new(@current_user, root: false, serializer_options: {token: @current_user.auth_token}),message: "Image updated successfully", status:200} and return
+          else
+            render json: {user: UserSerializer.new(@current_user, root: false, serializer_options: {token: @current_user.auth_token}),message: "Image can't be updated", status: 400} and return
+          end
+        end
+      end
+
       private
       def update_params
         params.require(:user).permit(:first_name, :last_name, :email, :phone_number, :company_name, :mobile, :address, :city, :state, :realtor_licence, :broker_licence, :type_attributes)
