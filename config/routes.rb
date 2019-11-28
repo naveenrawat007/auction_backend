@@ -17,6 +17,9 @@ Rails.application.routes.draw do
       put "users/update_profile" => "users#update_profile"
       put "users/update_image" => 'users#update_image'
       get "admin/users", to: 'admins#users_list'
+
+      get 'properties/new', to: 'properties#new'
+      post 'properties', to: 'properties#create'
     end
   end
 end
