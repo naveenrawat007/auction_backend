@@ -1,0 +1,2 @@
+class SellerPayType < ApplicationRecord
+end
