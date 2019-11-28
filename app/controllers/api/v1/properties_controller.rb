@@ -24,7 +24,7 @@ module Api
 
       private
       def property_params
-      params.require(:property).permit(:address, :category, :type, :bedrooms, :bathrooms, :garage, :area, :lot_size, :year_built, :units, :price_per_sq_ft, :headliner, :ms_available, :flooded, :flood_count, :estimated_rehab_cost, :description, :seller_price, :buy_now_price, :auction_started_at, :auction_length, :auction_ending_at, :status)
+      params.require(:property).permit(:address, :city, :state, :category, :type, :bedrooms, :bathrooms, :garage, :area, :lot_size, :year_built, :units, :price_per_sq_ft, :headliner, :ms_available, :flooded, :flood_count, :estimated_rehab_cost, :description, :seller_price, :buy_now_price, :auction_started_at, :auction_length, :auction_ending_at, :status)
       end
     end
   end
