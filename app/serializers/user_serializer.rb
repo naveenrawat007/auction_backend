@@ -15,6 +15,7 @@ class UserSerializer < ActiveModel::Serializer
     data[:company_phone] = object.company_phone
     data[:city] = object.city
     data[:state] = object.state
+    data[:zip_code] = object.zip_code
     data[:address] = object.address
     data[:broker_licence] = object.broker_licence
     data[:realtor_licence] = object.realtor_licence

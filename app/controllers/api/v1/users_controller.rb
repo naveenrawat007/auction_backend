@@ -108,7 +108,7 @@ module Api
 
       private
       def update_params
-        params.require(:user).permit(:first_name, :last_name, :email, :phone_number, :company_name, :mobile, :address, :city, :state, :realtor_licence, :broker_licence, :type_attributes)
+        params.require(:user).permit(:first_name, :last_name, :email, :phone_number, :company_name, :mobile, :address, :city, :state, :zip_code, :realtor_licence, :broker_licence, :type_attributes)
       end
 
       def type_attributes_permitter
