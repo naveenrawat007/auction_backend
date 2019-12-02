@@ -20,6 +20,7 @@ Rails.application.routes.draw do
 
       get 'properties/new', to: 'properties#new'
       post 'properties', to: 'properties#create'
+      put 'properties', to: 'properties#update'
     end
   end
 end
