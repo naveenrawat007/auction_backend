@@ -6,7 +6,15 @@ class Property < ApplicationRecord
     ['Residential', 'Commercial', 'Land']
   end
 
-  def self.type
-    ['Single Family', 'TownHomes / Condos', 'Multi Family', 'Apartments', 'Retail', 'Industrial', 'Office Building', 'Residential', 'Commercial', 'Industrial']
+  def self.residential_type
+    ['Single Family', 'TownHomes / Condos', 'Multi Family']
+  end
+
+  def self.commercial_type
+     ['Apartments', 'Retail', 'Industrial', 'Office Building']
+  end
+
+  def self.land_type
+     ['Residential', 'Commercial', 'Industrial']
   end
 end
