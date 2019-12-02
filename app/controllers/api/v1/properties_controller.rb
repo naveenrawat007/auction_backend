@@ -5,17 +5,24 @@ module Api
       def new
         @seller_pay_types = SellerPayType.all.order(:created_at)
         @show_instructions_types = ShowInstructionsType.all.order(:created_at)
-        render json: {seller_pay_types: ActiveModelSerializers::SerializableResource.new(@seller_pay_types, each_serializer: SellerPayTypeSerializer), show_instructions_types: ActiveModelSerializers::SerializableResource.new(@show_instructions_types, each_serializer: SellerPayTypeSerializer), categories: Property.category, residential_types: Property.residential_type, commercial_types: Property.commercial_type, land_type: Property.land_type, status: 200}, status: 200
+        render json: {seller_pay_types: ActiveModelSerializers::SerializableResource.new(@seller_pay_types, each_serializer: SellerPayTypeSerializer), show_instructions_types: ActiveModelSerializers::SerializableResource.new(@show_instructions_types, each_serializer: SellerPayTypeSerializer), categories: Property.category, residential_types: Property.residential_type, commercial_types: Property.commercial_type, land_types: Property.land_type, status: 200}, status: 200
       end
 
       def create
         @property = @current_user.owned_properties.new(property_params)
         if @property.save
-          # if params[:property][:images].blank? == false
-          #   params[:property][:images].each do |image|
-          #     @property.photos.create(image: image)
-          #   end
-          # end
+          if params[:property][:residential_attributes].blank? == false
+            @property.residential_attributes = residential_type_attributes_permitter
+            @property.save
+          end
+          if params[:property][:commercial_attributes].blank? == false
+            @property.commercial_attributes = commercial_type_attributes_permitter
+            @property.save
+          end
+          if params[:property][:land_attributes].blank? == false
+            @property.land_attributes = land_type_attributes_permitter
+            @property.save
+          end
           render json: {property: PropertySerializer.new(@property), message: "Property added sucessfully.", status: 200}, status: 200
         else
           render json: {message: "Property could not be added.", status: 400}, status: 200
@@ -32,11 +39,21 @@ module Api
       end
       private
       def property_params
-      params.require(:property).permit(:address, :city, :state, :zip_code, :category, :p_type, :bedrooms, :bathrooms, :garage, :area, :lot_size, :year_built, :units, :price_per_sq_ft, :headliner, :mls_available, :flooded, :flood_count, :estimated_rehab_cost, :description, )
+      params.require(:property).permit(:address, :city, :state, :zip_code, :category, :p_type, :headliner, :mls_available, :flooded, :flood_count, :description)
       end
 
       def property_update_params
-        params.require(:property).permit(:address, :city, :state, :zip_code, :category, :p_type, :bedrooms, :bathrooms, :garage, :area, :lot_size, :year_built, :units, :price_per_sq_ft, :headliner, :mls_available, :flooded, :flood_count, :estimated_rehab_cost, :description, :seller_price, :buy_now_price, :auction_started_at, :auction_length, :auction_ending_at, :title_status)
+        params.require(:property).permit(:address, :city, :state, :zip_code, :category, :p_type, :headliner, :mls_available, :flooded, :flood_count, :description)
+      end
+
+      def residential_type_attributes_permitter
+        JSON.parse(params[:property][:residential_attributes].to_json)
+      end
+      def commercial_type_attributes_permitter
+        JSON.parse(params[:property][:commercial_attributes].to_json)
+      end
+      def land_type_attributes_permitter
+        JSON.parse(params[:property][:land_attributes].to_json)
       end
     end
   end
