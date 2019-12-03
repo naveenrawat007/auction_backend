@@ -3,6 +3,8 @@ class Property < ApplicationRecord
   has_many :photos, as: :imageable
   has_one :landlord_deal
 
+  has_many :arv_proofs, as: :resource
+  has_many :rehab_cost_proofs, as: :resource
   def self.category
     ['Residential', 'Commercial', 'Land']
   end
@@ -17,5 +19,8 @@ class Property < ApplicationRecord
 
   def self.land_type
      ['Residential', 'Commercial', 'Industrial']
+  end
+  def self.deal_analysis_type
+     ['Rehab & Flip Deal', 'Landlord Deal']
   end
 end
