@@ -39,14 +39,23 @@ module Api
           @property.arv_analysis = params[:property][:arv_analysis]
           @property.description_of_repairs = params[:property][:description_of_repairs]
           @property.estimated_rehab_cost_attr = estimated_rehab_cost_attributes_permitter
+          if params[:property][:arv_proof].blank? == false
+            @property.arv_proofs.destroy_all
+            @property.arv_proofs.create(file: params[:property][:arv_proof])
+          end
+          if params[:property][:rehab_cost_proof].blank? == false
+            @property.rehab_cost_proofs.destroy_all
+            @property.rehab_cost_proofs.create(file: params[:property][:arv_proof])
+          end
+          @property.save
           if @property.deal_analysis_type == "Rehab & Flip Deal"
             @property.profit_potential = params[:property][:profit_potential]
-          elsif @property.deal_analysis_type == "Landlord deal"
+          elsif @property.deal_analysis_type == "Landlord Deal"
             if @property.landlord_deal
+              @landlord_deal = @property.landlord_deal
+            else
               @landlord_deal = @property.build_landlord_deal
               @landlord_deal.save
-            else
-              @landlord_deal = @property.landlord_deal
             end
             @landlord_deal.update(landlord_deal_params)
             @landlord_deal.save
