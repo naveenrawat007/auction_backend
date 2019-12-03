@@ -1,0 +1,2 @@
+class LandlordDeal < ApplicationRecord
+end
