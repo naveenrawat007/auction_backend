@@ -84,7 +84,7 @@ module Api
         JSON.parse(params[:property][:land_attributes].to_json)
       end
       def estimated_rehab_cost_attributes_permitter
-        JSON.parse(params[:property][:estimated_rehab_cost_attr].to_json)
+        JSON.parse(params[:property][:estimated_rehab_cost_attr])
       end
       def landlord_deal_params
         params.require(:property).permit(:closing_cost, :short_term_financing_cost, :total_acquisition_cost, :taxes_annually, :insurance_annually, :amount_financed_percentage, :amount_financed, :interest_rate, :loan_terms, :principal_interest, :taxes_monthly, :insurance_monthly, :piti_monthly_debt, :monthly_rent, :total_gross_yearly_income, :vacancy_rate, :adjusted_gross_yearly_income, :est_annual_management_fees, :est_annual_operating_fees, :annual_debt, :net_operating_income, :annual_cash_flow, :monthly_cash_flow, :total_out_of_pocket, :roi_cash_percentage, :est_annual_operating_fees_others)
