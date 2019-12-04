@@ -3,8 +3,8 @@ class Property < ApplicationRecord
   has_many :photos, as: :imageable
   has_one :landlord_deal
 
-  has_many :arv_proofs, as: :resource, class_name: "Attachment"
-  has_many :rehab_cost_proofs, as: :resource, class_name: "Attachment"
+  has_many :arv_proofs, -> { where(name: "Arv Proof") }, as: :resource, class_name: "Attachment"
+  has_many :rehab_cost_proofs, -> { where(name: "Rehab Cost Proof") }, as: :resource, class_name: "Attachment"
   def self.category
     ['Residential', 'Commercial', 'Land']
   end
