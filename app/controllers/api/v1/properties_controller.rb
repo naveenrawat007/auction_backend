@@ -42,6 +42,7 @@ module Api
             @property.estimated_rehab_cost_attr = estimated_rehab_cost_attributes_permitter2
           else
             @property.estimated_rehab_cost_attr = estimated_rehab_cost_attributes_permitter
+            @property.buy_option = buy_option_permitter
           end
           if params[:property][:images].blank? == false
             @property.photos.destroy_all
@@ -82,6 +83,10 @@ module Api
 
       def property_update_params
         params.require(:property).permit(:address, :city, :state, :zip_code, :category, :p_type, :headliner, :mls_available, :flooded, :flood_count, :description, :seller_price, :buy_now_price, :auction_started_at, :auction_length, :auction_ending_at, :show_instructions_type_id, :seller_pay_type_id, :title_status, :youtube_url)
+      end
+
+      def buy_option_permitter
+        JSON.parse(params[:property][:buy_option].to_json)
       end
 
       def residential_type_attributes_permitter
