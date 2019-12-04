@@ -23,4 +23,12 @@ class Property < ApplicationRecord
   def self.deal_analysis_type
      ['Rehab & Flip Deal', 'Landlord Deal']
   end
+
+  def self.auction_length
+     [7,14,21,28]
+  end
+
+  def self.buy_option
+     ["Line of Credit", "Owner Finance", "Hard Money", "Convential Loan", "Rehab Loan"]
+  end
 end
