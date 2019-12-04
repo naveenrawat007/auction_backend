@@ -41,11 +41,11 @@ module Api
           @property.estimated_rehab_cost_attr = estimated_rehab_cost_attributes_permitter
           if params[:property][:arv_proof].blank? == false
             @property.arv_proofs.destroy_all
-            @property.arv_proofs.create(file: params[:property][:arv_proof])
+            @property.arv_proofs.create(file: params[:property][:arv_proof], name: "Arv Proof")
           end
           if params[:property][:rehab_cost_proof].blank? == false
             @property.rehab_cost_proofs.destroy_all
-            @property.rehab_cost_proofs.create(file: params[:property][:arv_proof])
+            @property.rehab_cost_proofs.create(file: params[:property][:arv_proof], name: "Rehab Cost Proof")
           end
           @property.save
           if @property.deal_analysis_type == "Rehab & Flip Deal"
