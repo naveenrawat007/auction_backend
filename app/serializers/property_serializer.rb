@@ -23,7 +23,6 @@ class PropertySerializer < ActiveModel::Serializer
     data[:youtube_url] = object.youtube_url
     data[:city] = object.city
     data[:state] = object.state
-    data[:pay_type] = object.pay_type
     data[:title_status] = object.title_status
     data[:zip_code] = object.zip_code
     data
