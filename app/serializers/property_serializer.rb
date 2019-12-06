@@ -3,14 +3,28 @@ class PropertySerializer < ActiveModel::Serializer
     data = super
     data[:id] = object.id
     data[:address] = object.address
+    data[:city] = object.city
+    data[:state] = object.state
+    data[:zip_code] = object.zip_code
     data[:category] = object.category
     data[:p_type] = object.p_type
     data[:headliner] = object.headliner
     data[:mls_available] = object.mls_available
     data[:flooded] = object.flooded
     data[:flood_count] = object.flood_count
-    data[:estimated_rehab_cost] = object.estimated_rehab_cost
     data[:description] = object.description
+    data[:deal_analysis_type] = object.deal_analysis_type
+    data[:after_rehab_value] = object.after_rehab_value
+    data[:asking_price] = object.asking_price
+    data[:estimated_rehab_cost] = object.estimated_rehab_cost
+    data[:profit_potential] = object.profit_potential
+    data[:estimated_rehab_cost_attr] = object.estimated_rehab_cost_attr
+
+    if object.landlord_deal.blank? == false
+      data[:landlord_deal] = LandlordDealSerializer.new(object.landlord_deal)
+    end
+    data[:arv_analysis] = object.arv_analysis
+    data[:description_of_repairs] = object.description_of_repairs
     data[:seller_price] = object.seller_price
     data[:buy_now_price] = object.buy_now_price
     data[:auction_started_at] = object.auction_started_at
@@ -21,15 +35,28 @@ class PropertySerializer < ActiveModel::Serializer
     data[:seller_pay_type_id] = object.seller_pay_type_id
     data[:show_instructions_type_id] = object.show_instructions_type_id
     data[:youtube_url] = object.youtube_url
-    data[:city] = object.city
-    data[:state] = object.state
     data[:title_status] = object.title_status
-    data[:zip_code] = object.zip_code
+    data[:total_views] = object.total_views
+    data[:images] = property_images
+    data[:arv_proof] = arv_proof
+    data[:rehab_cost_proof] = rehab_cost_proof
     data
   end
-  def user_image
-    if object.photo
-      APP_CONFIG['backend_site_url'] + object.photo.image.url
+  def property_images
+    object.photos.order(:created_at).map{|i| APP_CONFIG['backend_site_url'] + i.image.url}
+  end
+
+  def arv_proof
+    if object.arv_proofs.last
+      APP_CONFIG['backend_site_url'] + object.arv_proofs.last.file.url
+    else
+      ""
+    end
+  end
+
+  def rehab_cost_proof
+    if object.rehab_cost_proofs.last
+      APP_CONFIG['backend_site_url'] + object.rehab_cost_proofs.last.file.url
     else
       ""
     end
