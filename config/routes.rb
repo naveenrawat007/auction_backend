@@ -21,6 +21,7 @@ Rails.application.routes.draw do
       get 'properties/new', to: 'properties#new'
       post 'properties', to: 'properties#create'
       put 'properties', to: 'properties#update'
+      get 'properties', to: 'properties#index'
     end
   end
 end
