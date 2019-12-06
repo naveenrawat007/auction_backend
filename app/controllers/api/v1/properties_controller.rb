@@ -4,7 +4,11 @@ module Api
       before_action :authorize_request
 
       def index
-        @properties = @current_user.owned_properties.order(created_at: :desc).paginate(page: params[:page], per_page: 10)
+        if params[:search_str].blank? == false
+          @properties = @current_user.owned_properties.where("lower(address) LIKE :search", search: "%#{params[:search_str].downcase}%").order(created_at: :desc).paginate(page: params[:page], per_page: 10)
+        else
+          @properties = @current_user.owned_properties.order(created_at: :desc).paginate(page: params[:page], per_page: 10)
+        end
         render json: {properties: ActiveModelSerializers::SerializableResource.new(@properties, each_serializer: PropertySerializer), status: 200, meta: {current_page: @properties.current_page, total_pages: @properties.total_pages} }
       end
 
