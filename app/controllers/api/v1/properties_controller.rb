@@ -8,6 +8,15 @@ module Api
         render json: {properties: ActiveModelSerializers::SerializableResource.new(@properties, each_serializer: PropertySerializer), status: 200, meta: {current_page: @properties.current_page, total_pages: @properties.total_pages} }
       end
 
+      def show
+        @property = Property.find_by(id: params[:id])
+        if @property
+          render json: {property: PropertySerializer.new(@property), status: 200 }
+        else
+          render json: {message: "This property does not exists", status: 404 }
+        end
+      end
+
       def new
         @seller_pay_types = SellerPayType.all.order(:created_at)
         @show_instructions_types = ShowInstructionsType.all.order(:created_at)
