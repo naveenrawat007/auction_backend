@@ -2,6 +2,12 @@ module Api
   module V1
     class PropertiesController < MainController
       before_action :authorize_request
+
+      def index
+        @properties = @current_user.owned_properties.order(created_at: :desc).paginate(page: params[:page], per_page: 10)
+        render json: {properties: ActiveModelSerializers::SerializableResource.new(@properties, each_serializer: PropertySerializer), status: 200, meta: {current_page: @properties.current_page, total_pages: @properties.total_pages} }
+      end
+
       def new
         @seller_pay_types = SellerPayType.all.order(:created_at)
         @show_instructions_types = ShowInstructionsType.all.order(:created_at)
