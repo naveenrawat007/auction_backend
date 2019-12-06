@@ -1,6 +1,8 @@
 class PropertySerializer < ActiveModel::Serializer
   def attributes(*args)
     data = super
+    data[:created_at] = object.created_at.strftime("%B %e, %Y")
+    data[:updated_at] = object.updated_at.strftime("%B %e, %Y")
     data[:id] = object.id
     data[:address] = object.address
     data[:city] = object.city
