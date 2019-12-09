@@ -45,6 +45,7 @@ class PropertySerializer < ActiveModel::Serializer
     data[:land_attributes] = object.category == "Land" ? object.land_attributes : {}
     data[:residential_attributes] = object.category == "Residential" ? object.residential_attributes : {}
     data[:commercial_attributes] = object.category == "Commercial" ? object.commercial_attributes : {}
+    data[:show_instructions] = object.show_instructions_type ? object.show_instructions_type.description : ""
     data
   end
   def property_images
