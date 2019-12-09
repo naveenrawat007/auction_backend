@@ -2,6 +2,8 @@ class Property < ApplicationRecord
   belongs_to :owner, class_name: "User", foreign_key: "owner_id"
   has_many :photos, as: :imageable
   has_one :landlord_deal
+  belongs_to :show_instructions_type
+  belongs_to :seller_pay_type
 
   has_many :arv_proofs, -> { where(name: "Arv Proof") }, as: :resource, class_name: "Attachment"
   has_many :rehab_cost_proofs, -> { where(name: "Rehab Cost Proof") }, as: :resource, class_name: "Attachment"
