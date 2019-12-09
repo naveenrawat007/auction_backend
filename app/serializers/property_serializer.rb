@@ -42,6 +42,9 @@ class PropertySerializer < ActiveModel::Serializer
     data[:images] = property_images
     data[:arv_proof] = arv_proof
     data[:rehab_cost_proof] = rehab_cost_proof
+    data[:land_attributes] = object.category == "Land" ? object.land_attributes : {}
+    data[:residential_attributes] = object.category == "Residential" ? object.residential_attributes : {}
+    data[:commercial_attributes] = object.category == "Commercial" ? object.commercial_attributes : {}
     data
   end
   def property_images
