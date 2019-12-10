@@ -33,4 +33,8 @@ class Property < ApplicationRecord
   def self.buy_option
      ["Line of Credit", "Owner Finance", "Hard Money", "Convential Loan", "Rehab Loan"]
   end
+
+  def self.status
+    ["Draft", "Under Review", "Hold", "Approve / Best Offer", "Live Online Bidding", "Post Auction", "Pending", "Terminated", "Sold"]
+  end
 end
