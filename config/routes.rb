@@ -24,6 +24,9 @@ Rails.application.routes.draw do
       post 'properties', to: 'properties#create'
       put 'properties', to: 'properties#update'
       get 'properties', to: 'properties#index'
+      namespace 'admin' do
+        get '/properties', to: 'properties#under_review_properties'
+      end
     end
   end
 end
