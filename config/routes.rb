@@ -19,6 +19,7 @@ Rails.application.routes.draw do
       get "admin/users", to: 'admins#users_list'
 
       get 'properties/new', to: 'properties#new'
+      put 'properties/submit', to: 'properties#submit_for_review'
       get 'properties/:id', to: 'properties#show'
       post 'properties', to: 'properties#create'
       put 'properties', to: 'properties#update'

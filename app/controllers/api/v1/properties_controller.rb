@@ -12,6 +12,20 @@ module Api
         render json: {properties: ActiveModelSerializers::SerializableResource.new(@properties, each_serializer: PropertySerializer), status: 200, meta: {current_page: @properties.current_page, total_pages: @properties.total_pages} }
       end
 
+      def submit_for_review
+        @property = @current_user.owned_properties.find_by(id: params[:property][:id])
+        if @property
+          @property.status = "Under Review"
+          if @property.save
+            render json: {property: PropertySerializer.new(@property), message: "Property status updated sucessfully.", status: 200}, status: 200
+          else
+            render json: {property: PropertySerializer.new(@property), message: "Property could not be updated.", status: 400}, status: 200
+          end
+        else
+          render json: { message: "Property could not be found.", status: 400}, status: 200
+        end
+      end
+
       def show
         @property = Property.find_by(id: params[:id])
         if @property
