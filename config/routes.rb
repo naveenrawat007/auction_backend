@@ -26,6 +26,7 @@ Rails.application.routes.draw do
       get 'properties', to: 'properties#index'
       namespace 'admin' do
         get '/properties', to: 'properties#under_review_properties'
+        get '/properties/best_offers', to: 'properties#best_offers_properties'
       end
     end
   end
