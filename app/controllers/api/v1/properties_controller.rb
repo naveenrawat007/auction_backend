@@ -43,7 +43,7 @@ module Api
 
       def create
         @property = @current_user.owned_properties.new(property_params)
-        @property.status = "Draft"
+        @property.status = "Under Review"
         if @property.save
           if params[:property][:residential_attributes].blank? == false
             @property.residential_attributes = residential_type_attributes_permitter

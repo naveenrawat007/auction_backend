@@ -22,7 +22,7 @@ class UnderReviewPropertySerializer < ActiveModel::Serializer
         break
       end
     end
-    if u_type.include?("inves")
+    if u_type.include?("Inves")
       "Investor"
     else
       "Realtor"
