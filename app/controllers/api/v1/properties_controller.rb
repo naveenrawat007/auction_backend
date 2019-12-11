@@ -74,11 +74,6 @@ module Api
           # @property.estimated_rehab_cost = params[:property][:estimated_rehab_cost]
           # @property.arv_analysis = params[:property][:arv_analysis]
           # @property.description_of_repairs = params[:property][:description_of_repairs]
-          if params[:draft] == false
-            if @property.status == "Draft"
-              @property.status == "Under Review"
-            end
-          end
           if params[:step2].blank? == false
             @property.estimated_rehab_cost_attr = estimated_rehab_cost_attributes_permitter2
           else
@@ -111,6 +106,14 @@ module Api
             end
             @landlord_deal.update(landlord_deal_params)
             @landlord_deal.save
+          end
+          if params[:draft] == false
+            if @property.status == "Draft"
+              @property.status == "Under Review"
+              if @property.save
+                Sidekiq::Client.enqueue_to_in("default", Time.now + 24.hours, PropertyApproveWorker, @property.id)
+              end
+            end
           end
           render json: {property: PropertySerializer.new(@property), message: "Property updated sucessfully.", status: 200}, status: 200
         else
