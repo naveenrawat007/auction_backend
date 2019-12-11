@@ -45,7 +45,7 @@ module Api
 
       def create
         @property = @current_user.owned_properties.new(property_params)
-        @property.status = "Under Review"
+        @property.status = "Draft"
         if @property.save
           if params[:property][:residential_attributes].blank? == false
             @property.residential_attributes = residential_type_attributes_permitter
@@ -74,6 +74,11 @@ module Api
           # @property.estimated_rehab_cost = params[:property][:estimated_rehab_cost]
           # @property.arv_analysis = params[:property][:arv_analysis]
           # @property.description_of_repairs = params[:property][:description_of_repairs]
+          if params[:draft] == false
+            if @property.status == "Draft"
+              @property.status == "Under Review"
+            end
+          end
           if params[:step2].blank? == false
             @property.estimated_rehab_cost_attr = estimated_rehab_cost_attributes_permitter2
           else
