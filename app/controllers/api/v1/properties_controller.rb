@@ -18,6 +18,7 @@ module Api
           @property.status = "Under Review"
           if @property.save
             Sidekiq::Client.enqueue_to_in("default", Time.now + 24.hours, PropertyApproveWorker, @property.id)
+            Sidekiq::Client.enqueue_to_in("default", Time.now , PropertyUnderReviewWorker, @current_user.id, @property.id)
             render json: {property: PropertySerializer.new(@property), message: "Property status updated sucessfully.", status: 200}, status: 200
           else
             render json: {property: PropertySerializer.new(@property), message: "Property could not be updated.", status: 400}, status: 200
@@ -108,11 +109,12 @@ module Api
             @landlord_deal.update(landlord_deal_params)
             @landlord_deal.save
           end
-          if params[:draft] == false
+          if params[:draft] == "false"
             if @property.status == "Draft"
-              @property.status == "Under Review"
+              @property.status = "Under Review"
               if @property.save
                 Sidekiq::Client.enqueue_to_in("default", Time.now + 24.hours, PropertyApproveWorker, @property.id)
+                Sidekiq::Client.enqueue_to_in("default", Time.now , PropertyUnderReviewWorker, @current_user.id, @property.id)
               end
             end
           end
