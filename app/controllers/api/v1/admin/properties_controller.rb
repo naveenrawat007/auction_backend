@@ -25,8 +25,10 @@ module Api
         def update_status
           @property = Property.find_by(id: params[:property][:id])
           if @property
-            @property.status = params[:property][:status]
-            @property.save
+            if params[:property][:status].blank? == false
+              @property.status = params[:property][:status]
+              @property.save
+            end
             render json: {message: "Property updated successfully", status: 200}, status: 200
           else
             render json: {message: "Property Not found", status: 400}, status: 200
