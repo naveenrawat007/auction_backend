@@ -17,6 +17,7 @@ module Api
         if @property
           @property.status = "Under Review"
           if @property.save
+            Sidekiq::Client.enqueue_to_in("default", Time.now + 24.hours, PropertyApproveWorker, @property.id)
             render json: {property: PropertySerializer.new(@property), message: "Property status updated sucessfully.", status: 200}, status: 200
           else
             render json: {property: PropertySerializer.new(@property), message: "Property could not be updated.", status: 400}, status: 200

@@ -19,7 +19,7 @@ module Api
           else
             @properties = Property.where(status: "Approve / Best Offer").order(created_at: :desc).paginate(page: params[:page], per_page: 10)
           end
-          render json: {properties: ActiveModelSerializers::SerializableResource.new(@properties, each_serializer: UnderReviewPropertySerializer), status: 200, meta: {current_page: @properties.current_page, total_pages: @properties.total_pages} }
+          render json: {properties: ActiveModelSerializers::SerializableResource.new(@properties, each_serializer: UnderReviewPropertySerializer), property_statuses: Property.status , status: 200, meta: {current_page: @properties.current_page, total_pages: @properties.total_pages} }
         end
 
         def update_status
