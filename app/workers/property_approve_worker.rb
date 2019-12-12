@@ -7,7 +7,9 @@ class PropertyApproveWorker
     if property
       if property.status == "Under Review"
         property.status = "Approve / Best Offer"
-        property.save
+        if property.save
+          PropertyMailer.approved(property.owner_id, property.id).deliver
+        end
       end
     end
   end
