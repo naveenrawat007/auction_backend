@@ -113,6 +113,8 @@ module Api
             if @property.status == "Draft"
               @property.status = "Under Review"
               if @property.save
+                @property.submitted_at = Time.now
+                @property.save
                 Sidekiq::Client.enqueue_to_in("default", Time.now + 24.hours, PropertyApproveWorker, @property.id)
                 Sidekiq::Client.enqueue_to_in("default", Time.now , PropertyUnderReviewWorker, @current_user.id, @property.id)
               end

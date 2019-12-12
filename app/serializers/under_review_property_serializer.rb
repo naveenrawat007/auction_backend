@@ -9,9 +9,10 @@ class UnderReviewPropertySerializer < ActiveModel::Serializer
     data[:user_type] = user_type
     data[:address] = object.address
     data[:status] = object.status
-    data[:submitted_date] = object.created_at.strftime("%b %e, %Y")
+    data[:submitted_at] = object.submitted_at ? object.submitted_at.strftime("%b %e, %Y") : ""
     data[:auction_started_at] = object.auction_started_at ? object.auction_started_at.strftime("%b %e, %Y") : ""
     data[:auction_length] = object.auction_length
+    data[:submitted_at_timer] = object.submitted_at ? object.submitted_at + 24.hours : "" 
     data
   end
 
