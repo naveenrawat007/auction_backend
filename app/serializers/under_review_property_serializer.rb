@@ -17,10 +17,12 @@ class UnderReviewPropertySerializer < ActiveModel::Serializer
 
   def user_type
     u_type = ""
-    object.owner.type_attributes.each do |type|
-      if type[1] == true
-        u_type = type[0]
-        break
+    if object.owner.type_attributes.blank? == false
+      object.owner.type_attributes.each do |type|
+        if type[1] == true
+          u_type = type[0]
+          break
+        end
       end
     end
     if u_type.include?("Inves")
