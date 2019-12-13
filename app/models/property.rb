@@ -31,10 +31,19 @@ class Property < ApplicationRecord
   end
 
   def self.buy_option
-     ["Line of Credit", "Owner Finance", "Hard Money", "Convential Loan", "Rehab Loan"]
+    ["Cash", "Line of Credit", "Owner Finance", "Hard Money", "Convential Loan", "Rehab Loan"]
   end
 
   def self.status
     ["Draft", "Under Review", "Hold", "Approve / Best Offer", "Live Online Bidding", "Post Auction", "Pending", "Terminated", "Sold"]
   end
+
+  def self.title_status
+    ["Clear title verified", "Clear title not verified but open", "Title not verified but open"]
+  end
+
+  def self.owner_category
+    ["Owner", "Wholesaler", "Realtor"]
+  end
+
 end

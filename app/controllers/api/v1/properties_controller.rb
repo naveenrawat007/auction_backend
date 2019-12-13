@@ -1,7 +1,7 @@
 module Api
   module V1
     class PropertiesController < MainController
-      before_action :authorize_request
+      before_action :authorize_request, except: [:new]
 
       def index
         if params[:search_str].blank? == false
@@ -42,7 +42,7 @@ module Api
       def new
         @seller_pay_types = SellerPayType.all.order(:created_at)
         @show_instructions_types = ShowInstructionsType.all.order(:created_at)
-        render json: {seller_pay_types: ActiveModelSerializers::SerializableResource.new(@seller_pay_types, each_serializer: SellerPayTypeSerializer), show_instructions_types: ActiveModelSerializers::SerializableResource.new(@show_instructions_types, each_serializer: SellerPayTypeSerializer), categories: Property.category, residential_types: Property.residential_type, commercial_types: Property.commercial_type, land_types: Property.land_type, deal_analysis_types: Property.deal_analysis_type, auction_lengths: Property.auction_length, buy_options: Property.buy_option, status: 200}, status: 200
+        render json: {seller_pay_types: ActiveModelSerializers::SerializableResource.new(@seller_pay_types, each_serializer: SellerPayTypeSerializer), show_instructions_types: ActiveModelSerializers::SerializableResource.new(@show_instructions_types, each_serializer: SellerPayTypeSerializer), categories: Property.category, residential_types: Property.residential_type, commercial_types: Property.commercial_type, land_types: Property.land_type, deal_analysis_types: Property.deal_analysis_type, auction_lengths: Property.auction_length, buy_options: Property.buy_option, owner_categories: Property.owner_category, title_statuses: Property.title_status, status: 200}, status: 200
       end
 
       def create
