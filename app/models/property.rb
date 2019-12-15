@@ -7,6 +7,7 @@ class Property < ApplicationRecord
 
   has_many :arv_proofs, -> { where(name: "Arv Proof") }, as: :resource, class_name: "Attachment"
   has_many :rehab_cost_proofs, -> { where(name: "Rehab Cost Proof") }, as: :resource, class_name: "Attachment"
+  has_many :rental_proofs, -> { where(name: "Rental Proof") }, as: :resource, class_name: "Attachment"
   def self.category
     ['Residential', 'Commercial', 'Land']
   end
