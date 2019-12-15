@@ -1,7 +1,7 @@
 module Api
   module V1
     class PropertiesController < MainController
-      before_action :authorize_request, except: [:new]
+      before_action :authorize_request, except: [:new, :register]
 
       def index
         if params[:search_str].blank? == false
@@ -124,6 +124,8 @@ module Api
         else
           render json: {property: PropertySerializer.new(@property), message: "Property could not be updated.", status: 400}, status: 200
         end
+      end
+      def register
       end
       private
       def property_params
