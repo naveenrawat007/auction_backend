@@ -213,7 +213,7 @@ module Api
             @landlord_deal.save
           end
           if @property.save
-            render json: {property: PropertySerializer.new(@property), message: "Property added sucessfully.", status: 201}, status: 200
+            render json: {property: PropertySerializer.new(@property), user_token: @user.auth_token, message: "Property added sucessfully.", status: 201}, status: 200
           else
             render json: {message: "Property could not be added.", status: 400}, status: 200
           end
