@@ -1,6 +1,7 @@
 class Property < ApplicationRecord
   belongs_to :owner, class_name: "User", foreign_key: "owner_id"
   has_many :photos, as: :imageable
+  has_many :videos, as: :resource
   has_one :landlord_deal
   belongs_to :show_instructions_type, optional: true
   belongs_to :seller_pay_type, optional: true
