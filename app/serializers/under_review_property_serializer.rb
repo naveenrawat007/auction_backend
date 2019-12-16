@@ -12,7 +12,7 @@ class UnderReviewPropertySerializer < ActiveModel::Serializer
     data[:submitted_at] = object.submitted_at ? object.submitted_at.strftime("%b %e, %Y") : ""
     data[:auction_started_at] = object.auction_started_at ? object.auction_started_at.strftime("%b %e, %Y") : ""
     data[:auction_length] = object.auction_length
-    data[:submitted_at_timer] = object.submitted_at ? object.submitted_at + 24.hours : "" 
+    data[:submitted_at_timer] = submitted_timer
     data
   end
 
@@ -30,6 +30,18 @@ class UnderReviewPropertySerializer < ActiveModel::Serializer
       "Investor"
     else
       "Realtor"
+    end
+  end
+
+  def submitted_timer
+    if object.submitted_at
+      if (Time.now < (object.submitted_at + 24.hours))
+        (object.submitted_at + 24.hours)
+      else
+        ""
+      end
+    else
+      ""
     end
   end
 
