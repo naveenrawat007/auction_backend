@@ -16,6 +16,7 @@ module Api
         @property = @current_user.owned_properties.find_by(id: params[:property][:id])
         if @property
           @property.status = "Under Review"
+          @property.submitted_at = Time.now
           if @property.save
             Sidekiq::Client.enqueue_to_in("default", Time.now + 24.hours, PropertyApproveWorker, @property.id)
             Sidekiq::Client.enqueue_to_in("default", Time.now , PropertyUnderReviewWorker, @current_user.id, @property.id)
