@@ -51,15 +51,15 @@ module Api
         @property.status = "Draft"
         if @property.save
           if params[:property][:residential_attributes].blank? == false
-            @property.residential_attributes = residential_type_attributes_permitter
+            @property.residential_attributes = params[:property][:residential_attributes]
             @property.save
           end
           if params[:property][:commercial_attributes].blank? == false
-            @property.commercial_attributes = commercial_type_attributes_permitter
+            @property.commercial_attributes = params[:property][:commercial_attributes]
             @property.save
           end
           if params[:property][:land_attributes].blank? == false
-            @property.land_attributes = land_type_attributes_permitter
+            @property.land_attributes = params[:property][:land_attributes]
             @property.save
           end
           render json: {property: PropertySerializer.new(@property), message: "Property added sucessfully.", status: 200}, status: 200
@@ -71,31 +71,63 @@ module Api
       def update
         @property = Property.find_by(id: params[:property][:id])
         if @property.update(property_update_params)
-          # @property.deal_analysis_type = params[:property][:deal_analysis_type]
-          # @property.after_rehab_value = params[:property][:after_rehab_value]
-          # @property.asking_price = params[:property][:asking_price]
-          # @property.estimated_rehab_cost = params[:property][:estimated_rehab_cost]
-          # @property.arv_analysis = params[:property][:arv_analysis]
-          # @property.description_of_repairs = params[:property][:description_of_repairs]
-          if params[:step2].blank? == false
-            @property.estimated_rehab_cost_attr = estimated_rehab_cost_attributes_permitter2
-          else
+          if params[:property][:residential_attributes].blank? == false
+            @property.residential_attributes = residential_type_attributes_permitter
+            @property.save
+          end
+          if params[:property][:commercial_attributes].blank? == false
+            @property.commercial_attributes = commercial_type_attributes_permitter
+            @property.save
+          end
+          if params[:property][:land_attributes].blank? == false
+            @property.land_attributes = land_type_attributes_permitter
+            @property.save
+          end
+          if params[:property][:open_house_dates]
+            if open_house_dates_permitter.blank? == false
+              @property.open_house_dates = open_house_dates_permitter
+            end
+          end
+          if params[:property][:estimated_rehab_cost_attr]
             @property.estimated_rehab_cost_attr = estimated_rehab_cost_attributes_permitter
+          end
+          if params[:property][:buy_option]
             @property.buy_option = buy_option_permitter
           end
-          if params[:property][:images].blank? == false
+          if params[:images].blank? == false
             @property.photos.destroy_all
-            params[:property][:images].each do |image|
+            params[:images].each do |image|
               @property.photos.create(image: image)
             end
           end
-          if params[:property][:arv_proof].blank? == false
+          if params[:video].blank? == false
+            @property.videos.destroy_all
+            @property.videos.create(video: params[:video])
+          end
+          if params[:arv_proof].blank? == false
             @property.arv_proofs.destroy_all
             @property.arv_proofs.create(file: params[:property][:arv_proof], name: "Arv Proof")
           end
-          if params[:property][:rehab_cost_proof].blank? == false
+          if params[:rehab_cost_proof].blank? == false
             @property.rehab_cost_proofs.destroy_all
             @property.rehab_cost_proofs.create(file: params[:property][:arv_proof], name: "Rehab Cost Proof")
+          end
+          if params[:rental_proof].blank? == false
+            @property.rental_proofs.destroy_all
+            @property.rental_proofs.create(file: params[:property][:arv_proof], name: "Rental Proof")
+          end
+          @property.save
+          if @property.deal_analysis_type == "Rehab & Flip Deal"
+            @property.profit_potential = params[:property][:profit_potential]
+          elsif @property.deal_analysis_type == "Landlord Deal"
+            if @property.landlord_deal
+              @landlord_deal = @property.landlord_deal
+            else
+              @landlord_deal = @property.build_landlord_deal
+              @landlord_deal.save
+            end
+            @landlord_deal.update(landlord_deal_params)
+            @landlord_deal.save
           end
           @property.save
           if @property.deal_analysis_type == "Rehab & Flip Deal"
@@ -222,7 +254,7 @@ module Api
       end
       private
       def property_params
-        params.require(:property).permit(:address, :city, :state, :zip_code, :category, :p_type, :headliner, :mls_available, :flooded, :flood_count, :description)
+        params.require(:property).permit(:address, :city, :state, :zip_code, :category, :p_type, :headliner, :mls_available, :flooded, :flood_count, :description, :owner_category, :title_status, :additional_information)
       end
 
       def property_update_params
