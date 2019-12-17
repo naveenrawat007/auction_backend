@@ -222,15 +222,15 @@ module Api
           end
           if params[:arv_proof].blank? == false
             @property.arv_proofs.destroy_all
-            @property.arv_proofs.create(file: params[:property][:arv_proof], name: "Arv Proof")
+            @property.arv_proofs.create(file: params[:arv_proof], name: "Arv Proof")
           end
           if params[:rehab_cost_proof].blank? == false
             @property.rehab_cost_proofs.destroy_all
-            @property.rehab_cost_proofs.create(file: params[:property][:arv_proof], name: "Rehab Cost Proof")
+            @property.rehab_cost_proofs.create(file: params[:rehab_cost_proof], name: "Rehab Cost Proof")
           end
           if params[:rental_proof].blank? == false
             @property.rental_proofs.destroy_all
-            @property.rental_proofs.create(file: params[:property][:arv_proof], name: "Rental Proof")
+            @property.rental_proofs.create(file: params[:rental_proof], name: "Rental Proof")
           end
           if open_house_dates_permitter.blank? == false
             @property.open_house_dates = open_house_dates_permitter
