@@ -70,6 +70,9 @@ module Api
 
       def update
         @property = Property.find_by(id: params[:property][:id])
+        if !@property
+          render json: { message: "Property could not be found.", status: 404}, status: 200 and return
+        end
         if @property.update(property_update_params)
           if params[:property][:residential_attributes].blank? == false
             @property.residential_attributes = residential_type_attributes_permitter
