@@ -15,6 +15,8 @@ class LandlordDealSerializer < ActiveModel::Serializer
     data[:insurance_monthly] = object.insurance_monthly
     data[:piti_monthly_debt] = object.piti_monthly_debt
     data[:monthly_rent] = object.monthly_rent
+    data[:loan_terms] = object.loan_terms
+    data[:vacancy_rate] = object.vacancy_rate
     data[:total_gross_yearly_income] = object.total_gross_yearly_income
     data[:adjusted_gross_yearly_income] = object.adjusted_gross_yearly_income
     data[:est_annual_management_fees] = object.est_annual_management_fees
