@@ -16,7 +16,7 @@ class PropertySerializer < ActiveModel::Serializer
     data[:flood_count] = object.flood_count
     data[:owner_category] = object.owner_category
     data[:additional_information] = object.additional_information
-    data[:buy_option] = object.buy_option
+    data[:buy_option] = object.buy_option.blank? == false ? object.buy_option : []
     data[:best_offer] = object.best_offer
     data[:best_offer_length] = object.best_offer_length
     data[:best_offer_sellers_minimum_price] = object.best_offer_sellers_minimum_price
