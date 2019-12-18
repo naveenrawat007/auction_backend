@@ -31,7 +31,7 @@ class PropertySerializer < ActiveModel::Serializer
     data[:asking_price] = object.asking_price
     data[:estimated_rehab_cost] = object.estimated_rehab_cost
     data[:profit_potential] = object.profit_potential ? object.profit_potential : ""
-    data[:estimated_rehab_cost_attr] = object.estimated_rehab_cost_attr
+    data[:estimated_rehab_cost_attr] = object.estimated_rehab_cost_attr.blank? == false ? object.estimated_rehab_cost_attr : {}
 
     if object.landlord_deal.blank? == false
       data[:landlord_deal] = LandlordDealSerializer.new(object.landlord_deal)
