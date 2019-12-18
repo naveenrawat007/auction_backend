@@ -14,12 +14,22 @@ class PropertySerializer < ActiveModel::Serializer
     data[:mls_available] = object.mls_available
     data[:flooded] = object.flooded
     data[:flood_count] = object.flood_count
+    data[:owner_category] = object.owner_category
+    data[:additional_information] = object.additional_information
+    data[:best_offer] = object.best_offer
+    data[:best_offer_length] = object.best_offer_length
+    data[:best_offer_sellers_minimum_price] = object.best_offer_sellers_minimum_price
+    data[:best_offer_sellers_reserve_price] = object.best_offer_sellers_reserve_price
+    data[:show_instructions_text] = object.show_instructions_text
+    data[:open_house_dates] = object.open_house_dates
+    data[:vimeo_url] = object.vimeo_url
+    data[:dropbox_url] = object.dropbox_url
     data[:description] = object.description
     data[:deal_analysis_type] = object.deal_analysis_type
     data[:after_rehab_value] = object.after_rehab_value
     data[:asking_price] = object.asking_price
     data[:estimated_rehab_cost] = object.estimated_rehab_cost
-    data[:profit_potential] = object.profit_potential
+    data[:profit_potential] = object.profit_potential ? object.profit_potential : ""
     data[:estimated_rehab_cost_attr] = object.estimated_rehab_cost_attr
 
     if object.landlord_deal.blank? == false
@@ -27,6 +37,7 @@ class PropertySerializer < ActiveModel::Serializer
     end
     data[:arv_analysis] = object.arv_analysis
     data[:description_of_repairs] = object.description_of_repairs
+    data[:rental_description] = object.rental_description
     data[:seller_price] = object.seller_price
     data[:buy_now_price] = object.buy_now_price
     data[:auction_started_at] = object.auction_started_at
@@ -42,6 +53,7 @@ class PropertySerializer < ActiveModel::Serializer
     data[:images] = property_images
     data[:arv_proof] = arv_proof
     data[:rehab_cost_proof] = rehab_cost_proof
+    data[:rental_proof] = rental_proof
     data[:land_attributes] = object.category == "Land" ? object.land_attributes : {}
     data[:residential_attributes] = object.category == "Residential" ? object.residential_attributes : {}
     data[:commercial_attributes] = object.category == "Commercial" ? object.commercial_attributes : {}
@@ -63,6 +75,14 @@ class PropertySerializer < ActiveModel::Serializer
   def rehab_cost_proof
     if object.rehab_cost_proofs.last
       APP_CONFIG['backend_site_url'] + object.rehab_cost_proofs.last.file.url
+    else
+      ""
+    end
+  end
+
+  def rental_proof
+    if object.rental_proofs.last
+      APP_CONFIG['backend_site_url'] + object.rental_proofs.last.file.url
     else
       ""
     end

@@ -21,12 +21,13 @@ Rails.application.routes.draw do
       get 'properties/new', to: 'properties#new'
       put 'properties/submit', to: 'properties#submit_for_review'
       get 'properties/:id', to: 'properties#show'
+      get 'properties/:id/edit', to: 'properties#edit'
       post 'properties', to: 'properties#create'
       put 'properties', to: 'properties#update'
       get 'properties', to: 'properties#index'
 
       post 'register/properties/', to: 'properties#register'
-      
+
       namespace 'admin' do
         get '/properties', to: 'properties#under_review_properties'
         get '/properties/best_offers', to: 'properties#best_offers_properties'

@@ -12,6 +12,17 @@ module Api
         render json: {properties: ActiveModelSerializers::SerializableResource.new(@properties, each_serializer: PropertySerializer), status: 200, meta: {current_page: @properties.current_page, total_pages: @properties.total_pages} }
       end
 
+      def edit
+        @property = Property.find_by(id: params[:id])
+        @seller_pay_types = SellerPayType.all.order(:created_at)
+        @show_instructions_types = ShowInstructionsType.all.order(:created_at)
+        if @property
+          render json: {property: PropertySerializer.new(@property), show_instructions_types: ActiveModelSerializers::SerializableResource.new(@show_instructions_types, each_serializer: SellerPayTypeSerializer), categories: Property.category, residential_types: Property.residential_type, commercial_types: Property.commercial_type, land_types: Property.land_type, deal_analysis_types: Property.deal_analysis_type, auction_lengths: Property.auction_length, buy_options: Property.buy_option, owner_categories: Property.owner_category, title_statuses: Property.title_status, status: 200 }, status: 200
+        else
+          render json: {message: "This property does not exists", status: 404 }, status: 200
+        end
+      end
+
       def submit_for_review
         @property = @current_user.owned_properties.find_by(id: params[:property][:id])
         if @property
@@ -121,7 +132,9 @@ module Api
           end
           @property.save
           if @property.deal_analysis_type == "Rehab & Flip Deal"
-            @property.profit_potential = params[:property][:profit_potential]
+            if params[:property][:profit_potential]
+              @property.profit_potential = params[:property][:profit_potential]
+            end
           elsif @property.deal_analysis_type == "Landlord Deal"
             if @property.landlord_deal
               @landlord_deal = @property.landlord_deal
