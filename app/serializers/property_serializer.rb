@@ -22,7 +22,7 @@ class PropertySerializer < ActiveModel::Serializer
     data[:best_offer_sellers_minimum_price] = object.best_offer_sellers_minimum_price
     data[:best_offer_sellers_reserve_price] = object.best_offer_sellers_reserve_price
     data[:show_instructions_text] = object.show_instructions_text
-    data[:open_house_dates] = object.open_house_dates
+    data[:open_house_dates] = object.open_house_dates.blank? == false ? object.open_house_dates  : []
     data[:vimeo_url] = object.vimeo_url
     data[:dropbox_url] = object.dropbox_url
     data[:description] = object.description
