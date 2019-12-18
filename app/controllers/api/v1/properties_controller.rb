@@ -132,7 +132,7 @@ module Api
           end
           @property.save
           if @property.deal_analysis_type == "Rehab & Flip Deal"
-            if params[:property][:profit_potential]
+            if params[:property][:profit_potential].blank? == false
               @property.profit_potential = params[:property][:profit_potential]
             end
           elsif @property.deal_analysis_type == "Landlord Deal"
@@ -146,18 +146,6 @@ module Api
             @landlord_deal.save
           end
           @property.save
-          if @property.deal_analysis_type == "Rehab & Flip Deal"
-            @property.profit_potential = params[:property][:profit_potential]
-          elsif @property.deal_analysis_type == "Landlord Deal"
-            if @property.landlord_deal
-              @landlord_deal = @property.landlord_deal
-            else
-              @landlord_deal = @property.build_landlord_deal
-              @landlord_deal.save
-            end
-            @landlord_deal.update(landlord_deal_params)
-            @landlord_deal.save
-          end
           if params[:draft] == "false"
             if @property.status == "Draft"
               @property.status = "Under Review"
