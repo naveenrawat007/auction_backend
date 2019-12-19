@@ -41,7 +41,7 @@ class Property < ApplicationRecord
   end
 
   def self.title_status
-    ["Clear title verified", "Clear title not verified but open", "Title not verified but open"]
+    ["Clear title verified", "Clear title not verified but open", "Title not verified or open"]
   end
 
   def self.owner_category
