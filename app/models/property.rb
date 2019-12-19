@@ -28,8 +28,12 @@ class Property < ApplicationRecord
      ['Rehab & Flip Deal', 'Landlord Deal']
   end
 
+  def self.best_offer_length
+     [3,5,7,10,14]
+  end
+
   def self.auction_length
-     [7,14,21,28]
+     [3,5,7,10]
   end
 
   def self.buy_option
