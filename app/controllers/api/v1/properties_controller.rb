@@ -13,7 +13,11 @@ module Api
       end
 
       def edit
-        @property = Property.find_by(id: params[:id])
+        if @current_user.is_admin?
+          @property = Property.find_by(id: params[:id])
+        else
+          @property = @current_user.owned_properties.find_by(id: params[:id])
+        end
         @seller_pay_types = SellerPayType.all.order(:created_at)
         @show_instructions_types = ShowInstructionsType.all.order(:created_at)
         if @property
@@ -24,7 +28,11 @@ module Api
       end
 
       def submit_for_review
-        @property = @current_user.owned_properties.find_by(id: params[:property][:id])
+        if @current_user.is_admin?
+          @property = Property.find_by(id: params[:property][:id])
+        else
+          @property = @current_user.owned_properties.find_by(id: params[:property][:id])
+        end
         if @property
           @property.status = "Under Review"
           @property.submitted_at = Time.now
