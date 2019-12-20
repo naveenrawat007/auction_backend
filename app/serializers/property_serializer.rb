@@ -22,7 +22,7 @@ class PropertySerializer < ActiveModel::Serializer
     data[:best_offer_sellers_minimum_price] = object.best_offer_sellers_minimum_price ? object.best_offer_sellers_minimum_price : ""
     data[:best_offer_sellers_reserve_price] = object.best_offer_sellers_reserve_price ? object.best_offer_sellers_reserve_price : ""
     data[:show_instructions_text] = object.show_instructions_text ? object.show_instructions_text : ""
-    data[:open_house_dates] = object.open_house_dates.blank? == false ? object.open_house_dates  : [""]
+    data[:open_house_dates] = object.open_house_dates.blank? == false ? object.open_house_dates  : [{date: "", opens: "", closes: ""}]
     data[:vimeo_url] = object.vimeo_url ? object.vimeo_url : ""
     data[:dropbox_url] = object.dropbox_url ? object.dropbox_url : ""
     data[:description] = object.description ? object.description : ""
@@ -59,7 +59,7 @@ class PropertySerializer < ActiveModel::Serializer
     data[:residential_attributes] = object.category == "Residential" ? object.residential_attributes : {}
     data[:commercial_attributes] = object.category == "Commercial" ? object.commercial_attributes : {}
     data[:show_instructions] = object.show_instructions_type ? object.show_instructions_type.description : ""
-    data[:images_details] = ActiveModelSerializers::SerializableResource.new(object.photos, each_serializer: PhotoSerializer) 
+    data[:images_details] = ActiveModelSerializers::SerializableResource.new(object.photos, each_serializer: PhotoSerializer)
     data
   end
   def property_images
