@@ -21,7 +21,7 @@ module Api
         @seller_pay_types = SellerPayType.all.order(:created_at)
         @show_instructions_types = ShowInstructionsType.all.order(:created_at)
         if @property
-          render json: {property: PropertySerializer.new(@property), show_instructions_types: ActiveModelSerializers::SerializableResource.new(@show_instructions_types, each_serializer: SellerPayTypeSerializer), categories: Property.category, residential_types: Property.residential_type, commercial_types: Property.commercial_type, land_types: Property.land_type, deal_analysis_types: Property.deal_analysis_type, auction_lengths: Property.auction_length, best_offer_lengths: Property.best_offer_length, buy_options: Property.buy_option, owner_categories: Property.owner_category, title_statuses: Property.title_status, status: 200 }, status: 200
+          render json: {property: PropertySerializer.new(@property), seller_pay_types: ActiveModelSerializers::SerializableResource.new(@seller_pay_types, each_serializer: SellerPayTypeSerializer), show_instructions_types: ActiveModelSerializers::SerializableResource.new(@show_instructions_types, each_serializer: SellerPayTypeSerializer), categories: Property.category, residential_types: Property.residential_type, commercial_types: Property.commercial_type, land_types: Property.land_type, deal_analysis_types: Property.deal_analysis_type, auction_lengths: Property.auction_length, best_offer_lengths: Property.best_offer_length, buy_options: Property.buy_option, owner_categories: Property.owner_category, title_statuses: Property.title_status, status: 200 }, status: 200
         else
           render json: {message: "This property does not exists", status: 404 }, status: 200
         end
