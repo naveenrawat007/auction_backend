@@ -49,6 +49,7 @@ class PropertySerializer < ActiveModel::Serializer
     data[:seller_pay_type_id] = object.seller_pay_type_id ? object.seller_pay_type_id : ""
     data[:show_instructions_type_id] = object.show_instructions_type_id ? object.show_instructions_type_id : ""
     data[:youtube_url] = object.youtube_url ? object.youtube_url : ""
+    data[:youtube_video_key] = object.youtube_video_key ? object.youtube_video_key : ""
     data[:title_status] = object.title_status ? object.title_status : ""
     data[:total_views] = object.total_views ? object.total_views : ""
     data[:images] = property_images
