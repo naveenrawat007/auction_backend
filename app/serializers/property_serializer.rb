@@ -60,6 +60,8 @@ class PropertySerializer < ActiveModel::Serializer
     data[:residential_attributes] = object.category == "Residential" ? object.residential_attributes : {}
     data[:commercial_attributes] = object.category == "Commercial" ? object.commercial_attributes : {}
     data[:show_instructions] = object.show_instructions_type ? object.show_instructions_type.description : ""
+    data[:lat] = object.lat ? object.lat : ""
+    data[:long] = object.long ? object.long : ""
     data[:images_details] = ActiveModelSerializers::SerializableResource.new(object.photos, each_serializer: PhotoSerializer)
     data
   end
