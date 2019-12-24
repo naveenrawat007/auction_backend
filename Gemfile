@@ -74,3 +74,4 @@ gem 'twilio-ruby', '~> 5.22.1'
 gem "paperclip", "~> 6.0.0"
 gem 'will_paginate', '~> 3.1.0'
 gem 'paperclip-av-transcoder'
+gem 'geocoder'
