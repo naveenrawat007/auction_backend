@@ -44,6 +44,7 @@ class PropertySerializer < ActiveModel::Serializer
     data[:auction_started_at] = object.auction_started_at ? object.auction_started_at : ""
     data[:auction_length] = object.auction_length ? object.auction_length : ""
     data[:auction_ending_at] = object.auction_ending_at ? object.auction_ending_at : ""
+    data[:closing_date] = object.auction_ending_at ? object.auction_ending_at.strftime("%B %e, %Y") : ""
     data[:status] = object.status
     data[:owner] = object.owner.first_name.to_s + " " + object.owner.last_name.to_s
     data[:seller_pay_type_id] = object.seller_pay_type_id ? object.seller_pay_type_id : ""
