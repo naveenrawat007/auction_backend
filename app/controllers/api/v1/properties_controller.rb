@@ -266,11 +266,11 @@ module Api
       end
       private
       def property_params
-        params.require(:property).permit(:address, :city, :state, :zip_code, :category, :p_type, :headliner, :mls_available, :flooded, :flood_count, :description, :owner_category, :title_status, :additional_information)
+        params.require(:property).permit(:address, :city, :state, :zip_code, :lat, :long, :category, :p_type, :headliner, :mls_available, :flooded, :flood_count, :description, :owner_category, :title_status, :additional_information)
       end
 
       def property_update_params
-        params.require(:property).permit(:address, :city, :state, :zip_code, :category, :p_type, :headliner, :mls_available, :flooded, :flood_count, :description, :owner_category, :additional_information, :seller_price, :buy_now_price, :auction_started_at, :auction_length, :auction_ending_at, :show_instructions_type_id, :seller_pay_type_id, :title_status, :youtube_url, :youtube_video_key, :deal_analysis_type, :after_rehab_value, :asking_price, :estimated_rehab_cost, :profit_potential, :arv_analysis, :description_of_repairs, :vimeo_url, :dropbox_url, :rental_description, :best_offer, :best_offer_length, :best_offer_sellers_minimum_price, :best_offer_sellers_reserve_price, :show_instructions_text)
+        params.require(:property).permit(:address, :city, :state, :zip_code, :lat, :long, :category, :p_type, :headliner, :mls_available, :flooded, :flood_count, :description, :owner_category, :additional_information, :seller_price, :buy_now_price, :auction_started_at, :auction_length, :auction_ending_at, :show_instructions_type_id, :seller_pay_type_id, :title_status, :youtube_url, :youtube_video_key, :deal_analysis_type, :after_rehab_value, :asking_price, :estimated_rehab_cost, :profit_potential, :arv_analysis, :description_of_repairs, :vimeo_url, :dropbox_url, :rental_description, :best_offer, :best_offer_length, :best_offer_sellers_minimum_price, :best_offer_sellers_reserve_price, :show_instructions_text)
       end
 
       def open_house_dates_permitter
