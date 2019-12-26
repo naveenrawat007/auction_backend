@@ -154,6 +154,13 @@ module Api
             @landlord_deal.save
           end
           @property.save
+          if @property.auction_started_at.blank? == false
+            @property.auction_started_at = @property.auction_started_at.beginning_of_day
+          end
+          if @property.auction_ending_at.blank? == false
+            @property.auction_ending_at = @property.auction_ending_at.end_of_day
+          end
+          @property.save
           if params[:draft] == "false"
             if @property.status == "Draft"
               @property.status = "Under Review"
