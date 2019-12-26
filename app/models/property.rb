@@ -69,4 +69,8 @@ class Property < ApplicationRecord
       self.auction_started_at ? self.auction_started_at + self.auction_length.to_i.days : ""
     end
   end
+
+  def highest_bid
+    self.seller_price
+  end
 end
