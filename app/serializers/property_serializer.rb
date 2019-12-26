@@ -19,6 +19,9 @@ class PropertySerializer < ActiveModel::Serializer
     data[:buy_option] = object.buy_option.blank? == false ? object.buy_option : []
     data[:best_offer] = object.best_offer
     data[:best_offer_length] = object.best_offer_length ? object.best_offer_length : ""
+    data[:best_offer_time_pending] = check_best_offer_time
+    data[:best_offer_auction_started_at] = object.auction_started_at ? object.auction_started_at : ""
+    data[:best_offer_auction_ending_at] = object.auction_started_at ? object.auction_started_at + object.best_offer_length.to_i.days : ""
     data[:best_offer_sellers_minimum_price] = object.best_offer_sellers_minimum_price ? object.best_offer_sellers_minimum_price : ""
     data[:best_offer_sellers_reserve_price] = object.best_offer_sellers_reserve_price ? object.best_offer_sellers_reserve_price : ""
     data[:show_instructions_text] = object.show_instructions_text ? object.show_instructions_text : ""
@@ -43,6 +46,8 @@ class PropertySerializer < ActiveModel::Serializer
     data[:buy_now_price] = object.buy_now_price ? object.buy_now_price : ""
     data[:auction_started_at] = object.auction_started_at ? object.auction_started_at : ""
     data[:auction_length] = object.auction_length ? object.auction_length : ""
+    data[:auction_bidding_started_at] = object.bidding_started_at
+    data[:auction_bidding_ending_at] = object.bidding_ending_at
     data[:auction_ending_at] = object.auction_ending_at ? object.auction_ending_at : ""
     data[:closing_date] = object.auction_ending_at ? object.auction_ending_at.strftime("%B %e, %Y") : ""
     data[:status] = object.status
@@ -91,6 +96,18 @@ class PropertySerializer < ActiveModel::Serializer
       APP_CONFIG['backend_site_url'] + object.rental_proofs.last.file.url
     else
       ""
+    end
+  end
+
+  def check_best_offer_time
+    if object.best_offer == true
+      if (Time.now < object.auction_started_at || Time.now < object.auction_started_at + object.best_offer_length.to_i.days)
+        true
+      else
+        false
+      end
+    else
+      false
     end
   end
 end
