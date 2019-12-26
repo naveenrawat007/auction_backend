@@ -54,4 +54,19 @@ class Property < ApplicationRecord
     ["Owner", "Wholesaler", "Realtor"]
   end
 
+  def bidding_started_at
+    if self.best_offer == true
+      self.auction_started_at ? self.auction_started_at + self.best_offer_length.to_i.days : ""
+    else
+      self.auction_started_at ? self.auction_started_at : ""
+    end
+  end
+
+  def bidding_ending_at
+    if self.best_offer == true
+      self.auction_started_at ? self.auction_started_at + self.best_offer_length.to_i.days + self.auction_length.to_i.days : ""
+    else
+      self.auction_started_at ? self.auction_started_at + self.auction_length.to_i.days : ""
+    end
+  end
 end
