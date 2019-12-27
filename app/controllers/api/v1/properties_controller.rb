@@ -14,9 +14,9 @@ module Api
 
       def edit
         if @current_user.is_admin?
-          @property = Property.find_by(id: params[:id])
+          @property = Property.find_by(unique_address: params[:id])
         else
-          @property = @current_user.owned_properties.find_by(id: params[:id])
+          @property = @current_user.owned_properties.find_by(unique_address: params[:id])
         end
         @seller_pay_types = SellerPayType.all.order(:created_at)
         @show_instructions_types = ShowInstructionsType.all.order(:created_at)
@@ -49,7 +49,7 @@ module Api
       end
 
       def show
-        @property = Property.find_by(id: params[:id])
+        @property = Property.find_by(unique_address: params[:id].strip)
         if @property
           @property.total_views += 1
           @property.save
