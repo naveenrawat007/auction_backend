@@ -13,6 +13,7 @@ class UnderReviewPropertySerializer < ActiveModel::Serializer
     data[:auction_started_at] = object.auction_started_at ? object.auction_started_at.strftime("%b %e, %Y") : ""
     data[:auction_length] = object.auction_length
     data[:submitted_at_timer] = submitted_timer
+    data[:unique_address] = object.unique_address
     data
   end
 
