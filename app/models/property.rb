@@ -11,6 +11,16 @@ class Property < ApplicationRecord
   has_many :rental_proofs, -> { where(name: "Rental Proof") }, as: :resource, class_name: "Attachment"
   geocoded_by :address, latitude: :lat, longitude: :long
   after_validation :geocode, if: ->(obj){ obj.lat.blank? or obj.long.blank? }
+
+  after_create :generate_unique_address
+
+  def generate_unique_address
+    if self.address.blank? == false
+      self.unique_address = self.address.strip.split(/\W/).join("_") + "_#{self.id}"
+    else
+      self.unique_address = "porperty_address_" + "#{self.id}"
+    end
+  end
   def self.category
     ['Residential', 'Commercial', 'Land']
   end

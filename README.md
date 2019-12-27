@@ -23,3 +23,5 @@ Things you may want to cover:
 * Deployment instructions
 
 * ...
+
+run "env rake property_unique_address:generate"  for populating unique address to property
