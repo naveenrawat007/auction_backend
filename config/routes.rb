@@ -29,8 +29,7 @@ Rails.application.routes.draw do
       post 'register/properties/', to: 'properties#register'
 
       namespace 'admin' do
-        get '/properties', to: 'properties#under_review_properties'
-        get '/properties/best_offers', to: 'properties#best_offers_properties'
+        get '/properties', to: 'properties#index'
         put 'properties/status', to: 'properties#update_status'
       end
     end
