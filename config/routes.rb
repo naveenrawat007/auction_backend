@@ -27,6 +27,7 @@ Rails.application.routes.draw do
       get 'properties', to: 'properties#index'
 
       post 'register/properties/', to: 'properties#register'
+      post 'properties/bids', to: 'bids#create'
 
       namespace 'admin' do
         get '/properties', to: 'properties#index'
