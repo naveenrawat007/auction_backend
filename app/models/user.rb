@@ -6,4 +6,5 @@ class User < ApplicationRecord
 
   has_one :photo, as: :imageable
   has_many :owned_properties, class_name: "Property", foreign_key: "owner_id"
+  has_many :bids
 end
