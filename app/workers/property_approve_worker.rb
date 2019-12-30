@@ -10,6 +10,7 @@ class PropertyApproveWorker
         if property.save
           PropertyMailer.approved(property.owner_id, property.id).deliver
         end
+        Sidekiq::Client.enqueue_to_in("default", property.auction_started_at , PropertyLiveWorker, property.id)
       end
     end
   end
