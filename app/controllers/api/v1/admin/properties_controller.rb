@@ -22,6 +22,11 @@ module Api
               @property.save
               if old_status != @property.status
                 Sidekiq::Client.enqueue_to_in("default", Time.now , PropertyNotificationWorker, @property.id)
+                if @property.status == "Approve / Best Offer"
+                  if @property.auction_started_at.blank? == false
+                    Sidekiq::Client.enqueue_to_in("default", @property.auction_started_at , PropertyLiveWorker, @property.id)
+                  end
+                end
               end
             end
             render json: {message: "Property updated successfully", status: 200}, status: 200
