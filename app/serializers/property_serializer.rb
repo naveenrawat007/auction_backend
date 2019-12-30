@@ -71,6 +71,7 @@ class PropertySerializer < ActiveModel::Serializer
     data[:images_details] = ActiveModelSerializers::SerializableResource.new(object.photos, each_serializer: PhotoSerializer)
     data[:highest_bid] = object.highest_bid
     data[:unique_address] = object.unique_address
+    data[:bids] = ActiveModelSerializers::SerializableResource.new(object.bids, each_serializer: BidSerializer)
     data
   end
   def property_images
