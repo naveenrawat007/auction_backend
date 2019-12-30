@@ -15,6 +15,14 @@ class PropertyMailer < ApplicationMailer
     end
   end
 
+  def live_bidding(user_id, property_id)
+    @user = User.find_by(id: user_id)
+    @property = Property.find_by(id: property_id)
+    if @user && @property
+      mail(to: [@user.email], subject: "Property is Live for online bidding.")
+    end
+  end
+  
   def status_notification(user_id, property_id)
     @user = User.find_by(id: user_id)
     @property = Property.find_by(id: property_id)
