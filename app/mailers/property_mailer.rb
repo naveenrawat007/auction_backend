@@ -14,4 +14,12 @@ class PropertyMailer < ApplicationMailer
       mail(to: [@user.email], subject: "Property is approved for bidding.")
     end
   end
+
+  def status_notification(user_id, property_id)
+    @user = User.find_by(id: user_id)
+    @property = Property.find_by(id: property_id)
+    if @user && @property
+      mail(to: [@user.email], subject: "Property status is changed to #{@property.status}")
+    end
+  end
 end
