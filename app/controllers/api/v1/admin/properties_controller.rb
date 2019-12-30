@@ -17,8 +17,12 @@ module Api
           @property = Property.find_by(id: params[:property][:id])
           if @property
             if params[:property][:status].blank? == false
+              old_status = @property.status
               @property.status = params[:property][:status]
               @property.save
+              if old_status != @property.status
+                Sidekiq::Client.enqueue_to_in("default", Time.now , PropertyNotificationWorker, @property.id)
+              end
             end
             render json: {message: "Property updated successfully", status: 200}, status: 200
           else
