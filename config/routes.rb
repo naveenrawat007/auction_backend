@@ -24,7 +24,8 @@ Rails.application.routes.draw do
       get 'properties/:id/edit', to: 'properties#edit'
       post 'properties', to: 'properties#create'
       put 'properties', to: 'properties#update'
-      get 'properties', to: 'properties#index'
+      get 'user/properties', to: 'properties#index'
+      get 'properties', to: 'properties#public_index'
 
       post 'register/properties/', to: 'properties#register'
       post 'properties/bids', to: 'bids#create'
