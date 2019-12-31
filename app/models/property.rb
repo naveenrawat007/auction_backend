@@ -85,7 +85,7 @@ class Property < ApplicationRecord
     if self.bids.blank? == false
       self.bids.maximum(:amount)
     else
-      self.seller_price
+      self.seller_price ? seller_price : ""
     end
   end
 end
