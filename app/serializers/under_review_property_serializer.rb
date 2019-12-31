@@ -11,6 +11,7 @@ class UnderReviewPropertySerializer < ActiveModel::Serializer
     data[:status] = object.status
     data[:submitted_at] = object.submitted_at ? object.submitted_at.strftime("%b %e, %Y") : ""
     data[:auction_started_at] = object.auction_started_at ? object.auction_started_at.strftime("%b %e, %Y") : ""
+    data[:auction_bidding_ending_at] = object.bidding_ending_at
     data[:auction_length] = object.auction_length
     data[:best_offer_auction_started_at] = object.auction_started_at ? object.auction_started_at : ""
     data[:best_offer_auction_ending_at] = object.auction_started_at ? object.auction_started_at + object.best_offer_length.to_i.days : ""
