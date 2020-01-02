@@ -6,6 +6,7 @@ class Property < ApplicationRecord
   belongs_to :show_instructions_type, optional: true
   belongs_to :seller_pay_type, optional: true
   has_many :bids
+  has_many :best_offers
 
   has_many :arv_proofs, -> { where(name: "Arv Proof") }, as: :resource, class_name: "Attachment"
   has_many :rehab_cost_proofs, -> { where(name: "Rehab Cost Proof") }, as: :resource, class_name: "Attachment"
@@ -86,6 +87,17 @@ class Property < ApplicationRecord
       self.bids.maximum(:amount)
     else
       self.seller_price ? seller_price : ""
+    end
+  end
+  def best_offer_price
+    if self.best_offer
+      if self.best_offers.blank? == false
+        self.best_offers.maximum(:amount)
+      else
+        self.best_offer_sellers_minimum_price
+      end
+    else
+      ""
     end
   end
 end
