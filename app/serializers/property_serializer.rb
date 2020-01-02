@@ -23,6 +23,7 @@ class PropertySerializer < ActiveModel::Serializer
     data[:best_offer_auction_started_at] = object.auction_started_at ? object.auction_started_at : ""
     data[:best_offer_auction_ending_at] = object.auction_started_at ? object.auction_started_at + object.best_offer_length.to_i.days : ""
     data[:best_offer_sellers_minimum_price] = object.best_offer_sellers_minimum_price ? object.best_offer_sellers_minimum_price : ""
+    data[:best_offer_price] = object.best_offer_price
     data[:best_offer_sellers_reserve_price] = object.best_offer_sellers_reserve_price ? object.best_offer_sellers_reserve_price : ""
     data[:show_instructions_text] = object.show_instructions_text ? object.show_instructions_text : ""
     data[:open_house_dates] = object.open_house_dates.blank? == false ? object.open_house_dates  : [{date: "", opens: "", closes: ""}]
@@ -72,6 +73,7 @@ class PropertySerializer < ActiveModel::Serializer
     data[:highest_bid] = object.highest_bid
     data[:unique_address] = object.unique_address
     data[:bids] = ActiveModelSerializers::SerializableResource.new(object.bids, each_serializer: BidSerializer)
+    data[:best_offers] = ActiveModelSerializers::SerializableResource.new(object.best_offers, each_serializer: BestOfferSerializer)
     data
   end
   def property_images
