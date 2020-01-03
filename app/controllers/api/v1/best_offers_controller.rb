@@ -9,6 +9,7 @@ module Api
           @best_offer.user_id = @current_user.id
           @best_offer.amount = params[:best_offer][:amount]
           @best_offer.save
+          Sidekiq::Client.enqueue_to_in("default", Time.now , PropertyBestOfferNotificationWorker, @property.id)
           if params[:best_offer][:fund_proof].blank? == false
             @best_offer.fund_proofs.destroy_all
             @best_offer.fund_proofs.create(file: params[:best_offer][:fund_proof])
