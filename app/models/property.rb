@@ -58,7 +58,7 @@ class Property < ApplicationRecord
   end
 
   def self.status
-    ["Draft", "Under Review", "Hold", "Approve / Best Offer", "Live Online Bidding", "Post Auction", "Pending", "Terminated", "Sold"]
+    ["Draft", "Under Review", "Hold", "Approve", "Live Online Bidding", "Post Auction", "Pending", "Terminated", "Sold"]
   end
 
   def self.title_status
