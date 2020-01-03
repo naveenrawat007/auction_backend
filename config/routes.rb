@@ -30,6 +30,7 @@ Rails.application.routes.draw do
       post 'register/properties/', to: 'properties#register'
       post 'properties/bids', to: 'bids#create'
       post 'properties/best_offers', to: 'best_offers#create'
+      post 'properties/buy_now_offers', to: 'buy_now_offers#create'
 
       namespace 'admin' do
         get '/properties', to: 'properties#index'
