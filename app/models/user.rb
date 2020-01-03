@@ -8,4 +8,7 @@ class User < ApplicationRecord
   has_many :owned_properties, class_name: "Property", foreign_key: "owner_id"
   has_many :bids
   has_many :best_offers
+  has_many :buy_nows, -> { where(best_offer: false) }, class_name: "BuyNowOffer"
+  has_many :best_buy_nows, -> { where(best_offer: true) }, class_name: "BuyNowOffer"
+
 end
