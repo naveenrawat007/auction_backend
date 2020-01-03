@@ -11,6 +11,8 @@ module Api
               @buy_now.user_id = @current_user.id
               @buy_now.amount = params[:buy_now][:amount]
               @buy_now.save
+              @property.status = "Pending"
+              @property.save
               if params[:buy_now][:fund_proof].blank? == false
                 @buy_now.fund_proofs.destroy_all
                 @buy_now.fund_proofs.create(file: params[:buy_now][:fund_proof])
@@ -24,6 +26,8 @@ module Api
             @buy_now.user_id = @current_user.id
             @buy_now.amount = params[:buy_now][:amount]
             @buy_now.save
+            @property.status = "Pending"
+            @property.save    
             if params[:buy_now][:fund_proof].blank? == false
               @buy_now.fund_proofs.destroy_all
               @buy_now.fund_proofs.create(file: params[:buy_now][:fund_proof])
