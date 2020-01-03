@@ -39,11 +39,18 @@ class PropertyMailer < ApplicationMailer
     end
   end
 
-  def best_offer
+  def best_offer(user_id, property_id)
     @user = User.find_by(id: user_id)
     @property = Property.find_by(id: property_id)
     if @user && @property
       mail(to: [@user.email], subject: "Your Property is Open for accepting Offers.")
+    end
+  end
+  def post_action(user_id, property_id)
+    @user = User.find_by(id: user_id)
+    @property = Property.find_by(id: property_id)
+    if @user && @property
+      mail(to: [@user.email], subject: "Property is auction period is over.")
     end
   end
 end
