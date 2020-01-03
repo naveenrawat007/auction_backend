@@ -6,7 +6,7 @@ module Api
         @property = Property.find_by(id: params[:property][:id])
         if @property
           if params[:best_offer] == "true"
-            if @property.status == "Approve / Best Offer" && check_best_offer_time
+            if check_best_offer_time #&& @property.status == "Best Offer"
               @buy_now = @property.best_buy_nows.where(user_id: @current_user.id).first_or_create
               @buy_now.user_id = @current_user.id
               @buy_now.amount = params[:buy_now][:amount]
@@ -27,7 +27,7 @@ module Api
             @buy_now.amount = params[:buy_now][:amount]
             @buy_now.save
             @property.status = "Pending"
-            @property.save    
+            @property.save
             if params[:buy_now][:fund_proof].blank? == false
               @buy_now.fund_proofs.destroy_all
               @buy_now.fund_proofs.create(file: params[:buy_now][:fund_proof])
