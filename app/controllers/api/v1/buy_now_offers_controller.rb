@@ -9,7 +9,7 @@ module Api
             if @property.status == "Approve / Best Offer" && check_best_offer_time
               @buy_now = @property.best_buy_nows.where(user_id: @current_user.id).first_or_create
               @buy_now.user_id = @current_user.id
-              @buy_now.amount = @property.best_offer_sellers_reserve_price
+              @buy_now.amount = params[:buy_now][:amount]
               @buy_now.save
               if params[:buy_now][:fund_proof].blank? == false
                 @buy_now.fund_proofs.destroy_all
@@ -22,7 +22,7 @@ module Api
           else
             @buy_now = @property.buy_nows.where(user_id: @current_user.id).first_or_create
             @buy_now.user_id = @current_user.id
-            @buy_now.amount = @property.buy_now_price
+            @buy_now.amount = params[:buy_now][:amount]
             @buy_now.save
             if params[:buy_now][:fund_proof].blank? == false
               @buy_now.fund_proofs.destroy_all
