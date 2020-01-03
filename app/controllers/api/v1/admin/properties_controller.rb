@@ -34,10 +34,11 @@ module Api
                   if @property.auction_started_at.blank? == false
                     if @property.best_offer == true
                       Sidekiq::Client.enqueue_to_in("default", @property.auction_started_at , PropertyBestOfferWorker, @property.id)
-                      Sidekiq::Client.enqueue_to_in("default", @property.auction_started_at + @property.auction_started_at + @property.best_offer_length.to_i.days , PropertyLiveWorker, @property.id)
+                      Sidekiq::Client.enqueue_to_in("default", @property.auction_started_at + @property.best_offer_length.to_i.days , PropertyLiveWorker, @property.id)
                     else
                       Sidekiq::Client.enqueue_to_in("default", @property.auction_started_at , PropertyLiveWorker, @property.id)
                     end
+                    Sidekiq::Client.enqueue_to_in("default", @property.auction_started_at + @property.best_offer_length.to_i.days + @property.auction_length.to_i.days , PropertyPostAuctionWorker, @property.id)
                   end
                 end
               end
