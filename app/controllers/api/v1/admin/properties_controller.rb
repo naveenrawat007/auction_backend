@@ -6,9 +6,17 @@ module Api
 
         def index
           if params[:search_str].blank? == false
-            @properties = Property.where(status: params[:status]).where("lower(address) LIKE :search", search: "%#{params[:search_str].downcase}%").order(created_at: :desc).paginate(page: params[:page], per_page: 10)
+            if params[:status] == "Under Review"
+              @properties = Property.where(status: ["Under Review", "Approve"]).where("lower(address) LIKE :search", search: "%#{params[:search_str].downcase}%").order(created_at: :desc).paginate(page: params[:page], per_page: 10)
+            else
+              @properties = Property.where(status: params[:status]).where("lower(address) LIKE :search", search: "%#{params[:search_str].downcase}%").order(created_at: :desc).paginate(page: params[:page], per_page: 10)
+            end
           else
-            @properties = Property.where(status: params[:status]).order(created_at: :desc).paginate(page: params[:page], per_page: 10)
+            if params[:status] == "Under Review"
+              @properties = Property.where(status: ["Under Review", "Approve"]).order(created_at: :desc).paginate(page: params[:page], per_page: 10)
+            else
+              @properties = Property.where(status: params[:status]).order(created_at: :desc).paginate(page: params[:page], per_page: 10)
+            end
           end
           render json: {properties: ActiveModelSerializers::SerializableResource.new(@properties, each_serializer: UnderReviewPropertySerializer), property_statuses: Property.status ,status: 200, meta: {current_page: @properties.current_page, total_pages: @properties.total_pages} }
         end
@@ -22,9 +30,14 @@ module Api
               @property.save
               if old_status != @property.status
                 Sidekiq::Client.enqueue_to_in("default", Time.now , PropertyNotificationWorker, @property.id)
-                if @property.status == "Approve / Best Offer"
+                if @property.status == "Approve"
                   if @property.auction_started_at.blank? == false
-                    Sidekiq::Client.enqueue_to_in("default", @property.auction_started_at , PropertyLiveWorker, @property.id)
+                    if @property.best_offer == true
+                      Sidekiq::Client.enqueue_to_in("default", @property.auction_started_at , PropertyBestOfferWorker, @property.id)
+                      Sidekiq::Client.enqueue_to_in("default", @property.auction_started_at + @property.auction_started_at + @property.best_offer_length.to_i.days , PropertyLiveWorker, @property.id)
+                    else
+                      Sidekiq::Client.enqueue_to_in("default", @property.auction_started_at , PropertyLiveWorker, @property.id)
+                    end
                   end
                 end
               end
