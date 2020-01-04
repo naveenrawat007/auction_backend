@@ -22,6 +22,7 @@ class UnderReviewPropertySerializer < ActiveModel::Serializer
     data[:bids] = ActiveModelSerializers::SerializableResource.new(object.bids, each_serializer: BidSerializer)
     data[:owner_category] = object.owner_category ? object.owner_category : ""
     data[:highest_bid_detail] = object.bids.order(:amount).first ? BidSerializer.new(object.bids.order(:amount).first) : {}
+    data[:best_offers] = ActiveModelSerializers::SerializableResource.new(object.best_offers, each_serializer: BestOfferSerializer)
     data
   end
 

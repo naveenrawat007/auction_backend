@@ -14,7 +14,7 @@ module Api
 
       def index
         if params[:search_str].blank? == false
-          @properties = @current_user.owned_properties.where("lower(address) LIKE :search", search: "%#{params[:search_str].downcase}%").order(created_at: :desc).paginate(page: params[:page], per_page: 10)
+          @properties = @current_user.owned_properties.where("lower(address) LIKE :search OR lower(headliner) LIKE :search", search: "%#{params[:search_str].downcase}%").order(created_at: :desc).paginate(page: params[:page], per_page: 10)
         else
           @properties = @current_user.owned_properties.order(created_at: :desc).paginate(page: params[:page], per_page: 10)
         end
