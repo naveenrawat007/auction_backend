@@ -74,6 +74,7 @@ class PropertySerializer < ActiveModel::Serializer
     data[:unique_address] = object.unique_address
     data[:bids] = ActiveModelSerializers::SerializableResource.new(object.bids, each_serializer: BidSerializer)
     data[:best_offers] = ActiveModelSerializers::SerializableResource.new(object.best_offers, each_serializer: BestOfferSerializer)
+    data[:thumbnail_img] = get_thumbnail
     data
   end
   def property_images
@@ -113,6 +114,13 @@ class PropertySerializer < ActiveModel::Serializer
       end
     else
       false
+    end
+  end
+  def get_thumbnail
+    if object.photos.blank? == false
+      APP_CONFIG['backend_site_url'] + object.photos.first.image.url(:thumb)
+    else
+      ""
     end
   end
 end
