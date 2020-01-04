@@ -38,6 +38,13 @@ class PropertyMailer < ApplicationMailer
       mail(to: [@user.email], subject: "Offer recieved for #{@property.address}")
     end
   end
+  def bid_notification(user_id, property_id)
+    @user = User.find_by(id: user_id)
+    @property = Property.find_by(id: property_id)
+    if @user && @property
+      mail(to: [@user.email], subject: "Bid recieved for #{@property.address}")
+    end
+  end
 
   def best_offer(user_id, property_id)
     @user = User.find_by(id: user_id)

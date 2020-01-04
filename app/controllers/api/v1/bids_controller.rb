@@ -9,6 +9,7 @@ module Api
           @bid.user_id = @current_user.id
           @bid.amount = params[:bid][:amount]
           @bid.save
+          Sidekiq::Client.enqueue_to_in("default", Time.now , PropertyBidNotificationWorker, @property.id)
           if params[:bid][:fund_proof].blank? == false
             @bid.fund_proofs.destroy_all
             @bid.fund_proofs.create(file: params[:bid][:fund_proof])
