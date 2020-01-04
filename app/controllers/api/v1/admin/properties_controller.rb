@@ -18,7 +18,7 @@ module Api
               @properties = Property.where(status: params[:status]).order(created_at: :desc).paginate(page: params[:page], per_page: 10)
             end
           end
-          render json: {properties: ActiveModelSerializers::SerializableResource.new(@properties, each_serializer: UnderReviewPropertySerializer), property_statuses: Property.status ,status: 200, meta: {current_page: @properties.current_page, total_pages: @properties.total_pages} }
+          render json: {properties: ActiveModelSerializers::SerializableResource.new(@properties, each_serializer: UnderReviewPropertySerializer), property_statuses: Property.status, auction_lengths: Property.auction_length ,status: 200, meta: {current_page: @properties.current_page, total_pages: @properties.total_pages} }
         end
 
         def update_status
@@ -30,7 +30,16 @@ module Api
               @property.save
               if old_status != @property.status
                 Sidekiq::Client.enqueue_to_in("default", Time.now , PropertyNotificationWorker, @property.id)
-                if @property.status == "Approve"
+                if (@property.status == "Approve" || @property.status == "Live Online Bidding")
+                  if @property.status == "Live Online Bidding"
+                    @property.status = "Approve"
+                    @property.auction_started_at = params[:property][:auction_started_at]
+                    @property.auction_length = params[:property][:auction_length]
+                    if @property.auction_started_at.blank? == false
+                      @property.auction_started_at = @property.auction_started_at.beginning_of_day
+                    end
+                    @property.save
+                  end
                   if @property.auction_started_at.blank? == false
                     if @property.best_offer == true
                       Sidekiq::Client.enqueue_to_in("default", @property.auction_started_at , PropertyBestOfferWorker, @property.id)
@@ -49,6 +58,7 @@ module Api
                   @property.save
                 elsif @property.status == "Terminated"
                   @property.termination_date = Time.now
+                  @property.termination_reason = params[:property][:termination_reason]
                   @property.save
                 end
               end
