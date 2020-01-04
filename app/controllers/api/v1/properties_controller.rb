@@ -180,6 +180,14 @@ module Api
                 Sidekiq::Client.enqueue_to_in("default", Time.now , PropertyUnderReviewWorker, @current_user.id, @property.id)
               end
             end
+          else
+            if @current_user.is_admin? == false
+              if (@property.status != "Draft" || @property.status != "Terminated")
+                @property.status = "Under Review"
+                @property.submitted_at = Time.now
+                @property.save
+              end
+            end
           end
           render json: {property: PropertySerializer.new(@property), message: "Property updated sucessfully.", status: 200}, status: 200
         else
