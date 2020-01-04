@@ -43,6 +43,9 @@ module Api
                 elsif @property.status == "Under Review"
                   @property.submitted_at = Time.now
                   @property.save
+                elsif @property.status == "Terminated"
+                  @property.termination_date = Time.now
+                  @property.save
                 end
               end
             end
