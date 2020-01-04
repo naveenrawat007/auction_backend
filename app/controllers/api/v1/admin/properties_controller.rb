@@ -40,6 +40,9 @@ module Api
                     end
                     Sidekiq::Client.enqueue_to_in("default", @property.auction_started_at + @property.best_offer_length.to_i.days + @property.auction_length.to_i.days , PropertyPostAuctionWorker, @property.id)
                   end
+                elsif @property.status == "Under Review"
+                  @property.submitted_at = Time.now
+                  @property.save
                 end
               end
             end
