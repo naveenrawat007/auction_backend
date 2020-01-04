@@ -8,7 +8,7 @@ class PropertyPostAuctionWorker
       if property.status = "Approve"
         property.status = "Post Auction"
         if property.save
-          PropertyMailer.post_action(property.owner_id, property.id).deliver
+          PropertyMailer.post_auction(property.owner_id, property.id).deliver
         end
       end
     end
