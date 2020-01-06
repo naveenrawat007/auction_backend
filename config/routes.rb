@@ -16,6 +16,8 @@ Rails.application.routes.draw do
       get 'users/show', to: 'users#show'
       put "users/update_profile" => "users#update_profile"
       put "users/update_image" => 'users#update_image'
+
+      put "watch_properties" => 'properties#add_watch_properties'
       get "admin/users", to: 'admins#users_list'
 
       get 'properties/new', to: 'properties#new'
