@@ -62,7 +62,7 @@ module Api
         if @property
           @property.total_views += 1
           @property.save
-          render json: {property: PropertySerializer.new(@property), status: 200 }
+          render json: {property: PropertySerializer.new(@property), favourite: check_favourite(@property.id), status: 200 }
         else
           render json: {message: "This property does not exists", status: 404 }
         end
@@ -299,10 +299,21 @@ module Api
             render json: {message: "Property added to watch list.", status: 201 }, status: 200
           end
         else
-
+          render json: {message: "Please provide property.", status: 400 }, status: 200
         end
       end
       private
+      def check_favourite(property_id)
+        if @current_user
+          if @current_user.user_watch_property_ids.include?(property_id)
+            true
+          else
+            false
+          end
+        else
+          false
+        end
+      end
       def property_params
         params.require(:property).permit(:address, :city, :state, :zip_code, :lat, :long, :category, :p_type, :headliner, :mls_available, :flooded, :flood_count, :description, :owner_category, :title_status, :additional_information)
       end
