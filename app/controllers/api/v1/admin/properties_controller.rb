@@ -56,6 +56,7 @@ module Api
                 elsif @property.status == "Under Review"
                   @property.submitted_at = Time.now
                   @property.save
+                  Sidekiq::Client.enqueue_to_in("default", Time.now + Property.approve_time_delay, PropertyApproveWorker, @property.id)
                 elsif @property.status == "Terminated"
                   @property.termination_date = Time.now
                   @property.termination_reason = params[:property][:termination_reason]

@@ -46,7 +46,7 @@ module Api
           @property.status = "Under Review"
           @property.submitted_at = Time.now
           if @property.save
-            Sidekiq::Client.enqueue_to_in("default", Time.now + 24.hours, PropertyApproveWorker, @property.id)
+            Sidekiq::Client.enqueue_to_in("default", Time.now + Property.approve_time_delay, PropertyApproveWorker, @property.id)
             Sidekiq::Client.enqueue_to_in("default", Time.now , PropertyUnderReviewWorker, @current_user.id, @property.id)
             render json: {property: PropertySerializer.new(@property), message: "Property status updated sucessfully.", status: 200}, status: 200
           else
@@ -176,7 +176,7 @@ module Api
               if @property.save
                 @property.submitted_at = Time.now
                 @property.save
-                Sidekiq::Client.enqueue_to_in("default", Time.now + 24.hours, PropertyApproveWorker, @property.id)
+                Sidekiq::Client.enqueue_to_in("default", Time.now + Property.approve_time_delay, PropertyApproveWorker, @property.id)
                 Sidekiq::Client.enqueue_to_in("default", Time.now , PropertyUnderReviewWorker, @current_user.id, @property.id)
               end
             end

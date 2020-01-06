@@ -45,8 +45,8 @@ class UnderReviewPropertySerializer < ActiveModel::Serializer
 
   def submitted_timer
     if object.submitted_at
-      if (Time.now < (object.submitted_at + 24.hours))
-        (object.submitted_at + 24.hours)
+      if (Time.now < (object.submitted_at + Property.approve_time_delay))
+        (object.submitted_at + Property.approve_time_delay)
       else
         ""
       end
