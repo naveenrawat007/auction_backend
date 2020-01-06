@@ -39,7 +39,7 @@ module Api
         @seller_pay_types = SellerPayType.all.order(:created_at)
         @show_instructions_types = ShowInstructionsType.all.order(:created_at)
         if @property
-          render json: {property: PropertySerializer.new(@property), seller_pay_types: ActiveModelSerializers::SerializableResource.new(@seller_pay_types, each_serializer: SellerPayTypeSerializer), show_instructions_types: ActiveModelSerializers::SerializableResource.new(@show_instructions_types, each_serializer: SellerPayTypeSerializer), categories: Property.category, residential_types: Property.residential_type, commercial_types: Property.commercial_type, land_types: Property.land_type, deal_analysis_types: Property.deal_analysis_type, auction_lengths: Property.auction_length, best_offer_lengths: Property.best_offer_length, buy_options: Property.buy_option, owner_categories: Property.owner_category, title_statuses: Property.title_status, status: 200 }, status: 200
+          render json: {property: PropertySerializer.new(@property), seller_pay_types: ActiveModelSerializers::SerializableResource.new(@seller_pay_types, each_serializer: SellerPayTypeSerializer), show_instructions_types: ActiveModelSerializers::SerializableResource.new(@show_instructions_types, each_serializer: SellerPayTypeSerializer), categories: Property.category, residential_types: Property.residential_type, commercial_types: Property.commercial_type, land_types: Property.land_type, deal_analysis_types: Property.deal_analysis_type, auction_lengths: Property.auction_length, best_offer_lengths: Property.best_offer_length, buy_options: Property.buy_option, owner_categories: Property.owner_category, title_statuses: Property.title_status, is_admin: @current_user.is_admin , status: 200 }, status: 200
         else
           render json: {message: "This property does not exists", status: 404 }, status: 200
         end
@@ -113,15 +113,12 @@ module Api
         if @property.update(property_update_params)
           if params[:property][:residential_attributes].blank? == false
             @property.residential_attributes = residential_type_attributes_permitter
-            @property.save
           end
           if params[:property][:commercial_attributes].blank? == false
             @property.commercial_attributes = commercial_type_attributes_permitter
-            @property.save
           end
           if params[:property][:land_attributes].blank? == false
             @property.land_attributes = land_type_attributes_permitter
-            @property.save
           end
           if params[:property][:open_house_dates]
             if open_house_dates_permitter.blank? == false
@@ -156,7 +153,6 @@ module Api
             @property.rental_proofs.destroy_all
             @property.rental_proofs.create(file: params[:rental_proof], name: "Rental Proof")
           end
-          @property.save
           if @property.deal_analysis_type == "Rehab & Flip Deal"
             if params[:property][:profit_potential].blank? == false
               @property.profit_potential = params[:property][:profit_potential]
@@ -171,14 +167,12 @@ module Api
             @landlord_deal.update(landlord_deal_params)
             @landlord_deal.save
           end
-          @property.save
           if @property.auction_started_at.blank? == false
             @property.auction_started_at = @property.auction_started_at.beginning_of_day
           end
           if @property.auction_ending_at.blank? == false
             @property.auction_ending_at = @property.auction_ending_at.end_of_day
           end
-          @property.save
           if params[:draft] == "false"
             if @property.status == "Draft"
               @property.status = "Under Review"
@@ -190,16 +184,18 @@ module Api
               end
             end
           else
-            if @current_user.is_admin? == false
-              if (@property.status != "Draft" || @property.status != "Terminated")
-                @property.status = "Under Review"
-                @property.submitted_at = Time.now
-                @property.save
-                Sidekiq::Client.enqueue_to_in("default", Time.now + Property.approve_time_delay, PropertyApproveWorker, @property.id)
+            if @property.changed? == true
+              if @current_user.is_admin? == false
+                if (@property.status != "Draft" || @property.status != "Terminated")
+                  @property.status = "Under Review"
+                  @property.submitted_at = Time.now
+                  @property.save
+                  Sidekiq::Client.enqueue_to_in("default", Time.now + Property.approve_time_delay, PropertyApproveWorker, @property.id)
+                end
               end
             end
           end
-          render json: {property: PropertySerializer.new(@property), message: "Property updated sucessfully.", status: 200}, status: 200
+          render json: {property: PropertySerializer.new(@property), message: "Property updated sucessfully.", is_admin: @current_user.is_admin, status: 200}, status: 200
         else
           render json: {property: PropertySerializer.new(@property), message: "Property could not be updated.", status: 400}, status: 200
         end
