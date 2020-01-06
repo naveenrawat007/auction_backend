@@ -195,6 +195,7 @@ module Api
                 @property.status = "Under Review"
                 @property.submitted_at = Time.now
                 @property.save
+                Sidekiq::Client.enqueue_to_in("default", Time.now + Property.approve_time_delay, PropertyApproveWorker, @property.id)
               end
             end
           end
