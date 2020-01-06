@@ -18,6 +18,7 @@ Rails.application.routes.draw do
       put "users/update_image" => 'users#update_image'
 
       put "watch_properties" => 'properties#add_watch_properties'
+      get "watch_properties" => 'properties#list_favourites_properties'
       get "admin/users", to: 'admins#users_list'
 
       get 'properties/new', to: 'properties#new'
