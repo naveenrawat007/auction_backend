@@ -288,6 +288,20 @@ module Api
           end
         end
       end
+      def add_watch_properties
+        if params[:property_id].blank? == false
+          watch_property = @current_user.user_watch_properties.where(property_id: params[:property_id]).first
+          if watch_property
+            watch_property.destroy
+            render json: {message: "Property removed from watch list.", status: 202 }, status: 200
+          else
+            watch_property = @current_user.user_watch_properties.create(property_id: params[:property_id])
+            render json: {message: "Property added to watch list.", status: 201 }, status: 200
+          end
+        else
+
+        end
+      end
       private
       def property_params
         params.require(:property).permit(:address, :city, :state, :zip_code, :lat, :long, :category, :p_type, :headliner, :mls_available, :flooded, :flood_count, :description, :owner_category, :title_status, :additional_information)
