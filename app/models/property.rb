@@ -18,6 +18,7 @@ class Property < ApplicationRecord
   after_validation :geocode, if: ->(obj){ obj.lat.blank? or obj.long.blank? }
 
   after_create :generate_unique_address
+  has_many :user_watch_properties
 
   def generate_unique_address
     if self.address.blank? == false

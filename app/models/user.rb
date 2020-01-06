@@ -11,4 +11,6 @@ class User < ApplicationRecord
   has_many :buy_nows, -> { where(best_offer: false) }, class_name: "BuyNowOffer"
   has_many :best_buy_nows, -> { where(best_offer: true) }, class_name: "BuyNowOffer"
 
+  has_many :user_watch_properties
+  has_many :watch_properties, through: :user_watch_properties, source: :property
 end
