@@ -78,7 +78,7 @@ class Property < ApplicationRecord
     ["Edit Property listing", "Need to resolve title issues", "Getting extension from owner", "Getting needed repairs completed", "Setting up open house so buyers can inspect property", "Need to make changes before selling", "Need time before live online auction starts"]
   end
   def self.request_status
-    ["Terminate", "Withdraw / Draft"]
+    ["Terminated", "Withdraw / Draft"]
   end
 
   def self.approve_time_delay

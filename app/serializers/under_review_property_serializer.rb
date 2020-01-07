@@ -25,6 +25,7 @@ class UnderReviewPropertySerializer < ActiveModel::Serializer
     data[:best_offers] = ActiveModelSerializers::SerializableResource.new(object.best_offers, each_serializer: BestOfferSerializer)
     data[:requested_at] = object.requested_at ? object.requested_at.strftime("%b %e, %Y") : ""
     data[:request_reason] = object.request_reason ? object.request_reason : ""
+    data[:requested_status] = object.requested_status ? object.requested_status : ""
     data
   end
 
