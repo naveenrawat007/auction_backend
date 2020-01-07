@@ -7,9 +7,9 @@ module Api
         def index
           if params[:type] == "termination_request"
             if params[:search_str].blank? == false
-              @properties = Property.where(requested_status: "Terminate").where("lower(address) LIKE :search", search: "%#{params[:search_str].downcase}%").order(created_at: :desc).paginate(page: params[:page], per_page: 10)
+              @properties = Property.where(requested_status: "Terminated").where.not(status: "Terminated").where("lower(address) LIKE :search", search: "%#{params[:search_str].downcase}%").order(created_at: :desc).paginate(page: params[:page], per_page: 10)
             else
-              @properties = Property.where(requested_status: "Terminate").order(created_at: :desc).paginate(page: params[:page], per_page: 10)
+              @properties = Property.where(requested_status: "Terminated").where.not(status: "Terminated").order(created_at: :desc).paginate(page: params[:page], per_page: 10)
             end
             render json: {properties: ActiveModelSerializers::SerializableResource.new(@properties, each_serializer: UnderReviewPropertySerializer),status: 200, meta: {current_page: @properties.current_page, total_pages: @properties.total_pages} }
           else
