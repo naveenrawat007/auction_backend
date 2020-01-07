@@ -35,6 +35,8 @@ Rails.application.routes.draw do
       post 'properties/best_offers', to: 'best_offers#create'
       post 'properties/buy_now_offers', to: 'buy_now_offers#create'
 
+      put 'properties/request_status', to: 'properties#request_status'
+
       namespace 'admin' do
         get '/properties', to: 'properties#index'
         put 'properties/status', to: 'properties#update_status'

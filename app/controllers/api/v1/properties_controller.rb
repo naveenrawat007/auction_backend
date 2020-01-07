@@ -27,7 +27,20 @@ module Api
         else
           @properties = @current_user.owned_properties.order(created_at: :desc).paginate(page: params[:page], per_page: 10)
         end
-        render json: {properties: ActiveModelSerializers::SerializableResource.new(@properties, each_serializer: PropertySerializer), status: 200, meta: {current_page: @properties.current_page, total_pages: @properties.total_pages} }
+        render json: {properties: ActiveModelSerializers::SerializableResource.new(@properties, each_serializer: PropertySerializer), status: 200, meta: {current_page: @properties.current_page, total_pages: @properties.total_pages}, request_statuses: Property.request_status, termination_reasons: Property.termination_reason, withdraw_reasons: Property.withdraw_reason }
+      end
+
+      def request_status
+        @property = Property.find_by(id: params[:property][:id])
+        if @property
+          @property.requested_status = params[:property][:request_status]
+          @property.requested_at = Time.now
+          @property.request_reason = params[:property][:request_reason]
+          @property.save
+          render json: {message: "Requested status saved.", status: 200}, status: 200
+        else
+          render json: {message: "Property not found.", status: 400}, status: 200
+        end
       end
 
       def edit
