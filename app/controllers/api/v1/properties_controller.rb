@@ -321,6 +321,13 @@ module Api
           render json: {message: "Please provide property.", status: 400 }, status: 200
         end
       end
+
+      def share
+        if params[:property][:email].blank? == false
+          Sidekiq::Client.enqueue_to_in("default", Time.now , PropertyShareLinkWorker, params[:property][:email], params[:property][:id], params[:property][:link])
+          render json: {message: "Property shared.", status: 200 }, status: 200
+        end
+      end
       private
       def check_favourite(property_id)
         if @current_user
