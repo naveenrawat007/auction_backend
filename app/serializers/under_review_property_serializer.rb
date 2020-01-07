@@ -23,6 +23,8 @@ class UnderReviewPropertySerializer < ActiveModel::Serializer
     data[:owner_category] = object.owner_category ? object.owner_category : ""
     data[:highest_bid_detail] = object.bids.order(:amount).first ? BidSerializer.new(object.bids.order(:amount).first) : {}
     data[:best_offers] = ActiveModelSerializers::SerializableResource.new(object.best_offers, each_serializer: BestOfferSerializer)
+    data[:requested_at] = object.requested_at ? object.requested_at.strftime("%b %e, %Y") : ""
+    data[:request_reason] = object.request_reason ? object.request_reason : ""
     data
   end
 
