@@ -60,4 +60,8 @@ class PropertyMailer < ApplicationMailer
       mail(to: [@user.email], subject: "Property's auction period is over.")
     end
   end
+  def share_link(email, link)
+    @link = link
+    mail(to: [email], subject: "Property is Shared.")
+  end
 end
