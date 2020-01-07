@@ -70,6 +70,14 @@ class Property < ApplicationRecord
     ["Owner", "Wholesaler", "Realtor"]
   end
 
+  def self.termination_reason
+    ["Title Issue can't get cleared", "Seller backed out of contract", "Sold to Outside Buyer", "Decided to keep property", "Legal issues can't get resolved"]
+  end
+
+  def self.withdraw_reason
+    ["Edit Property listing", "Need to resolve title issues", "Getting extension from owner", "Getting needed repairs completed", "Setting up open house so buyers can inspect property", "Need to make changes before selling", "Need time before live online auction starts"]
+  end
+
   def self.approve_time_delay
     24.hours
   end
