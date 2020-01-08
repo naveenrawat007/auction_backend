@@ -97,7 +97,7 @@ class Property < ApplicationRecord
     if self.best_offer == true
       self.auction_started_at ? self.auction_started_at + self.best_offer_length.to_i.days + self.auction_length.to_i.days : ""
     else
-      self.auction_started_at ? self.auction_started_at + self.auction_length.to_i.days : ""
+      self.auction_started_at ? self.auction_started_at + self.auction_length.to_i.days + self.sniper_length.minutes : ""
     end
   end
 
