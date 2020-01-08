@@ -10,7 +10,7 @@ class Property < ApplicationRecord
 
   has_many :buy_nows, -> { where(best_offer: false) }, class_name: "BuyNowOffer"
   has_many :best_buy_nows, -> { where(best_offer: true) }, class_name: "BuyNowOffer"
-
+  has_many :buy_now_offers
   has_many :arv_proofs, -> { where(name: "Arv Proof") }, as: :resource, class_name: "Attachment"
   has_many :rehab_cost_proofs, -> { where(name: "Rehab Cost Proof") }, as: :resource, class_name: "Attachment"
   has_many :rental_proofs, -> { where(name: "Rental Proof") }, as: :resource, class_name: "Attachment"
