@@ -22,10 +22,30 @@ module Api
       end
 
       def index
-        if params[:search_str].blank? == false
-          @properties = @current_user.owned_properties.where("lower(address) LIKE :search OR lower(headliner) LIKE :search", search: "%#{params[:search_str].downcase}%").order(created_at: :desc).paginate(page: params[:page], per_page: 10)
+        if params[:type] == "offer"
+          if params[:search_str].blank? == false
+            @properties = @current_user.best_offered_properties.where("lower(address) LIKE :search OR lower(headliner) LIKE :search", search: "%#{params[:search_str].downcase}%").order(created_at: :desc).paginate(page: params[:page], per_page: 10)
+          else
+            @properties = @current_user.best_offered_properties.order(created_at: :desc).paginate(page: params[:page], per_page: 10)
+          end
+        elsif params[:type] == "bid"
+          if params[:search_str].blank? == false
+            @properties = @current_user.bidded_properties.where("lower(address) LIKE :search OR lower(headliner) LIKE :search", search: "%#{params[:search_str].downcase}%").order(created_at: :desc).paginate(page: params[:page], per_page: 10)
+          else
+            @properties = @current_user.bidded_properties.order(created_at: :desc).paginate(page: params[:page], per_page: 10)
+          end
+        elsif params[:type] == "buy_now"
+          if params[:search_str].blank? == false
+            @properties = @current_user.buy_now_offered_properties.where("lower(address) LIKE :search OR lower(headliner) LIKE :search", search: "%#{params[:search_str].downcase}%").order(created_at: :desc).paginate(page: params[:page], per_page: 10)
+          else
+            @properties = @current_user.buy_now_offered_properties.order(created_at: :desc).paginate(page: params[:page], per_page: 10)
+          end
         else
-          @properties = @current_user.owned_properties.order(created_at: :desc).paginate(page: params[:page], per_page: 10)
+          if params[:search_str].blank? == false
+            @properties = @current_user.owned_properties.where("lower(address) LIKE :search OR lower(headliner) LIKE :search", search: "%#{params[:search_str].downcase}%").order(created_at: :desc).paginate(page: params[:page], per_page: 10)
+          else
+            @properties = @current_user.owned_properties.order(created_at: :desc).paginate(page: params[:page], per_page: 10)
+          end
         end
         render json: {properties: ActiveModelSerializers::SerializableResource.new(@properties, each_serializer: PropertySerializer), status: 200, meta: {current_page: @properties.current_page, total_pages: @properties.total_pages}, request_statuses: Property.request_status, termination_reasons: Property.termination_reason, withdraw_reasons: Property.withdraw_reason }
       end
