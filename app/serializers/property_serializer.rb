@@ -74,6 +74,7 @@ class PropertySerializer < ActiveModel::Serializer
     data[:unique_address] = object.unique_address
     data[:bids] = ActiveModelSerializers::SerializableResource.new(object.bids, each_serializer: BidSerializer)
     data[:best_offers] = ActiveModelSerializers::SerializableResource.new(object.best_offers, each_serializer: BestOfferSerializer)
+    data[:buy_now_offers] = ActiveModelSerializers::SerializableResource.new(object.buy_now_offers, each_serializer: BuyNowSerializer)
     data[:thumbnail_img] = get_thumbnail
     data
   end
