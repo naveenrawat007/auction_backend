@@ -61,7 +61,7 @@ module Api
                     else
                       Sidekiq::Client.enqueue_to_in("default", @property.auction_started_at , PropertyLiveWorker, @property.id)
                     end
-                    Sidekiq::Client.enqueue_to_in("default", @property.auction_started_at + @property.best_offer_length.to_i.days + @property.auction_length.to_i.days , PropertyPostAuctionWorker, @property.id)
+                    Sidekiq::Client.enqueue_to_in("default", @property.bidding_ending_at, PropertyPostAuctionWorker, @property.id)
                   else
                     @property.status = "Hold"
                     @property.save
