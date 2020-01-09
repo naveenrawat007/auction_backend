@@ -9,6 +9,7 @@ module Api
             @bid = @property.bids.where(user_id: @current_user.id).first_or_create
             @bid.user_id = @current_user.id
             @bid.amount = params[:bid][:amount]
+            @bid.buy_option = buy_option_permitter
             @bid.save
             if (@property.bidding_ending_at - Time.now < 1.minutes) #time check for bidding time
               @property.sniper = true
@@ -28,6 +29,10 @@ module Api
         else
           render json: {message: "Property Not Found.", status: "404"}, status: 200
         end
+      end
+      private
+      def buy_option_permitter
+        JSON.parse(params[:bid][:buy_option])
       end
     end
   end

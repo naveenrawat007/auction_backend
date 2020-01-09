@@ -10,6 +10,7 @@ module Api
               @buy_now = @property.best_buy_nows.where(user_id: @current_user.id).first_or_create
               @buy_now.user_id = @current_user.id
               @buy_now.amount = params[:buy_now][:amount]
+              @buy_now.buy_option = buy_option_permitter
               @buy_now.save
               @property.status = "Pending"
               @property.save
@@ -25,6 +26,7 @@ module Api
             @buy_now = @property.buy_nows.where(user_id: @current_user.id).first_or_create
             @buy_now.user_id = @current_user.id
             @buy_now.amount = params[:buy_now][:amount]
+            @buy_now.buy_option = buy_option_permitter
             @buy_now.save
             @property.status = "Pending"
             @property.save
@@ -49,6 +51,9 @@ module Api
         else
           false
         end
+      end
+      def buy_option_permitter
+        JSON.parse(params[:buy_now][:buy_option])
       end
     end
   end
