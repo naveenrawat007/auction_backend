@@ -53,11 +53,20 @@ module Api
       def request_status
         @property = Property.find_by(id: params[:property][:id])
         if @property
-          @property.requested_status = params[:property][:request_status]
-          @property.requested_at = Time.now
-          @property.request_reason = params[:property][:request_reason]
-          @property.save
-          render json: {message: "Requested status saved.", status: 200}, status: 200
+          if (@property.status != "Draft" || @property.status != "Terminated") && (params[:property][:request_status] != @property.requested_status)
+            if params[:property][:request_status] == "Withdraw / Draft"
+              @property.status = "Under Review"
+              @property.requested = true
+              Sidekiq::Client.enqueue_to_in("default", Time.now + Property.approve_time_delay , PropertyDraftWorker, @property.id)
+            end
+            @property.requested_status = params[:property][:request_status]
+            @property.requested_at = Time.now
+            @property.request_reason = params[:property][:request_reason]
+            @property.save
+            render json: {message: "Requested status saved.", status: 200}, status: 200
+          else
+            render json: {message: "Request can not be submitted.", status: 400}, status: 200
+          end
         else
           render json: {message: "Property not found.", status: 400}, status: 200
         end
