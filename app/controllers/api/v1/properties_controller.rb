@@ -113,9 +113,9 @@ module Api
         if @property
           @property.total_views += 1
           @property.save
-          render json: {property: PropertySerializer.new(@property), favourite: check_favourite(@property.id), status: 200 }
+          render json: {property: PropertySerializer.new(@property), favourite: check_favourite(@property.id), buy_options: Property.buy_option, status: 200 }, status: 200
         else
-          render json: {message: "This property does not exists", status: 404 }
+          render json: {message: "This property does not exists", status: 404 }, status: 200
         end
       end
 
