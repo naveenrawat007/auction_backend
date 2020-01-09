@@ -15,13 +15,13 @@ module Api
           else
             if params[:search_str].blank? == false
               if params[:status] == "Under Review"
-                @properties = Property.where(status: ["Under Review", "Approve"]).where("lower(address) LIKE :search", search: "%#{params[:search_str].downcase}%").order(created_at: :desc).paginate(page: params[:page], per_page: 10)
+                @properties = Property.where(status: ["Under Review", "Approve"], requested: true).where("lower(address) LIKE :search", search: "%#{params[:search_str].downcase}%").order(created_at: :desc).paginate(page: params[:page], per_page: 10)
               else
                 @properties = Property.where(status: params[:status]).where("lower(address) LIKE :search", search: "%#{params[:search_str].downcase}%").order(created_at: :desc).paginate(page: params[:page], per_page: 10)
               end
             else
               if params[:status] == "Under Review"
-                @properties = Property.where(status: ["Under Review", "Approve"]).order(created_at: :desc).paginate(page: params[:page], per_page: 10)
+                @properties = Property.where(status: ["Under Review", "Approve"], requested: true).order(created_at: :desc).paginate(page: params[:page], per_page: 10)
               else
                 @properties = Property.where(status: params[:status]).order(created_at: :desc).paginate(page: params[:page], per_page: 10)
               end
@@ -67,6 +67,9 @@ module Api
                     @property.save
                     Sidekiq::Client.enqueue_to_in("default", Time.now , PropertyNotificationWorker, @property.id)
                   end
+                elsif @property.status == "Draft"
+                  @property.requested = false
+                  @property.save
                 elsif @property.status == "Under Review"
                   @property.submitted_at = Time.now
                   @property.save
