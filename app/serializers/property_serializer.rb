@@ -1,8 +1,8 @@
 class PropertySerializer < ActiveModel::Serializer
   def attributes(*args)
     data = super
-    data[:created_at] = object.created_at.strftime("%B %e, %Y")
-    data[:updated_at] = object.updated_at.strftime("%B %e, %Y")
+    data[:created_at] = object.created_at.strftime("%m/%d/%Y")
+    data[:updated_at] = object.updated_at.strftime("%m/%d/%Y")
     data[:id] = object.id
     data[:address] = object.address ? object.address : ""
     data[:city] = object.city ? object.city : ""
@@ -50,7 +50,7 @@ class PropertySerializer < ActiveModel::Serializer
     data[:auction_bidding_started_at] = object.bidding_started_at
     data[:auction_bidding_ending_at] = object.bidding_ending_at
     data[:auction_ending_at] = object.auction_ending_at ? object.auction_ending_at : ""
-    data[:closing_date] = object.auction_ending_at ? object.auction_ending_at.strftime("%B %e, %Y") : ""
+    data[:closing_date] = object.auction_ending_at ? object.auction_ending_at.strftime("%m/%d/%Y") : ""
     data[:status] = object.status
     data[:owner] = object.owner.first_name.to_s + " " + object.owner.last_name.to_s
     data[:seller_pay_type_id] = object.seller_pay_type_id ? object.seller_pay_type_id : ""
