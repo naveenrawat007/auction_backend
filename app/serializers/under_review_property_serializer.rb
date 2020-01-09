@@ -15,7 +15,7 @@ class UnderReviewPropertySerializer < ActiveModel::Serializer
     data[:auction_started_at] = object.auction_started_at ? object.auction_started_at.strftime("%b %e, %Y") : ""
     data[:auction_bidding_ending_at] = object.bidding_ending_at
     data[:auction_length] = object.auction_length
-    data[:best_offer] = object.best_offer 
+    data[:best_offer] = object.best_offer
     data[:best_offer_auction_started_at] = object.auction_started_at ? object.auction_started_at : ""
     data[:best_offer_auction_ending_at] = object.auction_started_at ? object.auction_started_at + object.best_offer_length.to_i.days : ""
     data[:submitted_at_timer] = submitted_timer
@@ -27,7 +27,9 @@ class UnderReviewPropertySerializer < ActiveModel::Serializer
     data[:requested_at] = object.requested_at ? object.requested_at.strftime("%b %e, %Y") : ""
     data[:request_reason] = object.request_reason ? object.request_reason : ""
     data[:requested_status] = object.requested_status ? object.requested_status : ""
-    data[:auction_type] = object.status == "Under Review" ? "Under Review" : (object.best_offer ? "Best Offer" : "Live Online Bidding")
+    data[:auction_type] = object.requested ? "Withdraw / Draft" : (object.status == "Under Review" ? "Under Review" : (object.best_offer ? "Best Offer" : "Live Online Bidding"))
+    data[:requested] = object.requested
+    data[:requested_timer] = requested_timer
     data
   end
 
@@ -52,6 +54,17 @@ class UnderReviewPropertySerializer < ActiveModel::Serializer
     if object.submitted_at
       if (Time.now < (object.submitted_at + Property.approve_time_delay))
         (object.submitted_at + Property.approve_time_delay)
+      else
+        ""
+      end
+    else
+      ""
+    end
+  end
+  def requested_timer
+    if object.requested_at
+      if (Time.now < (object.requested_at + Property.approve_time_delay))
+        (object.requested_at + Property.approve_time_delay)
       else
         ""
       end
