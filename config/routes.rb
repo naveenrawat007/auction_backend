@@ -37,7 +37,7 @@ Rails.application.routes.draw do
 
       put 'properties/request_status', to: 'properties#request_status'
       put 'properties/share', to: 'properties#share'
-
+      put 'properties/accept_offer', to: 'properties#accept_offer'
       namespace 'admin' do
         get '/properties', to: 'properties#index'
         put 'properties/status', to: 'properties#update_status'
