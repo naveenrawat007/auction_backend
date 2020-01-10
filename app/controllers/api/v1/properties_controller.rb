@@ -362,33 +362,31 @@ module Api
         @property = Property.find_by(id: params[:property_id])
         if @property
           if params[:offer_type] == "Bid"
-            @bid = @property.bids.find_by(id: params[:offer_id])
-            if @bid.accepted != true
-              @bid.accepted = true
-              @bid.save
-              Sidekiq::Client.enqueue_to_in("default", Time.now, AcceptOfferNotificationWorker, @property.id, @bid.id, "Bid")
-            end
+            @offer = @property.bids.find_by(id: params[:offer_id])
           elsif params[:offer_type] == "Best Offer"
-            @best_offer = @property.best_offers.find_by(id: params[:offer_id])
-            if @best_offer.accepted != true
-              @best_offer.accepted =true
-              @best_offer.save
-              Sidekiq::Client.enqueue_to_in("default", Time.now, AcceptOfferNotificationWorker, @property.id, @best_offer.id, "Best Offer")
-            end
+            @offer = @property.best_offers.find_by(id: params[:offer_id])
           elsif (params[:offer_type] == "Buy Now" || params[:offer_type] == "Best / Buy Now")
-            @buy_now = @property.buy_now_offers.find_by(id: params[:offer_id])
-            if @buy_now.accepted != true
-              @buy_now.accepted = true
-              @buy_now.save
-              Sidekiq::Client.enqueue_to_in("default", Time.now, AcceptOfferNotificationWorker, @property.id, @buy_now.id, "Buy Now")
+            @offer = @property.buy_now_offers.find_by(id: params[:offer_id])
+          end
+          if params[:accepted] == "false"
+            if @offer.accepted != false
+              @offer.accepted = false
+              @offer.save
             end
+            render json: {message: "Offer rejected.", status: 200}, status: 200
+          else
+            if @offer.accepted != true
+              @offer.accepted = true
+              @offer.save
+              Sidekiq::Client.enqueue_to_in("default", Time.now, AcceptOfferNotificationWorker, @property.id, @offer.id, params[:offer_type])
+            end
+            if (@property.status != "Pending") || (@property.status != "Terminated")
+              @property.status = "Pending"
+              @property.save
+              Sidekiq::Client.enqueue_to_in("default", Time.now, PropertyNotificationWorker, @property.id)
+            end
+            render json: {message: "Offer accepted.", status: 200}, status: 200
           end
-          if (@property.status != "Pending") || (@property.status != "Terminated")
-            @property.status = "Pending"
-            @property.save
-            Sidekiq::Client.enqueue_to_in("default", Time.now, PropertyNotificationWorker, @property.id)
-          end
-          render json: {message: "offer accepted.", status: 200}, status: 200
         else
           render json: {message: "Property could not be found.", status: 400}, status: 200
         end
