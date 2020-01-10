@@ -9,6 +9,7 @@ class BuyNowSerializer < ActiveModel::Serializer
     data[:time] = object.updated_at.strftime("%m/%d/%Y | %l:%M%p")
     data[:fund_proof] = object.get_fund_proof
     data[:user_type] = user_type
+    data[:accepted] = object.accepted
     data
   end
   def check_type
