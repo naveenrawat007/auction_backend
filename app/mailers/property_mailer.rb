@@ -64,4 +64,28 @@ class PropertyMailer < ApplicationMailer
     @link = link
     mail(to: [email], subject: "Property is Shared.")
   end
+  def bid_accept(owner_id, property_id, user_id)
+    @owner = User.find_by(id: owner_id)
+    @property = Property.find_by(id: property_id)
+    @user = User.find_by(id: user_id)
+    if @owner && @property && @user
+      mail(to: [@user.email], subject: "Your Bid is accepted and is in pending status.")
+    end
+  end
+  def best_offer_accept(owner_id, property_id, user_id)
+    @owner = User.find_by(id: owner_id)
+    @property = Property.find_by(id: property_id)
+    @user = User.find_by(id: user_id)
+    if @owner && @property && @user
+      mail(to: [@user.email], subject: "Your Best Offer is accepted and is in pending status.")
+    end
+  end
+  def buy_now_accept(owner_id, property_id, user_id)
+    @owner = User.find_by(id: owner_id)
+    @property = Property.find_by(id: property_id)
+    @user = User.find_by(id: user_id)
+    if @owner && @property && @user
+      mail(to: [@user.email], subject: "Your Buy Offer is accepted and is in pending status.")
+    end
+  end
 end
