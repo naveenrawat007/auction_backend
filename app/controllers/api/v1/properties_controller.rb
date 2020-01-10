@@ -369,7 +369,7 @@ module Api
             @best_offer = @property.best_offers.find_by(id: params[:offer_id])
             @best_offer.accepted =true
             @best_offer.save
-          elsif params[:offer_type] == "Buy Now"
+          elsif (params[:offer_type] == "Buy Now" || params[:offer_type] == "Best / Buy Now")
             @buy_now = @property.buy_now_offers.find_by(id: params[:offer_id])
             @buy_now.accepted = true
             @buy_now.save
