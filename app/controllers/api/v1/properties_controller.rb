@@ -357,6 +357,32 @@ module Api
           render json: {message: "Property shared.", status: 200 }, status: 200
         end
       end
+
+      def accept_offer
+        @property = Property.find_by(id: params[:property_id])
+        if @property
+          if params[:offer_type] == "Bid"
+            @bid = @property.bids.find_by(id: params[:offer_id])
+            @bid.accepted = true
+            @bid.save
+          elsif params[:offer_type] == "Best Offer"
+            @best_offer = @property.best_offers.find_by(id: params[:offer_id])
+            @best_offer.accepted =true
+            @best_offer.save
+          elsif params[:offer_type] == "Buy Now"
+            @buy_now = @property.buy_now_offers.find_by(id: params[:offer_id])
+            @buy_now.accepted = true
+            @buy_now.save
+          end
+          if (@property.status != "Pending") || (@property.status != "Terminated")
+            @property.status = "Pending"
+            @property.save
+          end
+          render json: {message: "offer accepted.", status: 200}, status: 200
+        else
+          render json: {message: "Property could not be found.", status: 400}, status: 200
+        end
+      end
       private
       def check_favourite(property_id)
         if @current_user
