@@ -15,7 +15,7 @@ class AcceptOfferNotificationWorker
         if best_offer
           PropertyMailer.best_offer_accept(property.owner_id, property.id, best_offer.user_id).deliver
         end
-      elsif offer_type == "Buy Now"
+      elsif (offer_type == "Buy Now"|| offer_type == "Best / Buy Now")
         buy_now = property.buy_now_offers.find_by(id: offer_id)
         if buy_now
           PropertyMailer.buy_now_accept(property.owner_id, property.id, buy_now.user_id).deliver
