@@ -113,7 +113,15 @@ module Api
         if @property
           @property.total_views += 1
           @property.save
-          render json: {property: PropertySerializer.new(@property), favourite: check_favourite(@property.id), buy_options: Property.buy_option, status: 200 }, status: 200
+          if @property.lat.blank? == false && @property.long.blank? == false
+            @near_properties = Property.where(status: ["Live Online Bidding", "Approve"]).near([@property.lat, @property.long], 50000, units: :km).limit(4)
+            if @near_properties.length < 4
+              @near_properties = @near_properties + (Property.where(status: ["Live Online Bidding", "Approve"]).where.not(id: @near_properties.ids).order(address: :asc).limit(4-@near_properties.length))
+            end
+          else
+            @near_properties = Property.where(status: ["Live Online Bidding", "Approve"]).order(address: :asc).limit(4)
+          end
+          render json: {property: PropertySerializer.new(@property), favourite: check_favourite(@property.id), buy_options: Property.buy_option, near_properties: ActiveModel::Serializer::CollectionSerializer.new(@near_properties, each_serializer: UnderReviewPropertySerializer), status: 200 }, status: 200
         else
           render json: {message: "This property does not exists", status: 404 }, status: 200
         end
