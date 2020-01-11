@@ -8,6 +8,10 @@ class UnderReviewPropertySerializer < ActiveModel::Serializer
     data[:last_name] = object.owner.last_name
     data[:user_type] = user_type
     data[:address] = object.address
+    data[:category] = object.category
+    data[:land_attributes] = object.category == "Land" ? object.land_attributes : {}
+    data[:residential_attributes] = object.category == "Residential" ? object.residential_attributes : {}
+    data[:commercial_attributes] = object.category == "Commercial" ? object.commercial_attributes : {}
     data[:status] = object.status
     data[:submitted_at] = object.submitted_at ? object.submitted_at.strftime("%m/%d/%Y") : ""
     data[:termination_date] = object.termination_date ? object.termination_date.strftime("%m/%d/%Y") : ""
