@@ -41,7 +41,7 @@ module Api
             end
           end
         else
-          render json: {message: "Property Not Found.", status: "404"}, status: 200
+          render json: {message: "Property Not Found.", status: 404}, status: 200
         end
       end
       private

@@ -8,30 +8,35 @@ module Api
           if @property.owner_id == @current_user.id
             render json: {property: PropertySerializer.new(@property), message: "Can not submit proposal on own property.", status: 400 }, status: 200 and return
           else
+            hightest_bid_offer = @property.bids.maximum(:amount)
             if @property.bidding_ending_at > Time.now
-              @bid = @property.bids.where(user_id: @current_user.id).first_or_create
-              @bid.user_id = @current_user.id
-              @bid.amount = params[:bid][:amount]
-              @bid.buy_option = buy_option_permitter
-              @bid.save
-              if (@property.bidding_ending_at - Time.now < 1.minutes) #time check for bidding time
-                @property.sniper = true
-                @property.sniper_length += 3 #count of time duration increasing in minutes
-                @property.save
-                Sidekiq::Client.enqueue_to_in("default", @property.bidding_ending_at, PropertyPostAuctionWorker, @property.id)
+              if params[:bid][:amount].to_f > hightest_bid_offer
+                @bid = @property.bids.where(user_id: @current_user.id).first_or_create
+                @bid.user_id = @current_user.id
+                @bid.amount = params[:bid][:amount]
+                @bid.buy_option = buy_option_permitter
+                @bid.save
+                if (@property.bidding_ending_at - Time.now < 1.minutes) #time check for bidding time
+                  @property.sniper = true
+                  @property.sniper_length += 3 #count of time duration increasing in minutes
+                  @property.save
+                  Sidekiq::Client.enqueue_to_in("default", @property.bidding_ending_at, PropertyPostAuctionWorker, @property.id)
+                end
+                Sidekiq::Client.enqueue_to_in("default", Time.now , PropertyBidNotificationWorker, @property.id)
+                if params[:bid][:fund_proof].blank? == false
+                  @bid.fund_proofs.destroy_all
+                  @bid.fund_proofs.create(file: params[:bid][:fund_proof])
+                end
+                render json: {property: PropertySerializer.new(@property), message: "Bid Created.", status: 201 }, status: 200
+              else
+                render json: {message: "This amount is less than last Submitted bid.", status: 404 }, status: 200
               end
-              Sidekiq::Client.enqueue_to_in("default", Time.now , PropertyBidNotificationWorker, @property.id)
-              if params[:bid][:fund_proof].blank? == false
-                @bid.fund_proofs.destroy_all
-                @bid.fund_proofs.create(file: params[:bid][:fund_proof])
-              end
-              render json: {property: PropertySerializer.new(@property), message: "Bid Created.", status: 201 }, status: 200
             else
-              render json: {message: "Auction time period is over.", status: "404" }, status: 200
+              render json: {message: "Auction time period is over.", status: 404 }, status: 200
             end
           end
         else
-          render json: {message: "Property Not Found.", status: "404"}, status: 200
+          render json: {message: "Property Not Found.", status: 404}, status: 200
         end
       end
       private
