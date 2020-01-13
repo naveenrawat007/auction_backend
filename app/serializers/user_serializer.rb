@@ -19,6 +19,7 @@ class UserSerializer < ActiveModel::Serializer
     data[:realtor_licence] = object.realtor_licence ? object.realtor_licence : ""
     data[:type_attributes] = object.type_attributes
     data[:is_admin] = object.is_admin
+    data[:status] = object.status
     data
   end
   def user_image
