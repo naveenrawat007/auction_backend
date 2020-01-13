@@ -17,4 +17,8 @@ class User < ApplicationRecord
 
   has_many :user_watch_properties
   has_many :watch_properties, through: :user_watch_properties, source: :property
+
+  def self.status
+    ['Free', 'Premium', 'Ban']
+  end
 end
