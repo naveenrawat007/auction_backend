@@ -53,7 +53,7 @@ module Api
       def request_status
         @property = Property.find_by(id: params[:property][:id])
         if @property
-          if (@property.status != "Draft" || @property.status != "Terminated") && (params[:property][:request_status] != @property.requested_status)
+          if (@property.status != "Draft" || @property.status != "Terminated") && ((params[:property][:request_status] != @property.requested_status ) || (@property.requested == false))
             if params[:property][:request_status] == "Withdraw / Draft"
               @property.status = "Under Review"
               @property.bids.destroy_all
