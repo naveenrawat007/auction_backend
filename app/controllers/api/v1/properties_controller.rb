@@ -366,6 +366,8 @@ module Api
         if params[:property][:email].blank? == false
           Sidekiq::Client.enqueue_to_in("default", Time.now , PropertyShareLinkWorker, params[:property][:email], params[:property][:id], params[:property][:link])
           render json: {message: "Property shared.", status: 200 }, status: 200
+        else
+          render json: {message: "Email can not be blank.", status: 400 }, status: 200
         end
       end
 
