@@ -20,6 +20,7 @@ Rails.application.routes.draw do
       put "watch_properties" => 'properties#add_watch_properties'
       get "watch_properties" => 'properties#list_favourites_properties'
       get "admin/users", to: 'admins#users_list'
+      put "admin/users/status", to: 'admins#update_status'
 
       get 'properties/new', to: 'properties#new'
       put 'properties/submit', to: 'properties#submit_for_review'
