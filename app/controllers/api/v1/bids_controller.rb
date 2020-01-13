@@ -20,7 +20,9 @@ module Api
                   @property.sniper = true
                   @property.sniper_length += 3 #count of time duration increasing in minutes
                   @property.save
-                  Sidekiq::Client.enqueue_to_in("default", @property.bidding_ending_at, PropertyPostAuctionWorker, @property.id)
+                  post_auction_worker_jid = Sidekiq::Client.enqueue_to_in("default", @property.bidding_ending_at, PropertyPostAuctionWorker, @property.id)
+                  @property.post_auction_worker_jid = post_auction_worker_jid
+                  @property.save
                 end
                 Sidekiq::Client.enqueue_to_in("default", Time.now , PropertyBidNotificationWorker, @property.id)
                 if params[:bid][:fund_proof].blank? == false

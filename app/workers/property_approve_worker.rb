@@ -16,7 +16,9 @@ class PropertyApproveWorker
             else
               Sidekiq::Client.enqueue_to_in("default", property.auction_started_at , PropertyLiveWorker, property.id)
             end
-            Sidekiq::Client.enqueue_to_in("default", property.bidding_ending_at, PropertyPostAuctionWorker, property.id)
+            post_auction_worker_jid = Sidekiq::Client.enqueue_to_in("default", property.bidding_ending_at, PropertyPostAuctionWorker, property.id)
+            property.post_auction_worker_jid = post_auction_worker_jid
+            property.save
           else
             property.status = "Hold"
             property.save

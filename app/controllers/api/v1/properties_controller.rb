@@ -237,7 +237,7 @@ module Api
               end
             end
           else
-            if @property.changed? == true
+            if (@property.changed? == true || @property.previous_changes.length > 0  )
               if @current_user.is_admin? == false
                 if (@property.status != "Draft" || @property.status != "Terminated")
                   @property.status = "Under Review"
