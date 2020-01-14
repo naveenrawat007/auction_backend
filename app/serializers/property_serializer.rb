@@ -76,8 +76,17 @@ class PropertySerializer < ActiveModel::Serializer
     data[:best_offers] = ActiveModelSerializers::SerializableResource.new(object.best_offers, each_serializer: BestOfferSerializer)
     data[:buy_now_offers] = ActiveModelSerializers::SerializableResource.new(object.buy_now_offers, each_serializer: BuyNowSerializer)
     data[:thumbnail_img] = get_thumbnail
+    data[:video_url] = get_video_url
     data
   end
+  def get_video_url
+    if object.videos.blank? == false
+      APP_CONFIG['backend_site_url'] + object.videos.first.video.url
+    else
+      ""
+    end
+  end
+
   def property_images
     object.photos.order(:created_at).map{|i| APP_CONFIG['backend_site_url'] + i.image.url}
   end
