@@ -18,6 +18,22 @@ class User < ApplicationRecord
   has_many :user_watch_properties
   has_many :watch_properties, through: :user_watch_properties, source: :property
 
+  def is_premium?
+    if self.status == "Premium"
+      true
+    else
+      if self.trial_ending_at.blank? == true
+        false
+      else
+        if Time.now > self.trial_ending_at
+          false
+        else
+          true
+        end
+      end
+    end
+  end
+
   def self.status
     ['Free', 'Premium', 'Ban']
   end
