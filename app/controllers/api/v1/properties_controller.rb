@@ -1,7 +1,8 @@
 module Api
   module V1
     class PropertiesController < MainController
-      before_action :authorize_request, except: [:new, :register, :public_index]
+      before_action :authorize_request, except: [:new, :register, :public_index, :show]
+      before_action :get_user, only: [:show]
 
       def public_index
         if params[:search_str].blank? == false
@@ -124,7 +125,7 @@ module Api
           else
             @near_properties = Property.where(status: ["Live Online Bidding", "Approve"]).order(address: :asc).limit(4)
           end
-          render json: {property: PropertySerializer.new(@property), favourite: check_favourite(@property.id), buy_options: Property.buy_option, near_properties: ActiveModel::Serializer::CollectionSerializer.new(@near_properties, each_serializer: UnderReviewPropertySerializer), status: 200 }, status: 200
+          render json: {property: PropertySerializer.new(@property), favourite: check_favourite(@property.id), buy_options: Property.buy_option, near_properties: ActiveModel::Serializer::CollectionSerializer.new(@near_properties, each_serializer: UnderReviewPropertySerializer), is_premium: @current_user ? @current_user.is_premium? : "", status: 200 }, status: 200
         else
           render json: {message: "This property does not exists", status: 404 }, status: 200
         end
