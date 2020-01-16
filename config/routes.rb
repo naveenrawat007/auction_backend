@@ -6,6 +6,11 @@ Rails.application.routes.draw do
   mount Sidekiq::Web => '/sidekiq'
   mount Apidoco::Engine, at: "/docs"
   namespace 'api' do
+    namespace 'v1' do
+      mount ActionCable.server => '/cable'
+    end
+  end
+  namespace 'api' do
     namespace 'v1', constraints: ApiConstraint.new(version: 1) do
       devise_for :users, controllers:{ sessions: 'api/v1/users/sessions', registrations: 'api/v1/users/registrations' }
       get 'users/forgot_password', to: 'users#forgot_password'
@@ -39,6 +44,10 @@ Rails.application.routes.draw do
       put 'properties/request_status', to: 'properties#request_status'
       put 'properties/share', to: 'properties#share'
       put 'properties/accept_offer', to: 'properties#accept_offer'
+
+      get 'user/groups', to: 'groups#index'
+      get 'user/groups/:id/messages', to: 'groups#show_messages'
+      post 'user/groups/:id/message', to: 'groups#create_messages'
       namespace 'admin' do
         get '/properties', to: 'properties#index'
         put 'properties/status', to: 'properties#update_status'
