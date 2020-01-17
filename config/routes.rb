@@ -45,7 +45,7 @@ Rails.application.routes.draw do
       put 'properties/share', to: 'properties#share'
       put 'properties/accept_offer', to: 'properties#accept_offer'
 
-      get 'user/groups', to: 'groups#index'
+      get 'user/chat_rooms', to: 'groups#index'
       get 'user/groups/:id/messages', to: 'groups#show_messages'
       post 'user/groups/:id/message', to: 'groups#create_messages'
       namespace 'admin' do
