@@ -16,6 +16,7 @@ class Property < ApplicationRecord
   has_many :rental_proofs, -> { where(name: "Rental Proof") }, as: :resource, class_name: "Attachment"
   geocoded_by :address, latitude: :lat, longitude: :long
   after_validation :geocode, if: ->(obj){ obj.lat.blank? or obj.long.blank? }
+  has_many :chat_rooms
 
   after_create :generate_unique_address
   has_many :user_watch_properties

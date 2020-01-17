@@ -37,6 +37,18 @@ class User < ApplicationRecord
     end
   end
 
+  def full_name
+    self.first_name.to_s + " " + self.last_name.to_s
+  end
+
+  def user_image
+    if self.photo
+      APP_CONFIG['backend_site_url'] + self.photo.image.url
+    else
+      ""
+    end
+  end
+
   def self.status
     ['Free', 'Premium', 'Ban']
   end
