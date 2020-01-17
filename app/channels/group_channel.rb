@@ -9,7 +9,7 @@ class GroupChannel < ApplicationCable::Channel
   # calls when a client broadcasts data
   def speak(data)
     # puts"11111111111111111111111111111111111111111111111111111111111111"
-    sender    = get_sender(data)
+    sender    = get_sender(data['sender'])
     group_id   = data['group_id']
     message   = data['message']
 
@@ -32,7 +32,7 @@ class GroupChannel < ApplicationCable::Channel
       content: message.content,
       sender: message.user_id,
     }
-    ActionCable.server.broadcast(build_room_id(message.conversation.id), payload)
+    ActionCable.server.broadcast(build_room_id(message.group.id), payload)
 
   end
 
@@ -41,11 +41,11 @@ class GroupChannel < ApplicationCable::Channel
     "ChatRoom-#{id}"
   end
 
-  def get_group(room_code)
+  def get_group(group_id)
     Group.find_by(id: group_id)
   end
 
-  def get_sender
+  def get_sender(id)
     User.find_by(id: id)
   end
 end
