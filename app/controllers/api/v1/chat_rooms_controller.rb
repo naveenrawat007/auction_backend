@@ -14,7 +14,7 @@ module Api
       def show_messages
         @chat_room = @current_user.chat_rooms.find_by(id: params[:id])
         if @chat_room
-          @messages = @chat_room.messages.order(created_at: :desc)
+          @messages = @chat_room.messages.order(created_at: :desc).paginate(page: params[:page], per_page: 10)
           render json: {messages: ActiveModelSerializers::SerializableResource.new(@messages, each_serializer: MessageSerializer), status: 200}, status: 200
         else
           render json: {message: "Chat room not found", status: 400}, status: 200
