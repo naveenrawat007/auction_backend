@@ -28,9 +28,13 @@ class RoomChannel < ApplicationCable::Channel
       content: message
     )
     payload = {
-      chat_room_id: message.chat_room_id,
+      id: message.id,
       content: message.content,
-      sender: message.user_id,
+      user_id: message.user_id,
+      user_name: message.user.full_name,
+      user_image: message.user.user_image,
+      chat_room_id: message.chat_room_id,
+      created_at: message.created_at.strftime("%I:%M %p")
     }
     ActionCable.server.broadcast(build_room_id(message.chat_room_id), payload)
 
