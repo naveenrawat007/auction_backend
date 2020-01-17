@@ -45,9 +45,9 @@ Rails.application.routes.draw do
       put 'properties/share', to: 'properties#share'
       put 'properties/accept_offer', to: 'properties#accept_offer'
 
-      get 'user/chat_rooms', to: 'groups#index'
-      get 'user/groups/:id/messages', to: 'groups#show_messages'
-      post 'user/groups/:id/message', to: 'groups#create_messages'
+      get 'user/chat_rooms', to: 'chat_rooms#index'
+      get 'user/chat_rooms/:id/messages', to: 'chat_rooms#show_messages'
+      post 'user/chat_rooms/:id/message', to: 'chat_rooms#create_messages'
       namespace 'admin' do
         get '/properties', to: 'properties#index'
         put 'properties/status', to: 'properties#update_status'
