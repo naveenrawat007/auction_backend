@@ -8,5 +8,5 @@ test:
 
 production:
   adapter: redis
-  url: <%= ENV.fetch("REDIS_URL") { "redis://192.168.1.21:6379" } %>
+  url: <%= ENV.fetch("REDIS_URL") { "redis:/3.14.71.57:6379" } %>
   channel_prefix: auction-chat_production
