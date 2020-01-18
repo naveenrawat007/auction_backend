@@ -24,6 +24,7 @@ module Api
               @chat_room = @current_user.chat_rooms.where(property_id: @property.id).first
               unless @chat_room
                 @chat_room = @current_user.chat_rooms.new(property_id: @property.id)
+                @chat_room.name = @property.address
                 @chat_room.save
                 @chat_room.users << @property.owner
                 @chat_room.users << @current_user
