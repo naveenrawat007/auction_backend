@@ -8,9 +8,9 @@ module Api
           if @property.owner_id == @current_user.id
             render json: {property: PropertySerializer.new(@property), message: "Can not submit proposal on own property.", status: 400 }, status: 200 and return
           else
-            hightest_bid_offer = @property.bids.maximum(:amount)
+            hightest_bid_offer = @property.highest_bid
             if @property.bidding_ending_at > Time.now
-              if params[:bid][:amount].to_f > hightest_bid_offer
+              if params[:bid][:amount].to_f > hightest_bid_offer.to_f
                 @bid = @property.bids.where(user_id: @current_user.id).first_or_create
                 @bid.user_id = @current_user.id
                 @bid.amount = params[:bid][:amount]
@@ -29,7 +29,16 @@ module Api
                   @bid.fund_proofs.destroy_all
                   @bid.fund_proofs.create(file: params[:bid][:fund_proof])
                 end
-                render json: {property: PropertySerializer.new(@property), message: "Bid Created.", status: 201 }, status: 200
+                #creating chatrooms
+                @chat_room = @current_user.chat_rooms.where(property_id: @property.id).first
+                unless @chat_room
+                  @chat_room = @current_user.chat_rooms.new(property_id: @property.id)
+                  @chat_room.save
+                  @chat_room.users << @property.owner
+                  @chat_room.users << @current_user
+                end
+                #end
+                render json: {chat_room: ChatRoomSerializer.new(@chat_room), property: PropertySerializer.new(@property), message: "Bid Created.", status: 201 }, status: 200
               else
                 render json: {message: "This amount is less than last Submitted bid.", status: 404 }, status: 200
               end

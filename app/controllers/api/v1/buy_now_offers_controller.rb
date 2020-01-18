@@ -21,7 +21,16 @@ module Api
                   @buy_now.fund_proofs.destroy_all
                   @buy_now.fund_proofs.create(file: params[:buy_now][:fund_proof])
                 end
-                render json: {property: PropertySerializer.new(@property), message: "Offer Created.", status: 201 }, status: 200
+                #creating chatrooms
+                @chat_room = @current_user.chat_rooms.where(property_id: @property.id).first
+                unless @chat_room
+                  @chat_room = @current_user.chat_rooms.new(property_id: @property.id)
+                  @chat_room.save
+                  @chat_room.users << @property.owner
+                  @chat_room.users << @current_user
+                end
+                #end
+                render json: {chat_room: ChatRoomSerializer.new(@chat_room), property: PropertySerializer.new(@property), message: "Offer Created.", status: 201 }, status: 200
               else
                 render json: { message: "Can not Submit buy now.", status: 400 }, status: 200
               end
@@ -37,7 +46,16 @@ module Api
                 @buy_now.fund_proofs.destroy_all
                 @buy_now.fund_proofs.create(file: params[:buy_now][:fund_proof])
               end
-              render json: {property: PropertySerializer.new(@property), message: "Offer Created.", status: 201 }, status: 200
+              #creating chatrooms
+              @chat_room = @current_user.chat_rooms.where(property_id: @property.id).first
+              unless @chat_room
+                @chat_room = @current_user.chat_rooms.new(property_id: @property.id)
+                @chat_room.save
+                @chat_room.users << @property.owner
+                @chat_room.users << @current_user
+              end
+              #end
+              render json: {chat_room: ChatRoomSerializer.new(@chat_room), property: PropertySerializer.new(@property), message: "Offer Created.", status: 201 }, status: 200
             end
           end
         else
