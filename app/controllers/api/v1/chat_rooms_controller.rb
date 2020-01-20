@@ -22,9 +22,15 @@ module Api
       end
 
       def create_messages
-        @chat_room = @current_user.chat_rooms.find_by(id: params[:room_id])
-        if @group
-          @message = @chat_room.messages.create(user_id: @current_user.id, content: params[:content])
+        @chat_room = @current_user.chat_rooms.find_by(id: params[:id])
+        if @chat_room
+          @message = @chat_room.messages.create(user_id: @current_user.id, content: "Attachments")
+          if params[:attachments].blank? == false
+            params[:attachments].each do |attachment|
+              @message.attachments.create(file: attachment)
+            end
+            MessageBroadcastWorker.perform_at(Time.now, @message.id)
+          end
           render json: {messages: ActiveModelSerializers::SerializableResource.new(@message, each_serializer: MessageSerializer), status: 200}, status: 200
         else
           render json: {message: "Chat room not found", status: 400}, status: 200
