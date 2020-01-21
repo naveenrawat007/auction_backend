@@ -125,7 +125,7 @@ module Api
           else
             @near_properties = Property.where(status: ["Live Online Bidding", "Approve"]).order(address: :asc).limit(4)
           end
-          render json: {property: PropertySerializer.new(@property), favourite: check_favourite(@property.id), buy_options: Property.buy_option, near_properties: ActiveModel::Serializer::CollectionSerializer.new(@near_properties, each_serializer: UnderReviewPropertySerializer), is_premium: @current_user ? @current_user.is_premium? : "", status: 200 }, status: 200
+          render json: {property: PropertySerializer.new(@property), favourite: check_favourite(@property.id), buy_options: Property.buy_option, near_properties: ActiveModel::Serializer::CollectionSerializer.new(@near_properties, each_serializer: UnderReviewPropertySerializer), is_premium: @current_user ? ( @current_user.is_admin? ? @current_user.is_admin? : @current_user.is_premium?) : "", status: 200 }, status: 200
         else
           render json: {message: "This property does not exists", status: 404 }, status: 200
         end
