@@ -1,25 +1,25 @@
 class Property < ApplicationRecord
   belongs_to :owner, class_name: "User", foreign_key: "owner_id"
-  has_many :photos, as: :imageable
-  has_many :videos, as: :resource
-  has_one :landlord_deal
+  has_many :photos, as: :imageable, dependent: :destroy
+  has_many :videos, as: :resource, dependent: :destroy
+  has_one :landlord_deal, dependent: :destroy
   belongs_to :show_instructions_type, optional: true
   belongs_to :seller_pay_type, optional: true
-  has_many :bids
-  has_many :best_offers
+  has_many :bids, dependent: :destroy
+  has_many :best_offers, dependent: :destroy
 
   has_many :buy_nows, -> { where(best_offer: false) }, class_name: "BuyNowOffer"
   has_many :best_buy_nows, -> { where(best_offer: true) }, class_name: "BuyNowOffer"
-  has_many :buy_now_offers
-  has_many :arv_proofs, -> { where(name: "Arv Proof") }, as: :resource, class_name: "Attachment"
-  has_many :rehab_cost_proofs, -> { where(name: "Rehab Cost Proof") }, as: :resource, class_name: "Attachment"
-  has_many :rental_proofs, -> { where(name: "Rental Proof") }, as: :resource, class_name: "Attachment"
+  has_many :buy_now_offers, dependent: :destroy
+  has_many :arv_proofs, -> { where(name: "Arv Proof") }, as: :resource, class_name: "Attachment", dependent: :destroy
+  has_many :rehab_cost_proofs, -> { where(name: "Rehab Cost Proof") }, as: :resource, class_name: "Attachment", dependent: :destroy
+  has_many :rental_proofs, -> { where(name: "Rental Proof") }, as: :resource, class_name: "Attachment", dependent: :destroy
   geocoded_by :address, latitude: :lat, longitude: :long
   after_validation :geocode, if: ->(obj){ obj.lat.blank? or obj.long.blank? }
-  has_many :chat_rooms
+  has_many :chat_rooms, dependent: :destroy
 
   after_create :generate_unique_address
-  has_many :user_watch_properties
+  has_many :user_watch_properties, dependent: :destroy
 
   def generate_unique_address
     if self.address.blank? == false
