@@ -36,6 +36,7 @@ module Api
             if params[:property][:status].blank? == false
               old_status = @property.status
               @property.status = params[:property][:status]
+              @property.requested = false
               @property.save
               if @property.status == "Terminated"
                 @property.termination_date = Time.now
@@ -70,7 +71,6 @@ module Api
                     Sidekiq::Client.enqueue_to_in("default", Time.now , PropertyNotificationWorker, @property.id)
                   end
                 elsif @property.status == "Draft"
-                  @property.requested = false
                   @property.save
                 elsif @property.status == "Under Review"
                   @property.submitted_at = Time.now
