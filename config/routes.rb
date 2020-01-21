@@ -49,6 +49,9 @@ Rails.application.routes.draw do
       get 'user/chat_rooms/:id/messages', to: 'chat_rooms#show_messages'
       post 'user/chat_rooms/:id/messages', to: 'chat_rooms#create_messages'
       namespace 'admin' do
+        get '/chat_rooms', to: 'chat_rooms#index'
+        get '/chat_rooms/:id/messages', to: 'chat_rooms#show_messages'
+        post '/chat_rooms/:id/messages', to: 'chat_rooms#create_messages'
         get '/properties', to: 'properties#index'
         put 'properties/status', to: 'properties#update_status'
       end
