@@ -5,12 +5,18 @@ module Api
       before_action :get_user, only: [:show]
 
       def public_index
-        if params[:search_str].blank? == false
-          @properties = Property.where(status: params[:status]).where("lower(address) LIKE :search", search: "%#{params[:search_str].downcase}%").order(created_at: :desc).paginate(page: params[:page], per_page: 10)
+        params[:page] ||= 1
+        if params[:status].blank? == true
+          @properties = Property.where.not(status: ["Draft", "Terminated"]).order(created_at: :desc).limit(4)
+          render json: {properties: ActiveModelSerializers::SerializableResource.new(@properties, each_serializer: PropertySerializer), status: 200 }, status: 200
         else
-          @properties = Property.where(status: params[:status]).order(created_at: :desc).paginate(page: params[:page], per_page: 10)
+          if params[:search_str].blank? == false
+            @properties = Property.where(status: params[:status]).where("lower(address) LIKE :search", search: "%#{params[:search_str].downcase}%").order(created_at: :desc).paginate(page: params[:page], per_page: 10)
+          else
+            @properties = Property.where(status: params[:status]).order(created_at: :desc).paginate(page: params[:page], per_page: 10)
+          end
+          render json: {properties: ActiveModelSerializers::SerializableResource.new(@properties, each_serializer: PropertySerializer), status: 200, meta: {current_page: @properties.current_page, total_pages: @properties.total_pages} }, status: 200
         end
-        render json: {properties: ActiveModelSerializers::SerializableResource.new(@properties, each_serializer: PropertySerializer), status: 200, meta: {current_page: @properties.current_page, total_pages: @properties.total_pages} }, status: 200
       end
 
       def list_favourites_properties
