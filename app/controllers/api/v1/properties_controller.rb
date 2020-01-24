@@ -252,6 +252,8 @@ module Api
                   @property.save
                   Sidekiq::Client.enqueue_to_in("default", Time.now + Property.approve_time_delay, PropertyApproveWorker, @property.id)
                 end
+              else
+                @property.save
               end
             end
           end
