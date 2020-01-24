@@ -37,6 +37,7 @@ module Api
               old_status = @property.status
               @property.status = params[:property][:status]
               @property.requested = false
+              @property.submitted = false
               @property.save
               if @property.status == "Terminated"
                 @property.termination_date = Time.now
@@ -74,6 +75,7 @@ module Api
                   @property.save
                 elsif @property.status == "Under Review"
                   @property.submitted_at = Time.now
+                  @property.submitted = true
                   @property.save
                   Sidekiq::Client.enqueue_to_in("default", Time.now + Property.approve_time_delay, PropertyApproveWorker, @property.id)
                 end
