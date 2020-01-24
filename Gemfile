@@ -76,3 +76,4 @@ gem 'will_paginate', '~> 3.1.0'
 gem 'paperclip-av-transcoder'
 gem 'geocoder'
 gem 'redis'
+gem "audited", "~> 4.9"
