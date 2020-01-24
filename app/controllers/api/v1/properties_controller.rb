@@ -3,6 +3,7 @@ module Api
     class PropertiesController < MainController
       before_action :authorize_request, except: [:new, :register, :public_index, :show]
       before_action :get_user, only: [:show]
+      prepend_before_action :current_user, only: [:update]
 
       def public_index
         params[:page] ||= 1
@@ -170,6 +171,19 @@ module Api
         if !@property
           render json: { message: "Property could not be found.", status: 404}, status: 200 and return
         end
+        if @current_user.is_admin? == false
+          if (@property.status != "Draft" && @property.status != "Terminated")
+            @property.update(property_update_params)
+          else
+            @property.without_auditing do
+              @property.update(property_update_params)
+            end
+          end
+        else
+          @property.without_auditing do
+            @property.update(property_update_params)
+          end
+        end
         if @property.update(property_update_params)
           if params[:property][:residential_attributes].blank? == false
             @property.residential_attributes = residential_type_attributes_permitter
@@ -222,21 +236,39 @@ module Api
               @landlord_deal = @property.landlord_deal
             else
               @landlord_deal = @property.build_landlord_deal
-              @landlord_deal.save
             end
-            @landlord_deal.update(landlord_deal_params)
-            @landlord_deal.save
+            if @current_user.is_admin? == false
+              if (@property.status != "Draft" && @property.status != "Terminated")
+                @landlord_deal.update(landlord_deal_params)
+                @landlord_deal.save
+              else
+                @landlord_deal.without_auditing do
+                  @landlord_deal.update(landlord_deal_params)
+                  @landlord_deal.save
+                end
+              end
+            else
+              @landlord_deal.without_auditing do
+                @landlord_deal.update(landlord_deal_params)
+                @landlord_deal.save
+              end
+            end
           end
           if @property.auction_started_at.blank? == false
-            @property.auction_started_at = @property.auction_started_at.beginning_of_day
+            if @property.auction_started_at.to_i != @property.auction_started_at.beginning_of_day.to_i
+              @property.auction_started_at = @property.auction_started_at.beginning_of_day
+            end
           end
           if @property.auction_ending_at.blank? == false
-            @property.auction_ending_at = @property.auction_ending_at.end_of_day
+            if @property.auction_ending_at.to_i != @property.auction_ending_at.end_of_day.to_i
+              @property.auction_ending_at = @property.auction_ending_at.end_of_day
+            end
           end
           if params[:draft] == "false"
             if @property.status == "Draft"
               @property.status = "Under Review"
               if @property.save
+                @property.submitted = true
                 @property.submitted_at = Time.now
                 @property.save
                 Sidekiq::Client.enqueue_to_in("default", Time.now + Property.approve_time_delay, PropertyApproveWorker, @property.id)
@@ -246,14 +278,20 @@ module Api
           else
             if (@property.changed? == true || @property.previous_changes.length > 0  )
               if @current_user.is_admin? == false
-                if (@property.status != "Draft" || @property.status != "Terminated")
+                if (@property.status != "Draft" && @property.status != "Terminated")
                   @property.status = "Under Review"
+                  @property.submitted = true
                   @property.submitted_at = Time.now
                   @property.save
                   Sidekiq::Client.enqueue_to_in("default", Time.now + Property.approve_time_delay, PropertyApproveWorker, @property.id)
+                else
+                  @property.submitted = true
+                  @property.submitted_at = Time.now
+                  @property.save_without_auditing
+                  Sidekiq::Client.enqueue_to_in("default", Time.now + Property.approve_time_delay, PropertyApproveWorker, @property.id)
                 end
               else
-                @property.save
+                @property.save_without_auditing
               end
             end
           end
