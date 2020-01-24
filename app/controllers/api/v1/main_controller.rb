@@ -15,6 +15,13 @@ module Api
           render json: { error: e.message, status: 401 }, status: 200
         end
       end
+      def current_user
+        if @current_user
+          @current_user
+        else
+          'Admin'
+        end
+      end
       def get_user
         header = request.headers['Authorization']
         header = header.split(' ').last if header
