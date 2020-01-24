@@ -1,4 +1,6 @@
 class Property < ApplicationRecord
+  audited except: [:status, :total_views, :submitted_at, :youtube_video_key, :lat, :long, :unique_address, :termination_date, :requested_at, :sniper, :sniper_length, :requested, :post_auction_worker_jid, :submitted]
+  has_associated_audits
   belongs_to :owner, class_name: "User", foreign_key: "owner_id"
   has_many :photos, as: :imageable, dependent: :destroy
   has_many :videos, as: :resource, dependent: :destroy
