@@ -7,6 +7,7 @@ class PropertyApproveWorker
     if property
       if property.status == "Under Review"
         property.status = "Approve"
+        property.submitted = false
         if property.save
           PropertyMailer.approved(property.owner_id, property.id).deliver
           if property.auction_started_at.blank? == false
