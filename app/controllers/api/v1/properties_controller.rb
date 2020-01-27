@@ -132,7 +132,8 @@ module Api
           else
             @near_properties = Property.where(status: ["Live Online Bidding", "Approve"]).order(address: :asc).limit(4)
           end
-          render json: {property: PropertySerializer.new(@property), favourite: check_favourite(@property.id), buy_options: Property.buy_option, near_properties: ActiveModel::Serializer::CollectionSerializer.new(@near_properties, each_serializer: UnderReviewPropertySerializer), is_premium: @current_user ? ( @current_user.is_admin? ? @current_user.is_admin? : @current_user.is_premium?) : "", status: 200 }, status: 200
+          @audits = @property.audits.reorder(created_at: :desc)
+          render json: {property: PropertySerializer.new(@property), favourite: check_favourite(@property.id), buy_options: Property.buy_option, near_properties: ActiveModel::Serializer::CollectionSerializer.new(@near_properties, each_serializer: UnderReviewPropertySerializer), is_premium: @current_user ? ( @current_user.is_admin? ? @current_user.is_admin? : @current_user.is_premium?) : "", submitted: @property.submitted, is_admin: @current_user ? @current_user.is_admin? : false, changes: ActiveModel::Serializer::CollectionSerializer.new(@audits, each_serializer: AuditSerializer), status: 200 }, status: 200
         else
           render json: {message: "This property does not exists", status: 404 }, status: 200
         end
@@ -174,6 +175,7 @@ module Api
         if @current_user.is_admin? == false
           if (@property.status != "Draft" && @property.status != "Terminated")
             @property.update(property_update_params)
+            set_submitted(@property)
           else
             @property.without_auditing do
               @property.update(property_update_params)
@@ -241,6 +243,7 @@ module Api
               if (@property.status != "Draft" && @property.status != "Terminated")
                 @landlord_deal.update(landlord_deal_params)
                 @landlord_deal.save
+                set_submitted(@property)
               else
                 @landlord_deal.without_auditing do
                   @landlord_deal.update(landlord_deal_params)
@@ -276,17 +279,13 @@ module Api
               end
             end
           else
-            if (@property.changed? == true || @property.previous_changes.length > 0  )
+            if (@property.changed? == true || @property.previous_changes.length > 0)
               if @current_user.is_admin? == false
                 if (@property.status != "Draft" && @property.status != "Terminated")
-                  @property.status = "Under Review"
-                  @property.submitted = true
-                  @property.submitted_at = Time.now
+                  set_submitted(@property)
                   @property.save
                   Sidekiq::Client.enqueue_to_in("default", Time.now + Property.approve_time_delay, PropertyApproveWorker, @property.id)
                 else
-                  @property.submitted = true
-                  @property.submitted_at = Time.now
                   @property.save_without_auditing
                   Sidekiq::Client.enqueue_to_in("default", Time.now + Property.approve_time_delay, PropertyApproveWorker, @property.id)
                 end
@@ -452,6 +451,14 @@ module Api
         end
       end
       private
+      def set_submitted(property)
+        property.status = "Under Review"
+        if property.submitted == false
+          property.submitted_at = Time.now
+        end
+        property.submitted = true
+        property.save
+      end
       def check_favourite(property_id)
         if @current_user
           if @current_user.watch_property_ids.include?(property_id)
