@@ -30,6 +30,13 @@ module Api
                   @chat_room.save
                   @chat_room.users << @property.owner
                   @chat_room.users << @current_user
+                  message = @chat_room.messages.new
+                  message.content = "I have submitted Buy Now in your property at #{@property.address} for $#{@buy_now.amount} and check proof of funds."
+                  message.user_id = @current_user.id
+                  message.save
+                  if @buy_now.fund_proofs.blank? == false
+                    message.attachments.create(file: File.open(@buy_now.fund_proofs.first.file.path,'rb'))
+                  end
                 end
                 #end
                 render json: {chat_room: ChatRoomSerializer.new(@chat_room), property: PropertySerializer.new(@property), message: "Offer Created.", status: 201 }, status: 200
@@ -57,6 +64,13 @@ module Api
                 @chat_room.save
                 @chat_room.users << @property.owner
                 @chat_room.users << @current_user
+                message = @chat_room.messages.new
+                message.content = "I have submitted Buy Now in your property at #{@property.address} for $#{@buy_now.amount} and check proof of funds."
+                message.user_id = @current_user.id
+                message.save
+                if @buy_now.fund_proofs.blank? == false
+                  message.attachments.create(file: File.open(@buy_now.fund_proofs.first.file.path,'rb'))
+                end
               end
               #end
               render json: {chat_room: ChatRoomSerializer.new(@chat_room), property: PropertySerializer.new(@property), message: "Offer Created.", status: 201 }, status: 200
