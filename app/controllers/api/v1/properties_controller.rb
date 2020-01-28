@@ -134,7 +134,11 @@ module Api
           end
           @seller_pay_types = SellerPayType.all.order(:created_at)
           @show_instructions_types = ShowInstructionsType.all.order(:created_at)
-          @audits = @property.audits.reorder(created_at: :desc)
+          if (@property.submitted_at.blank? == false)
+            @audits = @property.audits.where('created_at > ?', (@property.submitted_at-30.seconds)).reorder(created_at: :desc)
+          else
+            @audits = @property.audits.reorder(created_at: :desc)
+          end
           render json: {seller_pay_types: ActiveModelSerializers::SerializableResource.new(@seller_pay_types, each_serializer: SellerPayTypeSerializer), show_instructions_types: ActiveModelSerializers::SerializableResource.new(@show_instructions_types, each_serializer: SellerPayTypeSerializer), property: PropertySerializer.new(@property), favourite: check_favourite(@property.id), buy_options: Property.buy_option, near_properties: ActiveModel::Serializer::CollectionSerializer.new(@near_properties, each_serializer: UnderReviewPropertySerializer), is_premium: @current_user ? ( @current_user.is_admin? ? @current_user.is_admin? : @current_user.is_premium?) : "", submitted: @property.submitted, is_admin: @current_user ? @current_user.is_admin? : false, changes: ActiveModel::Serializer::CollectionSerializer.new(@audits, each_serializer: AuditSerializer), status: 200 }, status: 200
         else
           render json: {message: "This property does not exists", status: 404 }, status: 200
