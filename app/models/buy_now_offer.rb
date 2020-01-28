@@ -2,7 +2,7 @@ class BuyNowOffer < ApplicationRecord
   belongs_to :property
   belongs_to :user
   has_many :fund_proofs, as: :resource, class_name: "Attachment", dependent: :destroy
-  has_one :chat_room, as: :offer
+  has_one :chat_room, as: :offer, dependent: :destroy
 
   def get_fund_proof
     if self.fund_proofs.blank? == false
