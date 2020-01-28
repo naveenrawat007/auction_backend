@@ -5,13 +5,13 @@ module Api
       def users_list
         if params[:status].blank? == false
           if params[:search_str].blank? == false
-            @users = User.where(status: params[:status]).where("lower(first_name) LIKE :search OR lower(last_name) LIKE :search OR lower(email) LIKE :search ", search: "%#{params[:search_str].downcase}%").order(created_at: :desc).paginate(page: params[:page], per_page: 10)
+            @users = User.where(status: params[:status]).where("lower(first_name) LIKE :search OR lower(last_name) LIKE :search OR lower(email) LIKE :search OR phone_number LIKE :search ", search: "%#{params[:search_str].downcase}%").order(created_at: :desc).paginate(page: params[:page], per_page: 10)
           else
             @users = User.all.where(status: params[:status]).order(created_at: :desc).paginate(page: params[:page], per_page: 10)
           end
         else
           if params[:search_str].blank? == false
-            @users = User.where("lower(first_name) LIKE :search OR lower(last_name) LIKE :search OR lower(email) LIKE :search ", search: "%#{params[:search_str].downcase}%").order(created_at: :desc).paginate(page: params[:page], per_page: 10)
+            @users = User.where("lower(first_name) LIKE :search OR lower(last_name) LIKE :search OR lower(email) LIKE :search OR phone_number LIKE :search ", search: "%#{params[:search_str].downcase}%").order(created_at: :desc).paginate(page: params[:page], per_page: 10)
           else
             @users = User.all.order(created_at: :desc).paginate(page: params[:page], per_page: 10)
           end
