@@ -77,6 +77,7 @@ class PropertySerializer < ActiveModel::Serializer
     data[:buy_now_offers] = ActiveModelSerializers::SerializableResource.new(object.buy_now_offers, each_serializer: BuyNowSerializer)
     data[:thumbnail_img] = get_thumbnail
     data[:video_url] = get_video_url
+    data[:video_thumb] = get_video_thumbnail
     data
   end
   def get_video_url
@@ -129,6 +130,13 @@ class PropertySerializer < ActiveModel::Serializer
   def get_thumbnail
     if object.photos.blank? == false
       APP_CONFIG['backend_site_url'] + object.photos.first.image.url(:thumb)
+    else
+      ""
+    end
+  end
+  def get_video_thumbnail
+    if object.videos.blank? == false
+      APP_CONFIG['backend_site_url'] + object.videos.first.video.url(:thumb)
     else
       ""
     end
