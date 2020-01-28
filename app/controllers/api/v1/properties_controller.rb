@@ -55,7 +55,7 @@ module Api
             @properties = @current_user.owned_properties.order(created_at: :desc).paginate(page: params[:page], per_page: 10)
           end
         end
-        render json: {properties: ActiveModelSerializers::SerializableResource.new(@properties, each_serializer: PropertySerializer), status: 200, meta: {current_page: @properties.current_page, total_pages: @properties.total_pages}, request_statuses: Property.request_status, termination_reasons: Property.termination_reason, withdraw_reasons: Property.withdraw_reason }
+        render json: {properties: ActiveModelSerializers::SerializableResource.new(@properties, each_serializer: UserPropertySerializer, serializer_options: {user: @current_user, type: params[:type]}), status: 200, meta: {current_page: @properties.current_page, total_pages: @properties.total_pages}, request_statuses: Property.request_status, termination_reasons: Property.termination_reason, withdraw_reasons: Property.withdraw_reason }
       end
 
       def request_status
