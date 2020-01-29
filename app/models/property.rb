@@ -23,6 +23,9 @@ class Property < ApplicationRecord
   after_create :generate_unique_address
   has_many :user_watch_properties, dependent: :destroy
 
+  has_one :sold_property_record, class_name: "SoldProperty", foreign_key: "property_id"
+  has_one :property_buyer, through: :sold_property_record, source: :buyer
+
   def generate_unique_address
     if self.address.blank? == false
       self.unique_address = self.address.strip.split(/\W/).join("_") + "_#{self.id}"
