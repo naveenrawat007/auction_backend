@@ -106,7 +106,7 @@ module Api
             @property.save
             render json: {message: "Status changed to Sold", status: 200}, status: 200
           else
-            render json: {message: "Property already sold.", status: 200}, status: 200
+            render json: {message: "Property already sold.", status: 400}, status: 200
           end
         end
       end
