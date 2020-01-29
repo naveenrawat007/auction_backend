@@ -1,9 +1,17 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Verification Email</title>
-</head>
-<body>
-  Welcome to Auction my deal. Here is your verification code:   <%= @user.verification_code %> .
-</body>
-</html>
+<p>
+	Hello <%= @user.first_name %>,
+</p>
+<br/>
+<p>
+	Your account has been approved so please enter the following verification code to activate your account at www.AuctionMyDeal.com.
+</p>
+<p>
+	Verification Code: <%= @user.verification_code %>
+	<br/>
+	We look forward to helping you in your real estate investment business!...:)
+</p>
+<br/>
+<p>
+	Sincerely,
+</p>
+Support@AuctionMyDeal.com
