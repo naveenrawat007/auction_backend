@@ -22,12 +22,12 @@ class UserPropertySerializer < ActiveModel::Serializer
     data[:long] = object.long ? object.long : ""
     data[:highest_bid] = object.highest_bid
     data[:unique_address] = object.unique_address
-    data[:bids] = ActiveModelSerializers::SerializableResource.new(object.bids, each_serializer: BidSerializer)
-    data[:best_offers] = ActiveModelSerializers::SerializableResource.new(object.best_offers, each_serializer: BestOfferSerializer)
-    data[:buy_now_offers] = ActiveModelSerializers::SerializableResource.new(object.buy_now_offers, each_serializer: BuyNowSerializer)
     data[:thumbnail_img] = get_thumbnail
     if self.instance_options[:serializer_options]
-      if self.instance_options[:serializer_options][:user] && self.instance_options[:serializer_options][:type]
+      data[:bids] = ActiveModelSerializers::SerializableResource.new(object.bids, each_serializer: BidSerializer, serializer_options: {chat: self.instance_options[:serializer_options][:chat]})
+      data[:best_offers] = ActiveModelSerializers::SerializableResource.new(object.best_offers, each_serializer: BestOfferSerializer, serializer_options: {chat: self.instance_options[:serializer_options][:chat]})
+      data[:buy_now_offers] = ActiveModelSerializers::SerializableResource.new(object.buy_now_offers, each_serializer: BuyNowSerializer, serializer_options: {chat: self.instance_options[:serializer_options][:chat]})
+      if self.instance_options[:serializer_options][:user].blank? == false && self.instance_options[:serializer_options][:type].blank? == false
         if self.instance_options[:serializer_options][:type] == "offer"
           data[:chat_room] = self.instance_options[:serializer_options][:user].best_offers.find_by(property_id: object.id) ?  ChatRoomSerializer.new(self.instance_options[:serializer_options][:user].best_offers.find_by(property_id: object.id).chat_room) : ""
         elsif self.instance_options[:serializer_options][:type] == "bid"

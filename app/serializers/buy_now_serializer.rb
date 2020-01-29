@@ -10,7 +10,11 @@ class BuyNowSerializer < ActiveModel::Serializer
     data[:fund_proof] = object.get_fund_proof
     data[:user_type] = user_type
     data[:accepted] = object.accepted
-    data[:chat_room] = ChatRoomSerializer.new(object.chat_room)
+    if self.instance_options[:serializer_options]
+      if self.instance_options[:serializer_options][:chat]
+        data[:chat_room] = ChatRoomSerializer.new(object.chat_room)
+      end
+    end
     data
   end
   def check_type
