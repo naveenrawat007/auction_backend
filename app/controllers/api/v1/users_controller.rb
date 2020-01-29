@@ -31,6 +31,7 @@ module Api
           if @current_user.verification_code == params[:verification_code]
             @current_user.is_verified = true
             @current_user.save
+            Sidekiq::Client.enqueue_to_in("default", Time.now, UserWelcomeWorker, @current_user.id)
             render json: {user: UserSerializer.new(@current_user, root: false, serializer_options: {token: @current_user.auth_token}), message: "Email verified successfully.", status: 201}, status: 200
           else
             render json: {user: UserSerializer.new(@current_user, root: false), message: "Invalid code.", status: 403}, status: 200
