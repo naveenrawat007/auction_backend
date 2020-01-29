@@ -26,10 +26,11 @@ module Api
         else
           @properties = @current_user.watch_properties.order(created_at: :desc).paginate(page: params[:page], per_page: 10)
         end
-        render json: {properties: ActiveModelSerializers::SerializableResource.new(@properties, each_serializer: PropertySerializer), status: 200, meta: {current_page: @properties.current_page, total_pages: @properties.total_pages} }
+        render json: {properties: ActiveModelSerializers::SerializableResource.new(@properties, each_serializer: UserPropertySerializer), status: 200, meta: {current_page: @properties.current_page, total_pages: @properties.total_pages} }
       end
 
       def index
+        show_chat = false
         if params[:type] == "offer"
           if params[:search_str].blank? == false
             @properties = @current_user.best_offered_properties.where("lower(address) LIKE :search OR lower(headliner) LIKE :search", search: "%#{params[:search_str].downcase}%").order(created_at: :desc).paginate(page: params[:page], per_page: 10)
@@ -49,13 +50,14 @@ module Api
             @properties = @current_user.buy_now_offered_properties.order(created_at: :desc).paginate(page: params[:page], per_page: 10)
           end
         else
+          show_chat = true
           if params[:search_str].blank? == false
             @properties = @current_user.owned_properties.where("lower(address) LIKE :search OR lower(headliner) LIKE :search", search: "%#{params[:search_str].downcase}%").order(created_at: :desc).paginate(page: params[:page], per_page: 10)
           else
             @properties = @current_user.owned_properties.order(created_at: :desc).paginate(page: params[:page], per_page: 10)
           end
         end
-        render json: {properties: ActiveModelSerializers::SerializableResource.new(@properties, each_serializer: UserPropertySerializer, serializer_options: {user: @current_user, type: params[:type]}), status: 200, meta: {current_page: @properties.current_page, total_pages: @properties.total_pages}, request_statuses: Property.request_status, termination_reasons: Property.termination_reason, withdraw_reasons: Property.withdraw_reason }
+        render json: {properties: ActiveModelSerializers::SerializableResource.new(@properties, each_serializer: UserPropertySerializer, serializer_options: {user: @current_user, type: params[:type], chat: show_chat}), status: 200, meta: {current_page: @properties.current_page, total_pages: @properties.total_pages}, request_statuses: Property.request_status, termination_reasons: Property.termination_reason, withdraw_reasons: Property.withdraw_reason }
       end
 
       def request_status
