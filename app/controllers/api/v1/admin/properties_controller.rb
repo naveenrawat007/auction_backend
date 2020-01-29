@@ -104,8 +104,10 @@ module Api
             sold_property_record.save
             @property.status = "Sold"
             @property.save
+            render json: {message: "Status changed to Sold", status: 200}, status: 200
+          else
+            render json: {message: "Property already sold.", status: 200}, status: 200
           end
-          render json: {message: "Status changed to Sold", status: 200}, status: 200
         end
       end
     end
