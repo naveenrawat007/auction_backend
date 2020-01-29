@@ -86,6 +86,27 @@ module Api
             render json: {message: "Property Not found", status: 400}, status: 200
           end
         end
+
+        def sold_property
+          if params[:property][:offer_type] == "Bid"
+            @offer = Bid.find_by(id: params[:property]["offer_id"])
+          elsif (params[:property][:offer_type] == "Best / Buy Now" || params[:property][:offer_type] == "Buy Now")
+            @offer = BuyNowOffer.find_by(id: params[:property]["offer_id"])
+          elsif params[:property][:offer_type] == "Best Offer"
+            @offer = BestOffer.find_by(id: params[:property]["offer_id"])
+          end
+          @property = @offer.property
+          if !@property.sold_property_record
+            sold_property_record = @property.build_sold_property_record
+            sold_property_record.property_id = @property.id
+            sold_property_record.user_id = @offer.user_id
+            sold_property_record.offer = @offer
+            sold_property_record.save
+            @property.status = "Sold"
+            @property.save
+          end
+          render json: {message: "Status changed to Sold", status: 200}, status: 200
+        end
       end
     end
   end
