@@ -54,6 +54,7 @@ Rails.application.routes.draw do
         post '/chat_rooms/:id/messages', to: 'chat_rooms#create_messages'
         get '/properties', to: 'properties#index'
         put 'properties/status', to: 'properties#update_status'
+        post '/properties/sold', to: 'properties#sold_property'
       end
     end
   end
