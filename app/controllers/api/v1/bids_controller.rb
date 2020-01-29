@@ -30,7 +30,7 @@ module Api
                   @bid.fund_proofs.create(file: params[:bid][:fund_proof])
                 end
                 #creating chatrooms
-                @chat_room = @current_user.chat_rooms.where(property_id: @property.id).first
+                @chat_room = @current_user.chat_rooms.where(property_id: @property.id, offer: @bid).first
                 unless @chat_room
                   @chat_room = @current_user.chat_rooms.new(property_id: @property.id)
                   @chat_room.name = @property.address

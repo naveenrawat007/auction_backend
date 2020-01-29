@@ -22,7 +22,7 @@ module Api
                   @buy_now.fund_proofs.create(file: params[:buy_now][:fund_proof])
                 end
                 #creating chatrooms
-                @chat_room = @current_user.chat_rooms.where(property_id: @property.id).first
+                @chat_room = @current_user.chat_rooms.where(property_id: @property.id, offer: @buy_now).first
                 unless @chat_room
                   @chat_room = @current_user.chat_rooms.new(property_id: @property.id)
                   @chat_room.name = @property.address
@@ -56,7 +56,7 @@ module Api
                 @buy_now.fund_proofs.create(file: params[:buy_now][:fund_proof])
               end
               #creating chatrooms
-              @chat_room = @current_user.chat_rooms.where(property_id: @property.id).first
+              @chat_room = @current_user.chat_rooms.where(property_id: @property.id, offer: @buy_now).first
               unless @chat_room
                 @chat_room = @current_user.chat_rooms.new(property_id: @property.id)
                 @chat_room.name = @property.address
