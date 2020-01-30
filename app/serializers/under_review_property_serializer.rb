@@ -35,6 +35,8 @@ class UnderReviewPropertySerializer < ActiveModel::Serializer
     data[:auction_type] = object.requested ? "Withdraw / Draft" : (object.status == "Under Review" ? "Under Review" : (object.best_offer ? "Best Offer" : "Live Online Bidding"))
     data[:requested] = object.requested
     data[:requested_timer] = requested_timer
+    data[:sold_to] = object.property_buyer ? object.property_buyer.full_name : ""
+    data[:sold_amount] = object.sold_property_record ? object.sold_property_record.offer.amount : ""
     data
   end
 
