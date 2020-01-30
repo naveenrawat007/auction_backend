@@ -4,6 +4,7 @@ class PropertyMailer < ApplicationMailer
     @property = Property.find_by(id: property_id)
     if @user && @property
       mail(to: [@user.email], subject: "Property is Submitted for review.")
+      PropertyMessage.under_review(@user, @property)
     end
 	end
 
