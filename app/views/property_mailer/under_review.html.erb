@@ -1,1 +1,34 @@
 Hello <%= @user.first_name %> <%= @user.last_name %> Property address with "<%= @property.address %>" is currently Under review and will be reviewed by AuctionMyDeal.com shortly.
+<p>
+  Hello <%= @user.first_name %>,
+</p>
+<br>
+<p>
+  Thank you for submitting your property at <%= @property.address %>!
+</p>
+<p>
+  You will get an email and a message in your user dashboard that will advise you when your property is approved or if we have any questions.
+</p>
+<p>
+  We highly advise you to upload the best pictures, video, property description, credible rehab numbers and real market comps, so that your property will sell for the highest price possible.
+</p>
+<p>
+  Don't forget that it is extremely important to users to be able to see good pictures of the inside and outside of the property.
+</p>
+<p>
+  We also suggest doing a short video, because this will give a buyer a quick tour of the property so they can see almost everything.  This way you don't have to show your deal to as many buyers, and the ones you do show are better qualified.
+</p>
+<p>
+  Thanks again for giving us the opportunity to help you net more money on your real estate deals.
+</p>
+<br>
+<p>
+  Best Regards,
+</p>
+<p>
+  Support@AuctionMyDeal.com
+</p>
+<br>
+<p>
+  P.S.: We would love to hear your feedback, so please let us know what we can do to make your experience on this site better for you? <%= link_to "Click HERE", "#{APP_CONFIG['site_url']}/how-everything-works/ask-us-question" %>
+</p>
