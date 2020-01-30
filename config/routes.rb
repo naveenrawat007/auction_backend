@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   namespace 'api' do
     namespace 'v1', constraints: ApiConstraint.new(version: 1) do
       devise_for :users, controllers:{ sessions: 'api/v1/users/sessions', registrations: 'api/v1/users/registrations' }
+      post 'visitor/question', to: 'visitors#submit_question'
       get 'users/forgot_password', to: 'users#forgot_password'
       post 'users/password/new', to: 'users#new_password'
       get 'users/check_token', to: 'users#check'
