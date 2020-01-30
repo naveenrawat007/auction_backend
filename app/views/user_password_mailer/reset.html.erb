@@ -1,9 +1,20 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Reset password</title>
-</head>
-<body>
-  Here is link to reset your password <%= link_to "Reset Password", "#{APP_CONFIG['site_url']}/new_password?reset_token=#{@user.auth_token}" %>
-</body>
-</html>
+<p>
+	Hello <%= @user.first_name %>,
+</p>
+<br>
+<p>
+	We heard you need a password reset. Click the link below and you'll be redirected to a secure site from which you can set a new password.
+</p>
+<p>
+	<%= link_to "Reset Password", "#{APP_CONFIG['site_url']}/new_password?reset_token=#{@user.auth_token}" %>
+</p>
+<p>
+	If you didn't try to reset your password, click here and we'll forget this ever happened.
+</p>
+<br>
+<p>
+	Best Regards,
+</p>
+<p>
+	Support Team @ AuctionMyDeal.com
+</p>
