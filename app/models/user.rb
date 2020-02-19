@@ -19,6 +19,7 @@ class User < ApplicationRecord
   has_many :watch_properties, through: :user_watch_properties, source: :property
   has_many :user_chat_rooms, dependent: :destroy
   has_many :chat_rooms, through: :user_chat_rooms
+  # has_many :owned_chat_rooms, through: :owned_properties, source: :chat_rooms
   has_many :messages, dependent: :destroy
   has_many :user_bought_properties, class_name: "SoldProperty", foreign_key: "user_id"
   has_many :bought_properties, through: :user_bought_properties, source: :property
