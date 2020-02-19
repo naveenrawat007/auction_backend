@@ -20,14 +20,21 @@ class RoomChannel < ApplicationCable::Channel
 
     # adds the message sender to the conversation if not already included
     chat_room.users << sender unless chat_room.users.include?(sender)
+    if chat_room.open_connection == false
+      if sender.id == chat_room.owner.id
+        chat_room.open_connection = true
+        chat_room.save
+      end
+    end
     # saves the message and its data to the DB
     # Note: this does not broadcast to the clients yet!
-    message = Message.create(
-      chat_room: chat_room,
-      user: sender,
-      content: message
-    )
-
+    if chat_room.open_connection == true
+      message = Message.create(
+        chat_room: chat_room,
+        user: sender,
+        content: message
+      )
+    end
   end
 
   # Helpers
