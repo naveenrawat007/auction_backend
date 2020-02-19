@@ -15,7 +15,7 @@ module Api
         @chat_room = @current_user.chat_rooms.find_by(id: params[:id])
         if @chat_room
           @messages = @chat_room.messages.order(created_at: :desc).paginate(page: params[:page], per_page: 10)
-          render json: {messages: ActiveModelSerializers::SerializableResource.new(@messages, each_serializer: MessageSerializer), status: 200}, status: 200
+          render json: {messages: ActiveModelSerializers::SerializableResource.new(@messages, each_serializer: MessageSerializer), status: 200, can_reply: can_reply(@chat_room)}, status: 200
         else
           render json: {message: "Chat room not found", status: 400}, status: 200
         end
@@ -34,6 +34,24 @@ module Api
           render json: {messages: ActiveModelSerializers::SerializableResource.new(@message, each_serializer: MessageSerializer), status: 200}, status: 200
         else
           render json: {message: "Chat room not found", status: 400}, status: 200
+        end
+      end
+
+      def can_reply(chat_room)
+        if chat_room.offer.class.to_s == "BestOffer"
+          if chat_room.property.best_offer_auction_ending_at > Time.now
+            true
+          else
+            if chat_room.messages.pluck(:user_id).include?(chat_room.owner.id)
+              true
+            elsif (chat_room.owner.id == @current_user.id)
+              true
+            else
+              false
+            end
+          end
+        else
+          true
         end
       end
     end
