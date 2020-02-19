@@ -114,6 +114,9 @@ class Property < ApplicationRecord
       self.seller_price ? seller_price : ""
     end
   end
+  def best_offer_auction_ending_at
+    self.auction_started_at ? self.auction_started_at + self.best_offer_length.to_i.days : ""
+  end
   def best_offer_price
     if self.best_offer
       if self.best_offers.blank? == false
