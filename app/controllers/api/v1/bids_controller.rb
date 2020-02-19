@@ -35,6 +35,7 @@ module Api
                   @chat_room = @current_user.chat_rooms.new(property_id: @property.id)
                   @chat_room.name = @property.address
                   @chat_room.offer = @bid
+                  @chat_room.open_connection = false
                   @chat_room.save
                   @chat_room.users << @property.owner
                   @chat_room.users << @current_user
@@ -47,7 +48,7 @@ module Api
                   end
                 end
                 #end
-                render json: {chat_room: ChatRoomSerializer.new(@chat_room), property: PropertySerializer.new(@property), message: "Bid Created.", status: 201 }, status: 200
+                render json: {property: PropertySerializer.new(@property), message: "Bid Created.", status: 201 }, status: 200
               else
                 render json: {message: "This amount is less than last Submitted bid.", status: 404 }, status: 200
               end
