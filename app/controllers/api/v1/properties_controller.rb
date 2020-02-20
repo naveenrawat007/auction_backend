@@ -265,6 +265,20 @@ module Api
               end
             end
           end
+          if @property.best_offer == true
+            if @property.best_offer_auction_started_at.blank? == false
+              if @property.best_offer_auction_started_at.to_i != @property.best_offer_auction_started_at.beginning_of_day.to_i
+                @property.best_offer_auction_started_at = @property.best_offer_auction_started_at.beginning_of_day
+              end
+            end
+            if @property.best_offer_auction_ending_at.blank? == false
+              if @property.best_offer_auction_ending_at.to_i != @property.best_offer_auction_ending_at.beginning_of_day.to_i
+                @property.best_offer_auction_ending_at = @property.best_offer_auction_ending_at.end_of_day
+                @property.auction_started_at = @property.best_offer_auction_ending_at
+                @property.auction_bidding_ending_at = @property.auction_started_at + @property.auction_length.to_i.days
+              end
+            end
+          end
           if @property.auction_started_at.blank? == false
             if @property.auction_started_at.to_i != @property.auction_started_at.beginning_of_day.to_i
               @property.auction_started_at = @property.auction_started_at.beginning_of_day
@@ -486,7 +500,7 @@ module Api
       end
 
       def property_update_params
-        params.require(:property).permit(:address, :city, :state, :zip_code, :lat, :long, :category, :p_type, :headliner, :mls_available, :flooded, :flood_count, :description, :owner_category, :additional_information, :seller_price, :buy_now_price, :auction_started_at, :auction_length, :auction_ending_at, :show_instructions_type_id, :seller_pay_type_id, :title_status, :youtube_url, :youtube_video_key, :deal_analysis_type, :after_rehab_value, :asking_price, :estimated_rehab_cost, :profit_potential, :arv_analysis, :description_of_repairs, :vimeo_url, :dropbox_url, :rental_description, :best_offer, :best_offer_length, :best_offer_sellers_minimum_price, :best_offer_sellers_reserve_price, :show_instructions_text)
+        params.require(:property).permit(:address, :city, :state, :zip_code, :lat, :long, :category, :p_type, :headliner, :mls_available, :flooded, :flood_count, :description, :owner_category, :additional_information, :seller_price, :buy_now_price, :auction_started_at, :auction_length, :auction_ending_at, :best_offer_auction_started_at, :best_offer_auction_ending_at, :show_instructions_type_id, :seller_pay_type_id, :title_status, :youtube_url, :youtube_video_key, :deal_analysis_type, :after_rehab_value, :asking_price, :estimated_rehab_cost, :profit_potential, :arv_analysis, :description_of_repairs, :vimeo_url, :dropbox_url, :rental_description, :best_offer, :best_offer_length, :best_offer_sellers_minimum_price, :best_offer_sellers_reserve_price, :show_instructions_text)
       end
 
       def open_house_dates_permitter
