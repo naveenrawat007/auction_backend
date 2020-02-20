@@ -444,6 +444,9 @@ module Api
           else
             if @offer.accepted != true
               @offer.accepted = true
+              if @offer.chat_room
+                @offer.update(open_connection: true)
+              end
               @offer.save
               Sidekiq::Client.enqueue_to_in("default", Time.now, AcceptOfferNotificationWorker, @property.id, @offer.id, params[:offer_type])
             end
