@@ -4,6 +4,9 @@ class Api::V1::Users::SessionsController < Devise::SessionsController
   def create
     @user = User.find_by(email:params[:user][:email])
     if @user
+      if @user.status == "Ban"
+        render json: {message: "You have been ban to the site pleasse contact support@auctionmydeal.com!", error: "Wrong Password", status: 401}, status: 200 and return
+      end
       if @user.valid_password?(params[:user][:password])
         token = JsonWebToken.encode(user_id: @user.id)
         @user.auth_token = token
