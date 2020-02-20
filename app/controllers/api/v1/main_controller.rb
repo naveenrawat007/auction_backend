@@ -9,6 +9,9 @@ module Api
         begin
           @decoded = JsonWebToken.decode(header)
           @current_user = User.find(@decoded[:user_id])
+          if @current_user.status == "Ban"
+            render json: { error: "User is Banned.", status: 401 }, status: 200 and return
+          end
         rescue ActiveRecord::RecordNotFound => e
           render json: { error: "User not exists.", status: 401 }, status: 200
         rescue JWT::DecodeError => e
