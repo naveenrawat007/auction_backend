@@ -42,11 +42,7 @@ module Api
           if chat_room.property.best_offer_auction_ending_at > Time.now
             true
           else
-            if chat_room.messages.where('created_at < ?', chat_room.property.best_offer_auction_ending_at).pluck(:user_id).include?(chat_room.owner.id)
-              true
-            else
-              false
-            end
+            false
           end
         else
           true
