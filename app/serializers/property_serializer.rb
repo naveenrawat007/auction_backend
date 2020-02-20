@@ -118,10 +118,12 @@ class PropertySerializer < ActiveModel::Serializer
 
   def check_best_offer_time
     if object.best_offer == true
-      if (Time.now < object.auction_started_at || Time.now < object.auction_started_at + object.best_offer_length.to_i.days)
-        true
-      else
-        false
+      if object.auction_started_at
+        if (Time.now < object.auction_started_at || Time.now < object.auction_started_at + object.best_offer_length.to_i.days)
+          true
+        else
+          false
+        end
       end
     else
       false
