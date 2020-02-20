@@ -19,6 +19,7 @@ module Api
         render json: {users: ActiveModelSerializers::SerializableResource.new(@users, each_serializer: UserSerializer), statuses: User.status, status: 200, meta: {current_page: @users.current_page, total_pages: @users.total_pages} }
       end
 
+
       def update_status
         @user = User.find_by(id: params[:user][:id])
         if @user
