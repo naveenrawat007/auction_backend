@@ -8,7 +8,7 @@ module Api
         else
           @chat_rooms = @current_user.chat_rooms.where(open_connection: true).order(created_at: :desc).paginate(page: params[:page], per_page: 20)
         end
-        render json: {user_id: @current_user.id, chat_rooms: ActiveModelSerializers::SerializableResource.new(@chat_rooms, each_serializer: ChatRoomSerializer), status: 200, meta: {current_page: @chat_rooms.current_page, total_pages: @chat_rooms.total_pages}}, status: 200
+        render json: {user_id: @current_user.id, chat_room_ids: @chat_rooms.ids, chat_rooms: ActiveModelSerializers::SerializableResource.new(@chat_rooms, each_serializer: ChatRoomSerializer), status: 200, meta: {current_page: @chat_rooms.current_page, total_pages: @chat_rooms.total_pages}}, status: 200
       end
 
       def show_messages
@@ -42,9 +42,7 @@ module Api
           if chat_room.property.best_offer_auction_ending_at > Time.now
             true
           else
-            if chat_room.messages.pluck(:user_id).include?(chat_room.owner.id)
-              true
-            elsif (chat_room.owner.id == @current_user.id)
+            if chat_room.messages.where('created_at < ?', chat_room.property.best_offer_auction_ending_at).pluck(:user_id).include?(chat_room.owner.id)
               true
             else
               false
