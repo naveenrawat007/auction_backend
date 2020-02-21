@@ -12,13 +12,15 @@ class PropertyApproveWorker
           PropertyMailer.approved(property.owner_id, property.id).deliver
           if property.auction_started_at.blank? == false
             if property.best_offer == true
-              Sidekiq::Client.enqueue_to_in("default", property.auction_started_at , PropertyBestOfferWorker, property.id)
-              Sidekiq::Client.enqueue_to_in("default", property.auction_started_at + property.best_offer_length.to_i.days , PropertyLiveWorker, property.id)
-            else
-              Sidekiq::Client.enqueue_to_in("default", property.auction_started_at , PropertyLiveWorker, property.id)
+              if property.best_offer_auction_started_at.blank? == false
+                @property.best_offer_live_auction_worker_jid = Sidekiq::Client.enqueue_to_in("default", property.best_offer_auction_started_at , PropertyBestOfferWorker, property.id)
+              end
+              if property.best_offer_auction_ending_at.blank? == false
+                @property.best_offer_post_auction_worker_jid = Sidekiq::Client.enqueue_to_in("default", property.auction_started_at + property.best_offer_length.to_i.days , PropertyBestOfferPostAuctionWorker, property.id)
+              end
             end
-            post_auction_worker_jid = Sidekiq::Client.enqueue_to_in("default", property.bidding_ending_at, PropertyPostAuctionWorker, property.id)
-            property.post_auction_worker_jid = post_auction_worker_jid
+            property.live_auction_worker_jid = Sidekiq::Client.enqueue_to_in("default", property.auction_started_at , PropertyLiveWorker, property.id)
+            property.post_auction_worker_jid = Sidekiq::Client.enqueue_to_in("default", property.auction_bidding_ending_at, PropertyPostAuctionWorker, property.id)
             property.save
           else
             property.status = "Hold"
