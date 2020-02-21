@@ -17,11 +17,11 @@ class UnderReviewPropertySerializer < ActiveModel::Serializer
     data[:termination_date] = object.termination_date ? object.termination_date.strftime("%m/%d/%Y") : ""
     data[:termination_reason] = object.termination_reason ? object.termination_reason : ""
     data[:auction_started_at] = object.auction_started_at ? object.auction_started_at.strftime("%m/%d/%Y") : ""
-    data[:auction_bidding_ending_at] = object.bidding_ending_at
+    data[:auction_bidding_ending_at] = object.auction_bidding_ending_at ? object.auction_bidding_ending_at : ""
     data[:auction_length] = object.auction_length
     data[:best_offer] = object.best_offer
     data[:auction_started_at_date] = object.auction_started_at ? object.auction_started_at : ""
-    data[:best_offer_auction_ending_at] = object.auction_started_at ? object.auction_started_at + object.best_offer_length.to_i.days : ""
+    data[:best_offer_auction_ending_at] = object.best_offer_auction_ending_at ? object.best_offer_auction_ending_at : ""
     data[:submitted_at_timer] = submitted_timer
     data[:unique_address] = object.unique_address
     data[:bids] = ActiveModelSerializers::SerializableResource.new(object.bids, each_serializer: BidSerializer)
