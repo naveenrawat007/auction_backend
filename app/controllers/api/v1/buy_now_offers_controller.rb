@@ -83,7 +83,7 @@ module Api
       private
       def check_best_offer_time
         if @property.best_offer == true
-          if (Time.now < @property.auction_started_at + @property.best_offer_length.to_i.days)
+          if (Time.now < @property.best_offer_auction_ending_at)
             true
           else
             false
