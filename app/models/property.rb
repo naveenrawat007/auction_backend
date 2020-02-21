@@ -1,5 +1,5 @@
 class Property < ApplicationRecord
-  audited except: [:status, :total_views, :submitted_at, :youtube_video_key, :lat, :long, :unique_address, :termination_date, :termination_reason, :termination_date, :requested_at,:request_reason, :sniper, :sniper_length, :requested, :requested_status, :post_auction_worker_jid, :submitted]
+  audited except: [:status, :total_views, :submitted_at, :youtube_video_key, :lat, :long, :unique_address, :termination_date, :termination_reason, :termination_date, :requested_at,:request_reason, :sniper, :sniper_length, :requested, :requested_status, :post_auction_worker_jid, :submitted, :best_offer_post_auction_worker_jid, :best_offer_live_auction_worker_jid, :live_auction_worker_jid]
   has_associated_audits
   belongs_to :owner, class_name: "User", foreign_key: "owner_id"
   has_many :photos, as: :imageable, dependent: :destroy
@@ -91,22 +91,6 @@ class Property < ApplicationRecord
     24.hours
   end
 
-  def bidding_started_at
-    if self.best_offer == true
-      self.auction_started_at ? self.auction_started_at + self.best_offer_length.to_i.days : ""
-    else
-      self.auction_started_at ? self.auction_started_at : ""
-    end
-  end
-
-  def bidding_ending_at
-    if self.best_offer == true
-      self.auction_started_at ? self.auction_started_at + self.best_offer_length.to_i.days + self.auction_length.to_i.days : ""
-    else
-      self.auction_started_at ? self.auction_started_at + self.auction_length.to_i.days + self.sniper_length.minutes : ""
-    end
-  end
-
   def highest_bid
     if self.bids.blank? == false
       self.bids.maximum(:amount)
@@ -114,9 +98,7 @@ class Property < ApplicationRecord
       self.seller_price ? seller_price : ""
     end
   end
-  def best_offer_auction_ending_at
-    self.auction_started_at ? self.auction_started_at + self.best_offer_length.to_i.days : ""
-  end
+
   def best_offer_price
     if self.best_offer
       if self.best_offers.blank? == false
