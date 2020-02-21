@@ -20,8 +20,8 @@ class PropertySerializer < ActiveModel::Serializer
     data[:best_offer] = object.best_offer
     data[:best_offer_length] = object.best_offer_length ? object.best_offer_length : ""
     data[:best_offer_time_pending] = check_best_offer_time
-    data[:best_offer_auction_started_at] = object.auction_started_at ? object.auction_started_at : ""
-    data[:best_offer_auction_ending_at] = object.auction_started_at ? object.auction_started_at + object.best_offer_length.to_i.days : ""
+    data[:best_offer_auction_started_at] = object.best_offer_auction_started_at
+    data[:best_offer_auction_ending_at] = object.best_offer_auction_ending_at
     data[:best_offer_sellers_minimum_price] = object.best_offer_sellers_minimum_price ? object.best_offer_sellers_minimum_price : ""
     data[:best_offer_price] = object.best_offer_price
     data[:best_offer_sellers_reserve_price] = object.best_offer_sellers_reserve_price ? object.best_offer_sellers_reserve_price : ""
@@ -47,8 +47,8 @@ class PropertySerializer < ActiveModel::Serializer
     data[:buy_now_price] = object.buy_now_price ? object.buy_now_price : ""
     data[:auction_started_at] = object.auction_started_at ? object.auction_started_at : ""
     data[:auction_length] = object.auction_length ? object.auction_length : ""
-    data[:auction_bidding_started_at] = object.bidding_started_at
-    data[:auction_bidding_ending_at] = object.bidding_ending_at
+    data[:auction_bidding_started_at] = object.auction_started_at
+    data[:auction_bidding_ending_at] = object.auction_bidding_ending_at
     data[:auction_ending_at] = object.auction_ending_at ? object.auction_ending_at : ""
     data[:closing_date] = object.auction_ending_at ? object.auction_ending_at.strftime("%m/%d/%Y") : ""
     data[:status] = object.status
@@ -118,8 +118,8 @@ class PropertySerializer < ActiveModel::Serializer
 
   def check_best_offer_time
     if object.best_offer == true
-      if object.auction_started_at
-        if (Time.now < object.auction_started_at || Time.now < object.auction_started_at + object.best_offer_length.to_i.days)
+      if object.best_offer_auction_started_at
+        if (Time.now < object.best_offer_auction_started_at)
           true
         else
           false
