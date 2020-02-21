@@ -2,6 +2,7 @@ module Api
   module V1
     module Admin
       class PropertiesController < Api::V1::MainController
+        include ApplicationHelper
         before_action :authorize_admin_request
 
         def index
@@ -52,19 +53,22 @@ module Api
                     @property.auction_started_at = params[:property][:auction_started_at]
                     @property.auction_length = params[:property][:auction_length]
                     if @property.auction_started_at.blank? == false
-                      @property.auction_started_at = @property.auction_started_at.beginning_of_day
+                      @property.auction_started_at = @property.auction_started_at.beginning_of_day + 8.hours
+                      @property.auction_bidding_ending_at = (@property.auction_started_at + @property.auction_length.to_i.days).end_of_day - 4.hours
                     end
                     @property.save
                   end
                   if @property.auction_started_at.blank? == false
                     if @property.best_offer == true
-                      Sidekiq::Client.enqueue_to_in("default", @property.auction_started_at , PropertyBestOfferWorker, @property.id)
-                      Sidekiq::Client.enqueue_to_in("default", @property.auction_started_at + @property.best_offer_length.to_i.days , PropertyLiveWorker, @property.id)
-                    else
-                      Sidekiq::Client.enqueue_to_in("default", @property.auction_started_at , PropertyLiveWorker, @property.id)
+                      if @property.best_offer_auction_started_at.blank? == false
+                        best_offer_live_auction(@property)
+                      end
+                      if @property.best_offer_auction_ending_at.blank? == false
+                        best_offer_post_auction(@property)
+                      end
                     end
-                    post_auction_worker_jid = Sidekiq::Client.enqueue_to_in("default", @property.bidding_ending_at, PropertyPostAuctionWorker, @property.id)
-                    @property.post_auction_worker_jid = post_auction_worker_jid
+                    live_auction(@property)
+                    post_auction(@property)
                     @property.save
                   else
                     @property.status = "Hold"
