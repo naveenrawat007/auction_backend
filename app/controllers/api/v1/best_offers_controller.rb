@@ -2,6 +2,7 @@ module Api
   module V1
     class BestOffersController < MainController
       before_action :authorize_request
+      include ActionView::Helpers::NumberHelper
       def create
         @property = Property.find_by(id: params[:property][:id])
         if @property
@@ -31,7 +32,7 @@ module Api
                 @chat_room.users << @current_user
               end
               message = @chat_room.messages.new
-              message.content = "I have submitted Best Offer in your property at #{@property.address} for $#{@best_offer.amount} and check proof of funds."
+              message.content = "I have submitted Best Offer in your property at #{@property.address} for #{number_to_currency(@best_offer.amount)} and check proof of funds."
               message.user_id = @current_user.id
               message.save
               if @best_offer.fund_proofs.blank? == false

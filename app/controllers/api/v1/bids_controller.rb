@@ -3,6 +3,7 @@ module Api
     class BidsController < MainController
       before_action :authorize_request
       include ApplicationHelper
+      include ActionView::Helpers::NumberHelper
       def create
         @property = Property.find_by(id: params[:property][:id])
         if @property
@@ -42,7 +43,7 @@ module Api
                   @chat_room.users << @current_user
                 end
                 message = @chat_room.messages.new
-                message.content = "I have submitted Bid in your property at #{@property.address} for $#{@bid.amount} and check proof of funds."
+                message.content = "I have submitted Bid in your property at #{@property.address} for #{number_to_currency(@bid.amount)} and check proof of funds."
                 message.user_id = @current_user.id
                 message.save
                 if @bid.fund_proofs.blank? == false
