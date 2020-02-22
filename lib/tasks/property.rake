@@ -74,4 +74,30 @@ namespace :property do
       end
     end
   end
+  task offers_date: :environment do #validates that buy is not seller
+    Property.all.each do |property|
+      if property.auction_started_at.blank? == false
+        if property.best_offer_auction_started_at.blank? == false
+          property.best_offer_auction_started_at = property.auction_started_at.beginning_of_day + 8.hours
+        end
+        if property.best_offer_auction_ending_at.blank? == false
+          property.best_offer_auction_ending_at = (property.auction_started_at.end_of_day - 4.hours) + property.best_offer_length.to_i.days
+          property.auction_started_at = (property.auction_started_at + 1.day + property.best_offer_length.to_i.days).beginning_of_day + 8.hours
+          property.auction_bidding_ending_at = (property.auction_started_at + property.auction_length.to_i.days).end_of_day - 4.hours
+        end
+        property.save
+        if property.best_offer == true
+          if property.best_offer_auction_started_at.blank? == false
+            property.best_offer_live_auction_worker_jid = Sidekiq::Client.enqueue_to_in("default", property.best_offer_auction_started_at , PropertyBestOfferWorker, property.id)
+          end
+          if property.best_offer_auction_ending_at.blank? == false
+            property.best_offer_post_auction_worker_jid = Sidekiq::Client.enqueue_to_in("default", property.best_offer_auction_ending_at , PropertyBestOfferPostAuctionWorker, property.id)
+          end
+        end
+        property.live_auction_worker_jid = Sidekiq::Client.enqueue_to_in("default", property.auction_started_at , PropertyLiveWorker, property.id)
+        property.post_auction_worker_jid = Sidekiq::Client.enqueue_to_in("default", property.auction_bidding_ending_at, PropertyPostAuctionWorker, property.id)
+        property.save
+      end
+    end
+  end
 end
