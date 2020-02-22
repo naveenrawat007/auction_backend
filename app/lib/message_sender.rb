@@ -5,11 +5,11 @@ class MessageSender
     auth_token  =  Rails.application.credentials.twilio_auth_token
     client = Twilio::REST::Client.new(account_sid, auth_token)
 
-    message = client.messages.create(
-      from:  Rails.application.credentials.twilio_phone_number,
-      to:    phone_number,
-      body:  code
-    )
+    # message = client.messages.create(
+    #   from:  Rails.application.credentials.twilio_phone_number,
+    #   to:    phone_number,
+    #   body:  code
+    # )
   end
   def self.send(phone_number, message)
     # puts "yess++++++++++++++++++++++++++++++++++++++++++#{phone_number}++++#{message}"
@@ -17,10 +17,10 @@ class MessageSender
     auth_token  =  Rails.application.credentials.twilio_auth_token
     client = Twilio::REST::Client.new(account_sid, auth_token)
 
-    message = client.messages.create(
-      from:  Rails.application.credentials.twilio_phone_number,
-      to:    phone_number,
-      body:  message
-    )
+    # message = client.messages.create(
+    #   from:  Rails.application.credentials.twilio_phone_number,
+    #   to:    phone_number,
+    #   body:  message
+    # )
   end
 end
