@@ -48,7 +48,7 @@ class PropertySerializer < ActiveModel::Serializer
     data[:auction_started_at] = object.auction_started_at ? object.auction_started_at : ""
     data[:auction_length] = object.auction_length ? object.auction_length : ""
     data[:auction_bidding_started_at] = object.auction_started_at ? object.auction_started_at : ""
-    data[:auction_bidding_ending_at] = object.auction_bidding_ending_at ? object.auction_bidding_ending_at : "" 
+    data[:auction_bidding_ending_at] = object.auction_bidding_ending_at ? object.auction_bidding_ending_at : ""
     data[:auction_ending_at] = object.auction_ending_at ? object.auction_ending_at : ""
     data[:closing_date] = object.auction_ending_at ? object.auction_ending_at.strftime("%m/%d/%Y") : ""
     data[:status] = object.status
@@ -119,7 +119,7 @@ class PropertySerializer < ActiveModel::Serializer
   def check_best_offer_time
     if object.best_offer == true
       if object.best_offer_auction_started_at
-        if (Time.now < object.best_offer_auction_started_at)
+        if (Time.now < object.best_offer_auction_ending_at)
           true
         else
           false
