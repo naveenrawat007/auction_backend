@@ -13,10 +13,10 @@ class PropertyApproveWorker
           if property.auction_started_at.blank? == false
             if property.best_offer == true
               if property.best_offer_auction_started_at.blank? == false
-                @property.best_offer_live_auction_worker_jid = Sidekiq::Client.enqueue_to_in("default", property.best_offer_auction_started_at , PropertyBestOfferWorker, property.id)
+                property.best_offer_live_auction_worker_jid = Sidekiq::Client.enqueue_to_in("default", property.best_offer_auction_started_at , PropertyBestOfferWorker, property.id)
               end
               if property.best_offer_auction_ending_at.blank? == false
-                @property.best_offer_post_auction_worker_jid = Sidekiq::Client.enqueue_to_in("default", property.auction_started_at + property.best_offer_length.to_i.days , PropertyBestOfferPostAuctionWorker, property.id)
+                property.best_offer_post_auction_worker_jid = Sidekiq::Client.enqueue_to_in("default", property.best_offer_auction_ending_at , PropertyBestOfferPostAuctionWorker, property.id)
               end
             end
             property.live_auction_worker_jid = Sidekiq::Client.enqueue_to_in("default", property.auction_started_at , PropertyLiveWorker, property.id)
