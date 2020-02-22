@@ -478,7 +478,7 @@ module Api
               @offer.accepted = false
               @offer.save
             end
-            render json: {message: "Offer rejected.", status: 200}, status: 200
+            render json: {accepted: false, message: "Offer rejected.", status: 200}, status: 200
           else
             if @offer.accepted != true
               @offer.accepted = true
@@ -493,7 +493,7 @@ module Api
               @property.save
               Sidekiq::Client.enqueue_to_in("default", Time.now, PropertyNotificationWorker, @property.id)
             end
-            render json: {message: "Offer accepted.", status: 200}, status: 200
+            render json: {accepted: true, chat_room: ChatRoomSerializer.new(@offer.chat_room), message: "Offer accepted.", status: 200}, status: 200
           end
         else
           render json: {message: "Property could not be found.", status: 400}, status: 200
