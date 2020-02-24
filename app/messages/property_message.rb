@@ -20,4 +20,11 @@ class PropertyMessage
     rescue StandardError => e
     end
   end
+  def self.post_auction(user, property)
+    begin
+      message = "The property you submitted at #{property.address} is now in post auction status so go to your user panel at AuctionMyDeal.com to accept, counter or relist your property under Best Offer or Live Online Auction?"
+      MessageSender.send("+1#{user.phone_number}", message)
+    rescue StandardError => e
+    end
+  end
 end
