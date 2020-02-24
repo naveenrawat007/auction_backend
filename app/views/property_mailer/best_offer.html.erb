@@ -5,7 +5,7 @@
   Your property will go LIVE into our Best Offer Bidding System on <%= @property.best_offer_auction_started_at.strftime("%m/%d/%Y") %> at 8 am.
 </p>
 <p>
-  Now it’s time for you to get as many investors as possible making offers on your property by driving them to your property @ <%= link_to "#{@property.address }" ,"#{APP_CONFIG['site_url']}/property/#{property.unique_address}" %> on the above date.
+  Now it’s time for you to get as many investors as possible making offers on your property by driving them to your property @ <%= link_to "#{@property.address }" ,"#{APP_CONFIG['site_url']}/property/#{@property.unique_address}" %> on the above date.
 </p>
 <p>
   #1 Priority for Success: It is your responsibility to make sure you give your property Maximum Visibility by Marketing Your Property.
