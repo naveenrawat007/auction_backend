@@ -21,6 +21,7 @@ class PropertyMailer < ApplicationMailer
     @property = Property.find_by(id: property_id)
     if @user && @property
       mail(to: [@user.email], subject: "Property is Live for online bidding.")
+      PropertyMessage.live_bidding(@user, @property)
     end
   end
 
