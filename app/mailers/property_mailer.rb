@@ -33,6 +33,15 @@ class PropertyMailer < ApplicationMailer
     end
   end
 
+  def buy_now_notification(user_id, property_id)
+    @user = User.find_by(id: user_id)
+    @property = Property.find_by(id: property_id)
+    if @user && @property
+      mail(to: [@user.email], subject: "You Win Your “Buy Now” Price…:)")
+      PropertyMessage.buy_now_notification(@user, @property)
+    end
+  end
+
   def best_offer_notification(user_id, property_id)
     @user = User.find_by(id: user_id)
     @property = Property.find_by(id: property_id)
