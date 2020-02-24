@@ -44,5 +44,13 @@ class PropertyMessage
     end
   end
 
+  def self.chat_notification(user)
+    begin
+      message = "You have received a message at AuctionMyDeal.com."
+      MessageSender.send("+1#{user.phone_number}", message)
+    rescue StandardError => e
+    end
+  end
+
 
 end
