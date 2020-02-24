@@ -36,5 +36,13 @@ class PropertyMessage
     end
   end
 
+  def self.sold_notification(user, property)
+    begin
+      message = "Congratulations on selling your property at (street address)!!!  Our goal is to go the extra yard for our members and we would like to learn from every property that’s posted on our site so that we can learn from our successes and failures.  It would mean a lot if you would take just a minute or 2 to give us your honest feedback? \n Your Support Team @ \n AuctionMyDeal.com "
+      MessageSender.send("+1#{user.phone_number}", message)
+    rescue StandardError => e
+    end
+  end
+
 
 end

@@ -82,6 +82,14 @@ class PropertyMailer < ApplicationMailer
       PropertyMessage.post_auction(@user, @property)
     end
   end
+  def sold_notification(user_id, property_id)
+    @user = User.find_by(id: user_id)
+    @property = Property.find_by(id: property_id)
+    if @user && @property
+      mail(to: [@user.email], subject: "Way to go #{@user.first_name}...:)")
+      PropertyMessage.sold_notification(@user, @property)
+    end
+  end
   def share_link(email, link)
     @link = link
     mail(to: [email], subject: "Property is Shared.")
