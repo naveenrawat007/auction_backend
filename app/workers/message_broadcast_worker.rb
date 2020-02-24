@@ -5,6 +5,10 @@ class MessageBroadcastWorker
   def perform(message_id)
     message = Message.find_by(id: message_id)
     if message
+      begin
+        Sidekiq::Client.enqueue_to_in("default", Time.now , MessageNotificationWorker, message.chat_room.property.owner.id)
+      rescue ExceptionName
+      end
       attachments = []
       message.attachments.each do |attachment|
         details = {
