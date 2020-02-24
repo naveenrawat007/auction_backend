@@ -27,4 +27,14 @@ class PropertyMessage
     rescue StandardError => e
     end
   end
+
+  def self.buy_now_notification(user, property)
+    begin
+      message = "Congratulations!!! You just got a buyer willing to pay your “Buy Now” price for your property at #{property.address}.  Your property is now in pending auction status until you go to your user panel at AuctionMyDeal.com to accept your “Buy Now” offer!  Your Support Team @ AuctionMyDeal.com"
+      MessageSender.send("+1#{user.phone_number}", message)
+    rescue StandardError => e
+    end
+  end
+
+
 end
