@@ -134,4 +134,12 @@ class PropertyMailer < ApplicationMailer
       mail(to: [@user.email], subject: "Your Buy Offer is accepted and is in pending status.")
     end
   end
+  def buyer_best_offer_notification(buyer_id, property_id)
+    @buyer = User.find_by(id: buyer_id)
+    @property = Property.find_by(id: property_id)
+    if @buyer
+      mail(to: [@buyer.email], subject: " Thank you for Your Best Offer on #{@property.address}!")
+    end
+    PropertyMessage.buyer_best_offer_notification(@buyer, @property)
+  end
 end

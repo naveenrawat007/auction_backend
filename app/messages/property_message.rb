@@ -52,5 +52,13 @@ class PropertyMessage
     end
   end
 
+  def self.buyer_best_offer_notification(user, property)
+    begin
+      message = "Thank you for your Best Offer on #{property.address} at AuctionMyDeal.com.  The seller is considering your offer and will be letting you know if your offer is acceptable or not.  They have the option to accept, reject or counter your offer, so look for a message from them in your messages under your profile?"
+      MessageSender.send("+1#{user.phone_number}", message)
+    rescue StandardError => e
+    end
+  end
+
 
 end
