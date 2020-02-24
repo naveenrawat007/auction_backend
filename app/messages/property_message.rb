@@ -6,4 +6,11 @@ class PropertyMessage
     rescue StandardError => e
     end
   end
+  def self.best_offer(user, property)
+    begin
+      message = "The property you submitted at #{property.address} has been approved! Check your email we just sent you that gives you"
+      MessageSender.send("+1#{user.phone_number}", message)
+    rescue StandardError => e
+    end
+  end
 end
