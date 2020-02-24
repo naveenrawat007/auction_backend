@@ -10,6 +10,9 @@ class PropertyLiveWorker
           property.status = "Live Online Bidding"
           property.save
           PropertyMailer.live_bidding(property.owner_id, property.id).deliver
+          if property.best_offer == true
+            Sidekiq::Client.enqueue_to_in("default", Time.now , BestOfferChecksWorker, @property.id)
+          end
         end
       end
     end
