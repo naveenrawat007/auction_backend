@@ -70,6 +70,7 @@ class PropertyMailer < ApplicationMailer
     @property = Property.find_by(id: property_id)
     if @user && @property
       mail(to: [@user.email], subject: "Property's auction period is over.")
+      PropertyMessage.post_auction(@user, @property)
     end
   end
   def share_link(email, link)
