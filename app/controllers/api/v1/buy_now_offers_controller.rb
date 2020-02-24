@@ -18,7 +18,7 @@ module Api
                 @buy_now.save
                 @property.status = "Pending"
                 @property.save
-                Sidekiq::Client.enqueue_to_in("default", Time.now , PropertyBuyNowNotificationWorker, @property.id)
+                Sidekiq::Client.enqueue_to_in("default", Time.now , PropertyBuyNowNotificationWorker, @property.id, @buy_now.id)
                 if params[:buy_now][:fund_proof].blank? == false
                   @buy_now.fund_proofs.destroy_all
                   @buy_now.fund_proofs.create(file: params[:buy_now][:fund_proof])
@@ -53,7 +53,7 @@ module Api
               @buy_now.save
               @property.status = "Pending"
               @property.save
-              Sidekiq::Client.enqueue_to_in("default", Time.now , PropertyBuyNowNotificationWorker, @property.id)
+              Sidekiq::Client.enqueue_to_in("default", Time.now , PropertyBuyNowNotificationWorker, @property.id, @buy_now.id)
               if params[:buy_now][:fund_proof].blank? == false
                 @buy_now.fund_proofs.destroy_all
                 @buy_now.fund_proofs.create(file: params[:buy_now][:fund_proof])
