@@ -17,6 +17,7 @@ class PropertyPostAuctionWorker
               property.status = "Pending"
               begin
                 property.bids.order(amount: :desc).first.chat_room.update(open_connection: true)
+                BidMailer.highest_bidder_notification(property.bids.order(amount: :desc).first.id).deliver
               rescue
               end
             end
