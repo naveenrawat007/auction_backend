@@ -20,4 +20,15 @@ class BidMailer < ApplicationMailer
       end
     end
   end
+
+  def highest_bidder_notification(bid_id)
+    @offer = Bid.find_by(id: bid_id)
+    if @offer
+  	  @buyer = User.find_by(id: @offer.user_id)
+      @property = Property.find_by(id: @offer.property_id)
+      if @buyer && @property
+        mail(to: [@buyer.email], subject: "CONGRATULATIONS!!! You’re the Highest Bidder for  #{@property.address}!")
+      end
+    end
+  end
 end
