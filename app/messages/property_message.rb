@@ -13,4 +13,11 @@ class PropertyMessage
     rescue StandardError => e
     end
   end
+  def self.live_bidding(user, property)
+    begin
+      message = "The property you submitted at #{property.address} is now active for Live Online Bidding status."
+      MessageSender.send("+1#{user.phone_number}", message)
+    rescue StandardError => e
+    end
+  end
 end
