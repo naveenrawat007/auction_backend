@@ -51,7 +51,8 @@ class PropertyMailer < ApplicationMailer
     @user = User.find_by(id: user_id)
     @property = Property.find_by(id: property_id)
     if @user && @property
-      mail(to: [@user.email], subject: "Your Property is Open for accepting Offers.")
+      mail(to: [@user.email], subject: "Your Property at #{@property.address} is Approved.")
+      PropertyMessage.best_offer(@user, @property)
     end
   end
 
