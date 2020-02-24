@@ -17,6 +17,7 @@ module Api
               @best_offer.buy_option = buy_option_permitter
               @best_offer.save
               Sidekiq::Client.enqueue_to_in("default", Time.now , PropertyBestOfferNotificationWorker, @property.id)
+              Sidekiq::Client.enqueue_to_in("default", Time.now , BuyerBestOfferNotificationWorker, @property.id, @current_user.id)
               if params[:best_offer][:fund_proof].blank? == false
                 @best_offer.fund_proofs.destroy_all
                 @best_offer.fund_proofs.create(file: params[:best_offer][:fund_proof])
