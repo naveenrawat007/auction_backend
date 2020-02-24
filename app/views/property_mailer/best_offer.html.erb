@@ -1,1 +1,56 @@
-Hello <%= @user.first_name %> <%= @user.last_name %>, Property address with "<%= @property.headline %>" is Live and available in best Offer on AuctionMyDeal.com
+<p>
+  Congratulations!!!  The property you submitted at <%= @property.address %> has been approved!
+</p>
+<p>
+  Your property will go LIVE into our Best Offer Bidding System on <%= @property.best_offer_auction_started_at.strftime("%m/%d/%Y") %> at 8 am.
+</p>
+<p>
+  Now it’s time for you to get as many investors as possible making offers on your property by driving them to your property @ <%= link_to "#{@property.address }" ,"#{APP_CONFIG['site_url']}/property/#{property.unique_address}" %> on the above date.
+</p>
+<p>
+  #1 Priority for Success: It is your responsibility to make sure you give your property Maximum Visibility by Marketing Your Property.
+</p>
+<p>
+  Your Marketing Checklist for Success:
+  <ul>
+    <li>
+      Email your buyers list the link above. (ex: Marketing Email)(link)
+    </li>
+    <li>
+      Post the link on your Facebook Page & Real Estate Investor Groups (ex: Best Facebook Marketing Post)
+    </li>
+    <li>
+      Post your property on the real estate section on Craigslist. (link to Craigslist real estate section)
+    </li>
+    <li>
+      Put a link under your property on your website for Buyers.(ex: Best Craigslist post)
+    </li>
+    <li>
+      Put together fliers on your property to pass out at networking events. (ex: Best Flier)
+    </li>
+  </ul>
+</p>
+<p>
+  #2 Priority for Success: Making your property available for potential buyers is extremely important if you want to get your property sold.  If it’s vacant and easy to show then that makes it easy, but if not then make sure that you set up at least 2 times for investors to inspect the property so that you will get multiple buyers bidding on your property.  It’s always better to show more than one investor at a time so that it creates more demand on your property but even better if you can get 10 in at once.  If your property is occupied and hard to show then we suggest that you upload a 3 to 4 minute video and give the winning bidder 48 hours after they are chosen as the winning bidder to inspect the property.  It’s always better get get bids from investors ******And under no circumstances should you ever except any offers from an investor unless they are your Best Offer at AuctionMyDeal.com unless you want to Net LESS Money.
+</p>
+<p>
+  We understand that building relationships with your inner circle of buyers is important, but don’t let them rob you of thousands of dollars on your wholesale deals by accepting your first offer.  I’m sure you work hard for your money and think about what you could do with an extra $2,000 to $5,000 a deal you close.  More money for your marketing, family, nicer cars and more vacations every year.
+</p>
+<p>
+  Don’t forget time is in your favor and our Best Offer System is set up to make sure that you make at least a few thousand dollars more than if you just accepted your first offer.
+</p>
+<p>
+  We are committed to helping you succeed so please let us know if you have any questions or suggestions on how we can better serve you? <%= link_to "Click HERE", "#{APP_CONFIG['site_url']}/how-everything-works/ask-us-question" %>
+</p>
+<p>
+  Best of Luck in getting Your Deal SOLD!
+  <br/>
+  Support@AuctionMyDeal.com
+</p>
+<p>
+  P.S.: If you don’t get an acceptable price during your Best Offer time frame then your property will automatically go into our Live Online Auction until the timer ends.
+</p>
+CREATE PDF FOR WHAT I’M TRYING TO EXPLAIN
+<p>
+  P.S.S.: For a limited time only our affiliate partners at Angel Investors, LLC will guarantee that if they don’t buy your deal then they will email it out to their list of 9347 Active Real Estate Investors to help you get your Deal SOLD at no cost.
+</p>
