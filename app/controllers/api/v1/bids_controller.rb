@@ -26,7 +26,7 @@ module Api
                   @property.post_auction_worker_jid = post_auction_worker_jid
                   @property.save
                 end
-                Sidekiq::Client.enqueue_to_in("default", Time.now , PropertyBidNotificationWorker, @property.id)
+                Sidekiq::Client.enqueue_to_in("default", Time.now , PropertyBidNotificationWorker, @property.id, @bid.id)
                 if params[:bid][:fund_proof].blank? == false
                   @bid.fund_proofs.destroy_all
                   @bid.fund_proofs.create(file: params[:bid][:fund_proof])
