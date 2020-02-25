@@ -24,6 +24,7 @@ class PropertyPostAuctionWorker
             if property.save
               PropertyMailer.post_auction(property.owner_id, property.id).deliver
               Sidekiq::Client.enqueue_to_in("default", Time.now , PropertyOutBidderNotificationWorker, @property.id)
+              Sidekiq::Client.enqueue_to_in("default", Time.now , PropertyWatchersNotificationWorker, @property.id)
             end
           end
         end
