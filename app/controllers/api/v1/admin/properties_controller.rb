@@ -37,6 +37,12 @@ module Api
             if params[:property][:status].blank? == false
               old_status = @property.status
               @property.status = params[:property][:status]
+              if @property.requested == true
+                Sidekiq::Client.enqueue_to_in("default", Time.now , PropertyTerminationNotificationWorker, @property.id, @property.bids.map(&:user_id), "Bid")
+                @property.bids.destroy_all
+                @property.best_offers.destroy_all
+                @property.buy_now_offers.destroy_all
+              end
               @property.requested = false
               @property.submitted = false
               @property.save
