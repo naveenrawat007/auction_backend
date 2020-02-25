@@ -66,9 +66,6 @@ module Api
           if (@property.status != "Draft" || @property.status != "Terminated") && ((params[:property][:request_status] != @property.requested_status ) || (@property.requested == false))
             if params[:property][:request_status] == "Withdraw / Draft"
               @property.status = "Under Review"
-              @property.bids.destroy_all
-              @property.best_offers.destroy_all
-              @property.buy_now_offers.destroy_all
               @property.requested = true
               Sidekiq::Client.enqueue_to_in("default", Time.now + Property.approve_time_delay , PropertyDraftWorker, @property.id)
             end
