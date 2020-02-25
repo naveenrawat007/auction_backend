@@ -6,9 +6,9 @@ class PropertyBuyNowNotificationWorker
     property = Property.find_by(id: property_id)
     if property && buy_now_id
       PropertyMailer.buy_now_notification(property.owner_id, property.id).deliver
-      BuyNowMailer.submitted(buy_now_id)
+      BuyNowMailer.submitted(buy_now_id).deliver
       property.bids.each do |bid_offer|
-        BuyNowMailer.out_bidded_notification(bid_offer.user_id, property.id)
+        BuyNowMailer.out_bidded_notification(bid_offer.user_id, property.id).deliver
       end
     end
   end
