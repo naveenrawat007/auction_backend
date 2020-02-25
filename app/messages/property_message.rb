@@ -60,5 +60,12 @@ class PropertyMessage
     end
   end
 
+  def self.watchers_post_notification(user, property)
+    begin
+      message = "The property at (street name) is now pending or off the market, but we will let you know if it comes back on the market.  Your Support Team @ AuctionMyDeal.com"
+      MessageSender.send("+1#{user.phone_number}", message)
+    rescue StandardError => e
+    end
+  end
 
 end

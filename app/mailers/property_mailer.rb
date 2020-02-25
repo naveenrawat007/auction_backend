@@ -139,7 +139,16 @@ class PropertyMailer < ApplicationMailer
     @property = Property.find_by(id: property_id)
     if @buyer
       mail(to: [@buyer.email], subject: " Thank you for Your Best Offer on #{@property.address}!")
+      PropertyMessage.buyer_best_offer_notification(@buyer, @property)
     end
-    PropertyMessage.buyer_best_offer_notification(@buyer, @property)
   end
+  def watchers_post_notification(property_id, user_id)
+    @user = User.find_by(id: user_id)
+    @property = Property.find_by(id: property_id)
+    if @user && @property
+      mail(to: [@user.email], subject: "#{@property.address} is Now Under Contract @ AuctionMyDeal.com")
+      PropertyMessage.watchers_post_notification(@user, @property)
+    end
+  end
+
 end
