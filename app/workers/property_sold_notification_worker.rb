@@ -1,4 +1,4 @@
-class PropertyPostAuctionWorker
+class PropertySoldNotificationWorker
   include Sidekiq::Worker
   sidekiq_options retry: 4
 
