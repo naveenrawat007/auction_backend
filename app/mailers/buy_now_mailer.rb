@@ -10,4 +10,11 @@ class BuyNowMailer < ApplicationMailer
       end
     end
   end
+  def out_bidded_notification(user_id, property_id)
+    @buyer = User.find_by(id: user_id)
+    @property = Property.find_by(id: @offer.property_id)
+    if @buyer && @property
+      mail(to: [@buyer.email], subject: "You’ve been Outbid for #{@property.address}")
+    end
+  end
 end
