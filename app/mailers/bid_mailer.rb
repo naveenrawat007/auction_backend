@@ -31,4 +31,15 @@ class BidMailer < ApplicationMailer
       end
     end
   end
+
+  def termination_notification(user_id, property_id)
+    @offer = Bid.find_by(id: bid_id)
+    if @offer
+  	  @buyer = User.find_by(id: @offer.user_id)
+      @property = Property.find_by(id: @offer.property_id)
+      if @buyer && @property
+        mail(to: [@buyer.email], subject: "#{@property.address} is no longer on the Market")
+      end
+    end
+  end
 end
