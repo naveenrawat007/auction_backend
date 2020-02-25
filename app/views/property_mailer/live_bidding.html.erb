@@ -1,19 +1,11 @@
 Hello <%= @user.first_name %>!
+<p style="font-size: 13px;">Congratulations! Your property is now active in our Live Online Auction!</p>
+<p style="font-size: 13px;">The property auction at <%= @property.address %> will end in <%= @property.auction_length %> days at <%= @property.auction_bidding_ending_at.strftime("%m/%d/%Y") %>.</p>
+<p style="font-size: 13px;">It’s extremely important that you give your property the Maximum Exposure it deserves in order to help You NET More Money.  To learn how to 10X Your traffic to your property download our “Free Maximum Results Marketing Guide for Wholesalers”!</p>
+<p style="font-size: 13px;">Don't forget that it's very important to send all of your interested buyers to <%= link_to "#{@property.address }" ,"#{APP_CONFIG['site_url']}/property/#{@property.unique_address}" %> to ensure you benefit from the auction effect to get your Highest & Best price.</p>
+<p style="font-size: 13px;">For a limited time only our affiliate partners at Angel Investors, LLC will guarantee that if they don’t buy your deal then they will email it out to their list of 9347 Active Real Estate Investors to help you get your Deal SOLD.</p>
+<p style="font-size: 13px;">We are committed to helping you succeed so please let us know if you have any questions or suggestions on how we can better serve you?  <%= link_to "Click HERE", "#{APP_CONFIG['site_url']}/help-and-faq", style: 'color: 28608f;' %></p>
+<p style="font-size: 13px; margin: 0px;">Best Regards,
+<p style="font-size: 13px; margin: 0px;">Support@AuctionMyDeal.com
 
-Congratulations! Your property is now active in our Live Online Auction!
-
-The property auction at <%= @property.address %> will end in <%= @property.auction_length %> days at <%= @property.auction_bidding_ending_at.strftime("%m/%d/%Y") %>.
-
-It’s extremely important that you give your property the Maximum Exposure it deserves in order to help You NET More Money.  To learn how to 10X Your traffic to your property download our “Free Maximum Results Marketing Guide for Wholesalers”!
-
-Don't forget that it's very important to send all of your interested buyers to <%= link_to "#{@property.address }" ,"#{APP_CONFIG['site_url']}/property/#{@property.unique_address}" %> to ensure you benefit from the auction effect to get your Highest & Best price.
-
-For a limited time only our affiliate partners at Angel Investors, LLC will guarantee that if they don’t buy your deal then they will email it out to their list of 9347 Active Real Estate Investors to help you get your Deal SOLD.
-
-We are committed to helping you succeed so please let us know if you have any questions or suggestions on how we can better serve you?  <%= link_to "Click HERE", "#{APP_CONFIG['site_url']}/help-and-faq" %>
-
-
-Best Regards,
-Support@AuctionMyDeal.com
-
-P.S.:  If you follow the steps in our Maximum Results Marketing Guide for Wholesalers and don’t get any offers during your Best Offer or Live Online Auction then chances are your property is overpriced and you should consider reducing your price to get it SOLD?  If you don’t get any offers during your Live Online Auction then your property will automatically roll back into our Best Offer System until you get it sold, terminate your property from site or withdraw your property from active online bidding.
+<p style="font-size: 13px;">P.S.:  If you follow the steps in our Maximum Results Marketing Guide for Wholesalers and don’t get any offers during your Best Offer or Live Online Auction then chances are your property is overpriced and you should consider reducing your price to get it SOLD?  If you don’t get any offers during your Live Online Auction then your property will automatically roll back into our Best Offer System until you get it sold, terminate your property from site or withdraw your property from active online bidding.
