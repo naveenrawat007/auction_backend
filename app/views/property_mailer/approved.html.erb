@@ -1,1 +1,3 @@
-Hello <%= @user.first_name %> <%= @user.last_name %> Property address with "<%= @property.address %>" is approved for bidding by AuctionMyDeal.com
+Congratulations!!!  The property you submitted at <%= @property.address %> has been approved!
+
+Now it’s time for you to get as many investors as possible making offers on your property by driving them to your property @ <%= link_to "#{property.address}", "#{APP_CONFIG['site_url']}/property/#{@property.unique_address}" %>.
