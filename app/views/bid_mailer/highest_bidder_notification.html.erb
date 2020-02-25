@@ -1,12 +1,7 @@
 <b><Hello <%= @buyer.id %>,</b>
-<br/>
-<p style="font-size: 16px;">Thank you bidding on the property at <%= @property.address %> at AuctionMyDeal.com, and you were the Highest Bidder!</p>
-<br/>
-<p style="font-size: 16px;">The property is now pending and taken off the market for You until the seller verifies your proof of funds and/or pre-approval.  Once they verify this information they will get back in touch with you to execute your contract or to verify more information from you.</p>
-<br/>
-<p style="font-size: 16px;">Please let us know if you have any questions, if you haven’t heard from the seller in over 24 hours or there’s anything we can do to help you get this property closed?  <%= link_to "Click HERE", "#{APP_CONFIG['site_url']}/help-and-faq" %> for Help.</p>
-<br/>
-<p style="font-size: 16px;">Your Support Team @</p>
-<p style="font-size: 16px;">AuctionMyDeal.com</p>
-<br/>
-<p style="font-size: 16px;">P.S.: The Seller has the right to accept or reject any offer based upon not only price but also terms and proving the buyers ability to buy.  Sellers may consider cash offers stronger than financing so please make sure you provide proof of funds and/or pre-approval status to make sure your offer is as strong as possible.  Nothing is final until seller and buyer executed a sales contract and a deposit is given to seller or delivered to the title company.</p>
+<p style="font-size: 14px;">Thank you bidding on the property at <%= @property.address %> at AuctionMyDeal.com, and you were the Highest Bidder!</p>
+<p style="font-size: 14px;">The property is now pending and taken off the market for You until the seller verifies your proof of funds and/or pre-approval.  Once they verify this information they will get back in touch with you to execute your contract or to verify more information from you.</p>
+<p style="font-size: 14px;">Please let us know if you have any questions, if you haven’t heard from the seller in over 24 hours or there’s anything we can do to help you get this property closed?  <%= link_to "Click HERE", "#{APP_CONFIG['site_url']}/help-and-faq", style: 'color: #ff0000;' %> for Help.</p>
+<p style="font-size: 14px; margin-bottom: 0px;">Your Support Team @</p>
+<p style="font-size: 14px; margin-bottom: 0px;">AuctionMyDeal.com</p>
+<p style="font-size: 14px;">P.S.: The Seller has the right to accept or reject any offer based upon not only price but also terms and proving the buyers ability to buy.  Sellers may consider cash offers stronger than financing so please make sure you provide proof of funds and/or pre-approval status to make sure your offer is as strong as possible.  Nothing is final until seller and buyer executed a sales contract and a deposit is given to seller or delivered to the title company.</p>
