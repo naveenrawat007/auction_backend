@@ -15,7 +15,7 @@ class AcceptOfferNotificationWorker
         if best_offer
           PropertyMailer.best_offer_accept(property.owner_id, property.id, best_offer.user_id).deliver
           property.best_offers.where.not(id: offer_id).each do |best_offer|
-            BestOfferMailer.out_bidded(best_offer.id)
+            BestOfferMailer.out_bidded(best_offer.id).deliver
           end
         end
       elsif (offer_type == "Buy Now"|| offer_type == "Best / Buy Now")
