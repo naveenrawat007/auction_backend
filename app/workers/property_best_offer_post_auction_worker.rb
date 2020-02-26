@@ -7,7 +7,7 @@ class PropertyBestOfferPostAuctionWorker
     if property
       if property.best_offer_post_auction_worker_jid == self.jid || property.best_offer_post_auction_worker_jid.blank? == true
         if property.status == "Best Offer"
-          property.status = "Hold"
+          property.status = "Post Auction"
           property.save
           PropertyMailer.best_offer_ended(property.owner_id, property.id).deliver
         end
