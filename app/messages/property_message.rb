@@ -68,4 +68,11 @@ class PropertyMessage
     end
   end
 
+  def self.termination_notification(user, property)
+    begin
+      message = "We noticed that your terminated your property at #{property.address} so let us know if there’s anything we can do to help you?  Your Support Team @ AuctionMyDeal.com…:)"
+      MessageSender.send("+1#{user.phone_number}", message)
+    rescue StandardError => e
+    end
+  end
 end
