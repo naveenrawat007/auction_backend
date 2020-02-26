@@ -37,8 +37,12 @@ module Api
             if params[:property][:status].blank? == false
               old_status = @property.status
               @property.status = params[:property][:status]
-              if @property.requested == true
+              if @property.status == "Terminated"
                 Sidekiq::Client.enqueue_to_in("default", Time.now , PropertyTerminationNotificationWorker, @property.id, @property.bids.map(&:user_id), "Bid")
+              elsif @property.status == "Draft"
+                Sidekiq::Client.enqueue_to_in("default", Time.now , PropertyWithdrawnNotificationWorker, @property.id, @property.bids.map(&:user_id), "Bid")
+              end
+              if @property.requested == true || @property.status == "Terminated"
                 @property.bids.destroy_all
                 @property.best_offers.destroy_all
                 @property.buy_now_offers.destroy_all
