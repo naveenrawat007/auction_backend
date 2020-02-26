@@ -6,7 +6,7 @@ class BuyerBestOfferNotificationWorker
     user = User.find_by(id: user_id)
     property = Property.find_by(id: property_id)
     if user
-      PropertyMailer.buyer_best_offer_notification(property.owner_id, property.id).deliver
+      PropertyMailer.buyer_best_offer_notification(user.id, property.id).deliver
     end
   end
 end
