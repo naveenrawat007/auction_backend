@@ -64,7 +64,7 @@ module Api
                     @property.auction_length = params[:property][:auction_length]
                     if @property.auction_started_at.blank? == false
                       @property.auction_started_at = @property.auction_started_at.beginning_of_day + 8.hours
-                      @property.auction_bidding_ending_at = (@property.auction_started_at + @property.auction_length.to_i.days).end_of_day - 4.hours
+                      @property.auction_bidding_ending_at = (@property.auction_started_at + @property.auction_length.to_i.days).beginning_of_day - 4.hours
                     end
                     @property.save
                   end
