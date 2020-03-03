@@ -235,6 +235,9 @@ class PropertyUpdateService
       end
     end
     if change_logs.blank? == false
+      if @property.change_log
+        @property.change_log.destroy
+      end
       @property.create_change_log(details: change_logs)
       set_submitted(@property)
       Sidekiq::Client.enqueue_to_in("default", Time.now + Property.approve_time_delay, PropertyApproveWorker, @property.id)
