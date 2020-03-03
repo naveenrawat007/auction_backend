@@ -27,7 +27,7 @@ module Api
                 @properties = Property.where(status: params[:status]).order(created_at: :desc).paginate(page: params[:page], per_page: 10)
               end
             end
-            render json: {properties: ActiveModelSerializers::SerializableResource.new(@properties, each_serializer: UnderReviewPropertySerializer), property_statuses: Property.status, termination_reason: Property.termination_reason, auction_lengths: Property.auction_length ,status: 200, meta: {current_page: @properties.current_page, total_pages: @properties.total_pages} }
+            render json: {properties: ActiveModelSerializers::SerializableResource.new(@properties, each_serializer: UnderReviewPropertySerializer, serializer_options: {status: params[:status]}), property_statuses: Property.status, termination_reason: Property.termination_reason, auction_lengths: Property.auction_length ,status: 200, meta: {current_page: @properties.current_page, total_pages: @properties.total_pages} }
           end
         end
 
