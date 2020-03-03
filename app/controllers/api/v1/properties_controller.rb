@@ -133,12 +133,8 @@ module Api
           end
           @seller_pay_types = SellerPayType.all.order(:created_at)
           @show_instructions_types = ShowInstructionsType.all.order(:created_at)
-          if (@property.submitted_at.blank? == false)
-            @audits = @property.audits.where('created_at > ?', (@property.submitted_at-30.seconds)).reorder(created_at: :desc)
-          else
-            @audits = @property.audits.reorder(created_at: :desc)
-          end
-          render json: {seller_pay_types: ActiveModelSerializers::SerializableResource.new(@seller_pay_types, each_serializer: SellerPayTypeSerializer), show_instructions_types: ActiveModelSerializers::SerializableResource.new(@show_instructions_types, each_serializer: SellerPayTypeSerializer), property: PropertySerializer.new(@property), favourite: check_favourite(@property.id), buy_options: Property.buy_option, near_properties: ActiveModel::Serializer::CollectionSerializer.new(@near_properties, each_serializer: UnderReviewPropertySerializer), is_premium: @current_user ? ( @current_user.is_admin? ? @current_user.is_admin? : @current_user.is_premium?) : "", submitted: @property.submitted, is_admin: @current_user ? @current_user.is_admin? : false, changes: ActiveModel::Serializer::CollectionSerializer.new(@audits, each_serializer: AuditSerializer), status: 200 }, status: 200
+
+          render json: {seller_pay_types: ActiveModelSerializers::SerializableResource.new(@seller_pay_types, each_serializer: SellerPayTypeSerializer), show_instructions_types: ActiveModelSerializers::SerializableResource.new(@show_instructions_types, each_serializer: SellerPayTypeSerializer), property: PropertySerializer.new(@property), favourite: check_favourite(@property.id), buy_options: Property.buy_option, near_properties: ActiveModel::Serializer::CollectionSerializer.new(@near_properties, each_serializer: UnderReviewPropertySerializer), is_premium: @current_user ? ( @current_user.is_admin? ? @current_user.is_admin? : @current_user.is_premium?) : "", submitted: @property.submitted, is_admin: @current_user ? @current_user.is_admin? : false, status: 200 }, status: 200
         else
           render json: {message: "This property does not exists", status: 404 }, status: 200
         end
@@ -176,149 +172,18 @@ module Api
         @property = Property.find_by(id: params[:property][:id])
         if !@property
           render json: { message: "Property could not be found.", status: 404}, status: 200 and return
-        end
-        if @current_user.is_admin? == false
-          if (@property.status != "Draft" && @property.status != "Terminated")
-            @property.update(property_update_params)
-            set_submitted(@property)
-          else
-            @property.without_auditing do
-              @property.update(property_update_params)
-            end
-          end
         else
-          @property.without_auditing do
-            @property.update(property_update_params)
-          end
-        end
-        if @property.update(property_update_params)
-          if params[:property][:residential_attributes].blank? == false
-            @property.residential_attributes = residential_type_attributes_permitter
-          end
-          if params[:property][:commercial_attributes].blank? == false
-            @property.commercial_attributes = commercial_type_attributes_permitter
-          end
-          if params[:property][:land_attributes].blank? == false
-            @property.land_attributes = land_type_attributes_permitter
-          end
-          if params[:property][:open_house_dates]
-            if open_house_dates_permitter.blank? == false
-              @property.open_house_dates = open_house_dates_permitter
-            end
-          end
-          if params[:property][:estimated_rehab_cost_attr]
-            @property.estimated_rehab_cost_attr = estimated_rehab_cost_attributes_permitter
-          end
-          if params[:property][:buy_option]
-            @property.buy_option = buy_option_permitter
-          end
-          if params[:images].blank? == false
-            @property.photos.destroy_all
-            params[:images].each do |image|
-              @property.photos.create(image: image)
-            end
-          end
-          if params[:video].blank? == false
-            @property.videos.destroy_all
-            @property.videos.create(video: params[:video])
-          end
-          if params[:arv_proof].blank? == false
-            @property.arv_proofs.destroy_all
-            @property.arv_proofs.create(file: params[:arv_proof], name: "Arv Proof")
-          end
-          if params[:rehab_cost_proof].blank? == false
-            @property.rehab_cost_proofs.destroy_all
-            @property.rehab_cost_proofs.create(file: params[:rehab_cost_proof], name: "Rehab Cost Proof")
-          end
-          if params[:rental_proof].blank? == false
-            @property.rental_proofs.destroy_all
-            @property.rental_proofs.create(file: params[:rental_proof], name: "Rental Proof")
-          end
-          if @property.deal_analysis_type == "Rehab & Flip Deal"
-            if params[:property][:profit_potential].blank? == false
-              @property.profit_potential = params[:property][:profit_potential]
-            end
-          elsif @property.deal_analysis_type == "Landlord Deal"
-            if @property.landlord_deal
-              @landlord_deal = @property.landlord_deal
-            else
-              @landlord_deal = @property.build_landlord_deal
-            end
-            if @current_user.is_admin? == false
-              if (@property.status != "Draft" && @property.status != "Terminated")
-                @landlord_deal.update(landlord_deal_params)
-                @landlord_deal.save
-                set_submitted(@property)
-              else
-                @landlord_deal.without_auditing do
-                  @landlord_deal.update(landlord_deal_params)
-                  @landlord_deal.save
-                end
-              end
-            else
-              @landlord_deal.without_auditing do
-                @landlord_deal.update(landlord_deal_params)
-                @landlord_deal.save
-              end
-            end
-          end
-          if @property.best_offer == true
-            if @property.best_offer_auction_started_at.blank? == false
-              if @property.best_offer_auction_started_at.to_i != (@property.best_offer_auction_started_at.beginning_of_day + 8.hours).to_i
-                @property.best_offer_auction_started_at = @property.best_offer_auction_started_at.beginning_of_day + 8.hours
-              end
-            end
-            if @property.best_offer_auction_ending_at.blank? == false
-              if @property.best_offer_auction_ending_at.to_i != (@property.best_offer_auction_ending_at.end_of_day - 4.hours).to_i
-                @property.best_offer_auction_ending_at = @property.best_offer_auction_ending_at.end_of_day - 4.hours
-                @property.auction_started_at = (@property.best_offer_auction_ending_at + 1.day).beginning_of_day + 8.hours
-                @property.auction_bidding_ending_at = (@property.auction_started_at + @property.auction_length.to_i.days).beginning_of_day - 4.hours
-              end
-            end
-          end
-          if @property.auction_started_at.blank? == false
-            if @property.auction_started_at.to_i != (@property.auction_started_at.beginning_of_day + 8.hours).to_i
-              @property.auction_started_at = @property.auction_started_at.beginning_of_day + 8.hours
-              @property.auction_bidding_ending_at = (@property.auction_started_at + @property.auction_length.to_i.days).beginning_of_day - 4.hours
-            end
-          end
-          if @property.auction_bidding_ending_at == false
-            if @property.auction_bidding_ending_at != @property.auction_bidding_ending_at.end_of_day - 4.hours
-              @property.auction_bidding_ending_at = (@property.auction_started_at + @property.auction_length.to_i.days).beginning_of_day - 4.hours
-            end
-          end
-          if @property.auction_ending_at.blank? == false
-            if @property.auction_ending_at.to_i != @property.auction_ending_at.end_of_day.to_i
-              @property.auction_ending_at = @property.auction_ending_at.end_of_day
-            end
-          end
-          if params[:draft] == "false"
+          if @current_user.is_admin? == false
             if @property.status == "Draft"
-              @property.status = "Under Review"
-              if @property.save
-                @property.submitted = true
-                @property.submitted_at = Time.now
-                @property.save
-                Sidekiq::Client.enqueue_to_in("default", Time.now + Property.approve_time_delay, PropertyApproveWorker, @property.id)
-                Sidekiq::Client.enqueue_to_in("default", Time.now , PropertyUnderReviewWorker, @current_user.id, @property.id)
-              end
+              result = PropertyUpdateService.new(@property, params, @current_user).user_process!
+            else
+              result = PropertyUpdateService.new(@property, params, @current_user).user_property_log_process!
             end
           else
-            if (@property.changed? == true || @property.previous_changes.length > 0)
-              if @current_user.is_admin? == false
-                if (@property.status != "Draft" && @property.status != "Terminated")
-                  set_submitted(@property)
-                  @property.save
-                  Sidekiq::Client.enqueue_to_in("default", Time.now + Property.approve_time_delay, PropertyApproveWorker, @property.id)
-                else
-                  @property.save_without_auditing
-                  Sidekiq::Client.enqueue_to_in("default", Time.now + Property.approve_time_delay, PropertyApproveWorker, @property.id)
-                end
-              else
-                @property.save_without_auditing
-              end
-            end
+            result = PropertyUpdateService.new(@property, params, @current_user).admin_process!
           end
+        end
+        if result.status == "success"
           render json: {property: PropertySerializer.new(@property), message: "Property updated sucessfully.", is_admin: @current_user.is_admin, status: 200}, status: 200
         else
           render json: {property: PropertySerializer.new(@property), message: "Property could not be updated.", status: 400}, status: 200
