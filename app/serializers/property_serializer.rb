@@ -78,6 +78,9 @@ class PropertySerializer < ActiveModel::Serializer
     data[:thumbnail_img] = get_thumbnail
     data[:video_url] = get_video_url
     data[:video_thumb] = get_video_thumbnail
+    if object.change_log
+      data[:change_log] = ChangeLogSerializer.new(object.change_log)#ChangeLogSerializer.new(ChangeLog.find(1))
+    end
     data
   end
   def get_video_url
