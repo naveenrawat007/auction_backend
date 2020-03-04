@@ -248,6 +248,14 @@ class PropertyUpdateService
     end
     return OpenStruct.new(status: "success")
   end
+
+  def admin_property_change_log_update_process!
+    if @property.update(property_update_params)
+      return OpenStruct.new(status: "success")
+    else
+      return OpenStruct.new(status: "failure")
+    end
+  end
   private
   def set_submitted(property_id)
     property = Property.find_by(id: property_id)

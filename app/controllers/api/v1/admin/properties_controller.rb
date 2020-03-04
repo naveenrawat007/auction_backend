@@ -138,7 +138,7 @@ module Api
         def change_log_update
           @property = Property.find_by(id: params[:id])
           if @property
-            result = PropertyUpdateService.new(@property, params, @current_user).admin_property_changes_update_process!
+            result = PropertyUpdateService.new(@property, params, @current_user).admin_property_change_log_update_process!
             if result.status == "success"
               render json: {property: PropertySerializer.new(@property), message: "Property updated sucessfully.", status: 200}, status: 200
             else
