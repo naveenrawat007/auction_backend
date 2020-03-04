@@ -251,6 +251,26 @@ class PropertyUpdateService
 
   def admin_property_change_log_update_process!
     if @property.update(property_update_params)
+      if params[:property][:open_house_dates]
+        if open_house_dates_permitter.blank? == false
+          @property.open_house_dates = open_house_dates_permitter
+        end
+      end
+      if params[:property][:residential_attributes].blank? == false
+        params[:property][:residential_attributes].keys.each do |key|
+          @property.residential_attributes[key] = params[:property][:residential_attributes][key]
+        end
+      end
+      if params[:property][:commercial_attributes].blank? == false
+        params[:property][:commercial_attributes].keys.each do |key|
+          @property.residential_attributes[key] = params[:property][:commercial_attributes][key]
+        end
+      end
+      if params[:property][:land_attributes].blank? == false
+        params[:property][:commercial_attributes].keys.each do |key|
+          @property.residential_attributes[key] = params[:property][:commercial_attributes][key]
+        end
+      end
       if @property.deal_analysis_type == "Rehab & Flip Deal"
         if params[:property][:profit_potential].blank? == false
           @property.profit_potential = params[:property][:profit_potential]
