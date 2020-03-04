@@ -231,7 +231,7 @@ class PropertyUpdateService
     end
     if @landlord_deal
       if @landlord_deal.changed?
-        change_logs = change_logs.merge(@landlord_deal.changes)
+        change_logs[:landlord_deal] = @landlord_deal.changes
       end
     end
     if change_logs.blank? == false
@@ -251,6 +251,19 @@ class PropertyUpdateService
 
   def admin_property_change_log_update_process!
     if @property.update(property_update_params)
+      if @property.deal_analysis_type == "Rehab & Flip Deal"
+        if params[:property][:profit_potential].blank? == false
+          @property.profit_potential = params[:property][:profit_potential]
+        end
+      elsif @property.deal_analysis_type == "Landlord Deal"
+        if @property.landlord_deal
+          @landlord_deal = @property.landlord_deal
+        else
+          @landlord_deal = @property.build_landlord_deal
+        end
+        @landlord_deal.update(landlord_deal_params)
+        @landlord_deal.save
+      end
       return OpenStruct.new(status: "success")
     else
       return OpenStruct.new(status: "failure")
