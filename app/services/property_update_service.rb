@@ -231,21 +231,26 @@ class PropertyUpdateService
     end
     if @landlord_deal
       if @landlord_deal.changed?
-        change_logs.merge(@landlord_deal.changes)
+        change_logs = change_logs.merge(@landlord_deal.changes)
       end
     end
     if change_logs.blank? == false
       if @property.change_log
-        @property.change_log.destroy
+        details = @property.change_log.details
+        details.merge(change_logs)
+        @property.change_log.details = details.merge(change_logs)
+        @property.change_log.save
+      else
+        @property.create_change_log(details: change_logs)
       end
-      @property.create_change_log(details: change_logs)
-      set_submitted(@property)
+      set_submitted(@property.id)
       Sidekiq::Client.enqueue_to_in("default", Time.now + Property.approve_time_delay, PropertyApproveWorker, @property.id)
     end
     return OpenStruct.new(status: "success")
   end
   private
-  def set_submitted(property)
+  def set_submitted(property_id)
+    property = Property.find_by(id: property_id)
     property.status = "Under Review"
     if property.submitted == false
       property.submitted_at = Time.now
