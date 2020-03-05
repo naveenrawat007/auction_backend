@@ -271,6 +271,9 @@ class PropertyUpdateService
           @property.residential_attributes[key] = params[:property][:commercial_attributes][key]
         end
       end
+      if params[:property][:buy_option]
+        @property.buy_option = buy_option_permitter
+      end
       if @property.deal_analysis_type == "Rehab & Flip Deal"
         if params[:property][:profit_potential].blank? == false
           @property.profit_potential = params[:property][:profit_potential]
@@ -284,6 +287,7 @@ class PropertyUpdateService
         @landlord_deal.update(landlord_deal_params)
         @landlord_deal.save
       end
+      @property.save
       return OpenStruct.new(status: "success")
     else
       return OpenStruct.new(status: "failure")
