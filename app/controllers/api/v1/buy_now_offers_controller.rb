@@ -37,7 +37,7 @@ module Api
                   message.user_id = @current_user.id
                   message.save
                   if @buy_now.fund_proofs.blank? == false
-                    message.attachments.create(file: File.open(@buy_now.fund_proofs.first.file.path,'rb'))
+                    message.attachments.create(file: open("#{APP_CONFIG['backend_site_url']}/#{@buy_now.fund_proofs.first.file.url}",'rb'))
                   end
                 end
                 #end
@@ -72,7 +72,7 @@ module Api
                 message.user_id = @current_user.id
                 message.save
                 if @buy_now.fund_proofs.blank? == false
-                  message.attachments.create(file: File.open(@buy_now.fund_proofs.first.file.path,'rb'))
+                  message.attachments.create(file: open("#{APP_CONFIG['backend_site_url']}/#{@buy_now.fund_proofs.first.file.url}",'rb'))
                 end
               end
               #end

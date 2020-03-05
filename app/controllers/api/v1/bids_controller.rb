@@ -47,7 +47,7 @@ module Api
                 message.user_id = @current_user.id
                 message.save
                 if @bid.fund_proofs.blank? == false
-                  message.attachments.create(file: File.open(@bid.fund_proofs.first.file.path,'rb'))
+                  message.attachments.create(file: open("#{APP_CONFIG['backend_site_url']}/#{@bid.fund_proofs.first.file.url}",'rb'))
                 end
                 #end
                 render json: {property: PropertySerializer.new(@property), message: "Bid Created.", status: 201 }, status: 200
