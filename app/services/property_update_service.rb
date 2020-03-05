@@ -186,16 +186,6 @@ class PropertyUpdateService
     if params[:property][:buy_option]
       @property.buy_option = buy_option_permitter
     end
-    # if params[:images].blank? == false
-    #   @property.photos.destroy_all
-    #   params[:images].each do |image|
-    #     @property.photos.create(image: image)
-    #   end
-    # end
-    # if params[:video].blank? == false
-    #   @property.videos.destroy_all
-    #   @property.videos.create(video: params[:video])
-    # end
     # if params[:arv_proof].blank? == false
     #   @property.arv_proofs.destroy_all
     #   @property.arv_proofs.create(file: params[:arv_proof], name: "Arv Proof")
@@ -233,6 +223,26 @@ class PropertyUpdateService
       if @landlord_deal.changed?
         change_logs[:landlord_deal] = @landlord_deal.changes
       end
+    end
+    if params[:images].blank? == false
+      if @property.change_log
+        @change_log = @property.change_log
+      else
+        @change_log = @property.create_change_log(details: change_logs)
+      end
+      params[:images].each do |image|
+        @change_log.photos.create(image: image)
+      end
+      change_logs[:images] = @change_log.photos.order(:created_at).map{|i| APP_CONFIG['backend_site_url'] + i.image.url}
+    end
+    if params[:video].blank? == false
+      if @property.change_log
+        @change_log = @property.change_log
+      else
+        @change_log = @property.create_change_log(details: change_logs)
+      end
+      @change_log.videos.create(video: params[:video])
+      change_logs[:video_url] = APP_CONFIG['backend_site_url'] + @change_log.videos.first.video.url
     end
     if change_logs.blank? == false
       if @property.change_log
@@ -273,6 +283,12 @@ class PropertyUpdateService
       end
       if params[:property][:buy_option]
         @property.buy_option = buy_option_permitter
+      end
+      if params[:property][:images]
+        @property.photos.destroy_all
+        params[:property][:images].each do |img_url|
+          @property.photos.create(image: open(img_url,'rb'))
+        end
       end
       if @property.deal_analysis_type == "Rehab & Flip Deal"
         if params[:property][:profit_potential].blank? == false
