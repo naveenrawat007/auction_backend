@@ -290,6 +290,10 @@ class PropertyUpdateService
           @property.photos.create(image: open(img_url,'rb'))
         end
       end
+      if params[:property][:video_url]
+        @property.videos.destroy_all
+        @property.videos.create(video: open(params[:property][:video_url], 'rb'))
+      end
       if @property.deal_analysis_type == "Rehab & Flip Deal"
         if params[:property][:profit_potential].blank? == false
           @property.profit_potential = params[:property][:profit_potential]
