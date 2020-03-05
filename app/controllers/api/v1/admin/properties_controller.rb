@@ -57,42 +57,46 @@ module Api
               end
               if old_status != @property.status
                 Sidekiq::Client.enqueue_to_in("default", Time.now , PropertyNotificationWorker, @property.id)
-                if (@property.status == "Approve" || @property.status == "Live Online Bidding")
-                  if @property.status == "Live Online Bidding"
-                    @property.status = "Approve"
-                    @property.auction_started_at = params[:property][:auction_started_at]
-                    @property.auction_length = params[:property][:auction_length]
-                    if @property.auction_started_at.blank? == false
-                      @property.auction_started_at = @property.auction_started_at.beginning_of_day + 8.hours
-                      @property.auction_bidding_ending_at = (@property.auction_started_at + @property.auction_length.to_i.days).beginning_of_day - 4.hours
-                    end
-                    @property.save
-                  end
-                  if @property.auction_started_at.blank? == false
-                    if @property.best_offer == true
-                      if @property.best_offer_auction_started_at.blank? == false
-                        best_offer_live_auction(@property)
-                      end
-                      if @property.best_offer_auction_ending_at.blank? == false
-                        best_offer_post_auction(@property)
-                      end
-                    end
-                    live_auction(@property)
-                    post_auction(@property)
-                    @property.save
-                  else
-                    @property.status = "Hold"
-                    @property.save
-                    Sidekiq::Client.enqueue_to_in("default", Time.now , PropertyNotificationWorker, @property.id)
-                  end
-                elsif @property.status == "Draft"
+              end
+              if (@property.status == "Approve" || @property.status == "Live Online Bidding")
+                if @property.status == "Live Online Bidding"
+                  @property.status = "Approve"
+                  @property.auction_started_at = params[:property][:auction_started_at]
+                  @property.auction_length = params[:property][:auction_length]
+                  @property = set_property_timing(@property)
                   @property.save
-                elsif @property.status == "Under Review"
-                  @property.submitted_at = Time.now
-                  @property.submitted = true
-                  @property.save
-                  Sidekiq::Client.enqueue_to_in("default", Time.now + Property.approve_time_delay, PropertyApproveWorker, @property.id)
                 end
+                if params[:property][:best_offer] == "true"
+                  @property.best_offer = true
+                  @property.best_offer_auction_started_at = params[:property][:best_offer_auction_started_at]
+                  @property.best_offer_auction_ending_at = params[:property][:best_offer_auction_ending_at]
+                  @property = set_property_timing(@property)
+                  @property.save
+                end
+                if @property.auction_started_at.blank? == false
+                  if @property.best_offer == true
+                    if @property.best_offer_auction_started_at.blank? == false
+                      best_offer_live_auction(@property)
+                    end
+                    if @property.best_offer_auction_ending_at.blank? == false
+                      best_offer_post_auction(@property)
+                    end
+                  end
+                  live_auction(@property)
+                  post_auction(@property)
+                  @property.save
+                else
+                  @property.status = "Hold"
+                  @property.save
+                  Sidekiq::Client.enqueue_to_in("default", Time.now , PropertyNotificationWorker, @property.id)
+                end
+              elsif @property.status == "Draft"
+                @property.save
+              elsif @property.status == "Under Review"
+                @property.submitted_at = Time.now
+                @property.submitted = true
+                @property.save
+                Sidekiq::Client.enqueue_to_in("default", Time.now + Property.approve_time_delay, PropertyApproveWorker, @property.id)
               end
             end
             render json: {message: "Property updated successfully", status: 200}, status: 200
@@ -147,6 +151,35 @@ module Api
           else
             render json: {message: "Property not found", status: 404 }, status: 200
           end
+        end
+        private
+        def set_property_timing(property)
+          if property.best_offer == true
+            if property.best_offer_auction_started_at.blank? == false
+              if property.best_offer_auction_started_at.to_i != (property.best_offer_auction_started_at.beginning_of_day + 8.hours).to_i
+                property.best_offer_auction_started_at = property.best_offer_auction_started_at.beginning_of_day + 8.hours
+              end
+            end
+            if property.best_offer_auction_ending_at.blank? == false
+              if property.best_offer_auction_ending_at.to_i != (property.best_offer_auction_ending_at.end_of_day - 4.hours).to_i
+                property.best_offer_auction_ending_at = property.best_offer_auction_ending_at.end_of_day - 4.hours
+                property.auction_started_at = (property.best_offer_auction_ending_at + 1.day).beginning_of_day + 8.hours
+                property.auction_bidding_ending_at = (property.auction_started_at + property.auction_length.to_i.days).beginning_of_day - 4.hours
+              end
+            end
+          end
+          if property.auction_started_at.blank? == false
+            if property.auction_started_at.to_i != (property.auction_started_at.beginning_of_day + 8.hours).to_i
+              property.auction_started_at = property.auction_started_at.beginning_of_day + 8.hours
+              property.auction_bidding_ending_at = (property.auction_started_at + property.auction_length.to_i.days).beginning_of_day - 4.hours
+            end
+          end
+          if property.auction_bidding_ending_at == false
+            if property.auction_bidding_ending_at.to_i != (property.auction_started_at + property.auction_length.to_i.days).beginning_of_day - 4.hours
+              property.auction_bidding_ending_at = (property.auction_started_at + property.auction_length.to_i.days).beginning_of_day - 4.hours
+            end
+          end
+          return property
         end
       end
     end
