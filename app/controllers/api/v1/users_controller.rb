@@ -20,6 +20,7 @@ module Api
       def new_password
         @current_user.password = params[:user][:password]
         if @current_user.save
+          CreateActivityService.new(@current_user, "user_password_change").process!
           render json: { message: "Password changed sucessfully. Now you can login.", status: 200}, status: 200
         else
           render json: { message: "Could not change password.", error: "Password error.", status: 400}, status: 200
@@ -55,6 +56,7 @@ module Api
                 if @current_user.valid_password?(params[:user][:old_password])
                   @current_user.password = params[:user][:password]
                   if @current_user.save
+                    CreateActivityService.new(@current_user, "user_password_change").process!
                     render json: {user: UserSerializer.new(@current_user, root: false, serializer_options: {token: @current_user.auth_token}),message: "Password updated successfully", status:200} and return
                   else
                     render json: {user: UserSerializer.new(@current_user, root: false, serializer_options: {token: @current_user.auth_token}),message: "Password can't be updated", status: 400} and return
