@@ -25,7 +25,7 @@ class Property < ApplicationRecord
   has_one :sold_property_record, class_name: "SoldProperty", foreign_key: "property_id", dependent: :destroy
   has_one :property_buyer, through: :sold_property_record, source: :buyer
 
-  has_many :activites, as: :resource, dependent: :destroy
+  has_many :activities, as: :resource, dependent: :destroy
 
   def generate_unique_address
     if self.address.blank? == false
