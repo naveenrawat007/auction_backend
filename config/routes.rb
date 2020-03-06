@@ -58,6 +58,7 @@ Rails.application.routes.draw do
         post '/properties/sold', to: 'properties#sold_property'
         get '/properties/:id/change_logs', to: 'properties#change_log_details'
         put '/properties/:id/change_logs', to: 'properties#change_log_update'
+        get '/activities', to: 'activities#index'
       end
     end
   end
