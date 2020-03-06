@@ -16,6 +16,7 @@ module Api
                 @buy_now.amount = params[:buy_now][:amount]
                 @buy_now.buy_option = buy_option_permitter
                 @buy_now.save
+                CreateActivityService.new(@buy_now, "buy_now_submission").process!
                 @property.status = "Pending"
                 @property.save
                 Sidekiq::Client.enqueue_to_in("default", Time.now , PropertyBuyNowNotificationWorker, @property.id, @buy_now.id)
@@ -51,6 +52,7 @@ module Api
               @buy_now.amount = params[:buy_now][:amount]
               @buy_now.buy_option = buy_option_permitter
               @buy_now.save
+              CreateActivityService.new(@buy_now, "buy_now_submission").process!
               @property.status = "Pending"
               @property.save
               Sidekiq::Client.enqueue_to_in("default", Time.now , PropertyBuyNowNotificationWorker, @property.id, @buy_now.id)

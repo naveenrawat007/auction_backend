@@ -18,6 +18,7 @@ module Api
                 @bid.amount = params[:bid][:amount]
                 @bid.buy_option = buy_option_permitter
                 @bid.save
+                CreateActivityService.new(@bid, "bid_submission").process!
                 if (@property.auction_bidding_ending_at - Time.now < 1.minutes) #time check for bidding time
                   @property.sniper = true
                   @property.sniper_length += 3 #count of time duration increasing in minutes
