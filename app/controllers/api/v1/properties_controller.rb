@@ -109,6 +109,7 @@ module Api
           @property.status = "Under Review"
           @property.submitted_at = Time.now
           if @property.save
+            CreateActivityService.new(@property, "property_posted").process!
             Sidekiq::Client.enqueue_to_in("default", Time.now + Property.approve_time_delay, PropertyApproveWorker, @property.id)
             Sidekiq::Client.enqueue_to_in("default", Time.now , PropertyUnderReviewWorker, @current_user.id, @property.id)
             render json: {property: PropertySerializer.new(@property), message: "Property status updated sucessfully.", status: 200}, status: 200
@@ -199,6 +200,7 @@ module Api
             @user = User.new(configure_sign_up_params)
             ConfirmationSender.send_confirmation_to(@user)
             if @user.save
+              CreateActivityService.new(@user, "user_register").process!
               token = JsonWebToken.encode(user_id: @user.id)
               @user.auth_token = token
               @user.save
@@ -215,6 +217,7 @@ module Api
               token = JsonWebToken.encode(user_id: @user.id)
               @user.auth_token = token
               @user.save
+              CreateActivityService.new(@user, "user_login").process!
             else
               render json: {message: "Wrong password. Could not authenticate!", error: "Wrong Password", status: 401}, status: 200 and return
             end
