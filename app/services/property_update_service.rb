@@ -74,6 +74,7 @@ class PropertyUpdateService
         if @property.status == "Draft"
           @property.status = "Under Review"
           if @property.save
+            CreateActivityService.new(@property, "property_posted").process!
             @property.submitted = true
             @property.submitted_at = Time.now
             @property.save
