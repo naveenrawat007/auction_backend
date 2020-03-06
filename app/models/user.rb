@@ -23,6 +23,7 @@ class User < ApplicationRecord
   has_many :messages, dependent: :destroy
   has_many :user_bought_properties, class_name: "SoldProperty", foreign_key: "user_id"
   has_many :bought_properties, through: :user_bought_properties, source: :property
+  has_many :activites, as: :resource, dependent: :destroy
   def is_premium?
     if self.status == "Premium"
       true
