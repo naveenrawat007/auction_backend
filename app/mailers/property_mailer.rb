@@ -1,4 +1,5 @@
 class PropertyMailer < ApplicationMailer
+  ADMIN_MAILS = []
   def under_review(user_id, property_id)
 	  @user = User.find_by(id: user_id)
     @property = Property.find_by(id: property_id)
@@ -151,4 +152,12 @@ class PropertyMailer < ApplicationMailer
     end
   end
 
+  def request_termination_notification(user_id, property_id)
+    @user = User.find_by(id: user_id)
+    @property = Property.find_by(id: property_id)
+    if @user && @property
+      mail(to: ADMIN_MAILS, subject: "Request to Terminate #{@property.status}")
+      PropertyMessage.request_termination_notification(@user, @property)
+    end
+  end
 end
