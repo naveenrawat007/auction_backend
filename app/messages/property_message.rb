@@ -1,4 +1,5 @@
 class PropertyMessage
+  ADMIN_NUMBERS = [7135531331, 9044900044]
   def self.under_review(user, property)
     begin
       message = "Thank you for submitting your property at #{property.address}!  You will get an email and a message in your user dashboard that will advise you when your property is approved or if we have any questions. To Your Success, \n Your Support Team @ \n AuctionMyDeal.com "
@@ -72,6 +73,15 @@ class PropertyMessage
     begin
       message = "We noticed that your terminated your property at #{property.address} so let us know if there’s anything we can do to help you?  Your Support Team @ AuctionMyDeal.com…:)"
       MessageSender.send("+1#{user.phone_number}", message)
+    rescue StandardError => e
+    end
+  end
+  def self.request_termination_notification(user, property)
+    begin
+      ADMIN_NUMBERS.each do |phone_number|
+        message = "#{user.first_name} is requesting for property termination at #{property.address}."
+        MessageSender.send("+1#{phone_number}", message)
+      end
     rescue StandardError => e
     end
   end
