@@ -11,6 +11,7 @@ class Api::V1::Users::SessionsController < Devise::SessionsController
         token = JsonWebToken.encode(user_id: @user.id)
         @user.auth_token = token
         @user.save
+        CreateActivityService.new(@user, "user_login").process!
         render json: {user: UserSerializer.new(@user, root: false, serializer_options: {token: token}), status: 202}, status: 200
       else
         render json: {message: "Wrong password. Could not authenticate!", error: "Wrong Password", status: 401}, status: 200

@@ -14,6 +14,7 @@ class Api::V1::Users::RegistrationsController < Devise::RegistrationsController
         @user.status = "Free"
         @user.trial_ending_at = Time.now.beginning_of_day + 60.days
         @user.save
+        CreateActivityService.new(@user, "user_register").process!
         render json: {user: UserSerializer.new(@user, root: false, serializer_options: {token: token}), status: 201}, status: 200
       else
         render json: { message: "Can not add user.", error: "User save error", status: 400}, status: 200
