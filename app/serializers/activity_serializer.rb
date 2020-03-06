@@ -4,7 +4,7 @@ class ActivitySerializer < ActiveModel::Serializer
     data = super
     data[:id] = object.id
     data[:user] = object.resource_name
-    data[:desc] = object.description
+    data[:description] = object.description
     data[:time] = time_ago_in_words(object.created_at) + " ago"
     data
   end
