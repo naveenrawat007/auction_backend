@@ -68,6 +68,8 @@ module Api
               @property.status = "Under Review"
               @property.requested = true
               Sidekiq::Client.enqueue_to_in("default", Time.now + Property.approve_time_delay , PropertyDraftWorker, @property.id)
+            elsif params[:property][:request_status] == "Terminated"
+              Sidekiq::Client.enqueue_to_in("default", Time.now, PropertyStatusRequestNotificationWorker, @property.id, "Terminated")
             end
             @property.requested_status = params[:property][:request_status]
             @property.requested_at = Time.now
