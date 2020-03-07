@@ -2,7 +2,7 @@ class Activity < ApplicationRecord
   belongs_to :resource, polymorphic: true
   after_create_commit { ActivityNotificationWorker.perform_at(Time.now, self.id) }
 
-  act_type = ["user_login", "user_register", "user_password_change", "property_posted", "bid_submission", "offer_submission", "buy_now_submission", "request_for_termination"]
+  act_type = ["user_login", "user_register", "user_password_change", "property_posted", "bid_submission", "offer_submission", "buy_now_submission", "request_for_termination", "property_bidding_ended"]
 
   def resource_name
     if act_type == "user_login"
@@ -41,6 +41,8 @@ class Activity < ApplicationRecord
       return "Submitted a Buy Now at #{resource.property.address}"
     elsif act_type == "request_for_termination"
       return "Submitted Termination Request at #{resource.address}"
+    elsif act_type == "property_bidding_ended"
+      return "Live online auction ended for Property at #{resource.address}"
     end
   end
 end
