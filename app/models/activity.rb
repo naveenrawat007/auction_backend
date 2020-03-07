@@ -1,5 +1,6 @@
 class Activity < ApplicationRecord
   belongs_to :resource, polymorphic: true
+  after_create_commit { ActivityNotificationWorker.perform_at(Time.now, self.id) }
 
   act_type = ["user_login", "user_register", "user_password_change", "property_posted", "bid_submission", "offer_submission", "buy_now_submission", "request_for_termination"]
 
