@@ -21,6 +21,7 @@ class PropertyPostAuctionWorker
               rescue
               end
             end
+            CreateActivityService.new(@property, "property_bidding_ended").process!
             if property.save
               PropertyMailer.post_auction(property.owner_id, property.id).deliver
               Sidekiq::Client.enqueue_to_in("default", Time.now , PropertyOutBidderNotificationWorker, @property.id)
