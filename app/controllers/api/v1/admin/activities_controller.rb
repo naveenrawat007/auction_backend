@@ -12,6 +12,11 @@ module Api
           end
           render json: {activities: ActiveModelSerializers::SerializableResource.new(activites, each_serializer: ActivitySerializer), status: 200, meta: {current_page: activites.current_page, total_pages: activites.total_pages}}, status: 200
         end
+
+        def update #wiil mark all notifications read
+          activites = Activity.where.not(act_type: ['user_login','user_register','user_password_change','bid_submission','offer_submission']).update_all(viewed: true)
+          render json: {message: "Success", status: 200}, status: 200
+        end
       end
     end
   end
