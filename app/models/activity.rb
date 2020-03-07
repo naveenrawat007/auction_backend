@@ -45,4 +45,21 @@ class Activity < ApplicationRecord
       return "Live online auction ended for Property at #{resource.address}"
     end
   end
+
+  def text_description
+    if act_type == "property_posted"
+      return "Posted a property at "
+    elsif act_type == "bid_submission"
+      return "Submitted a bid at "
+    elsif act_type == "offer_submission"
+      return "Submitted a Best Offer at "
+    elsif act_type == "buy_now_submission"
+      return "Submitted a Buy Now at "
+    elsif act_type == "request_for_termination"
+      return "Submitted Termination Request at "
+    elsif act_type == "property_bidding_ended"
+      return "Live online auction ended for Property at "
+    end
+  end
+
 end
