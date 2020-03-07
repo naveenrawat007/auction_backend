@@ -6,7 +6,7 @@ class ActivityNotificationWorker
   def perform(activity_id)
     activity = Activity.find_by(id: activity_id)
     if activity
-      if ['request_for_termination','property_posted','buy_now_submission'].include?(activity.act_type)
+      if ['request_for_termination','property_posted','buy_now_submission','property_bidding_ended'].include?(activity.act_type)
         payload = {
           id: activity.id,
           user: activity.resource_name,
