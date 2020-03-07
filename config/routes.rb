@@ -59,6 +59,7 @@ Rails.application.routes.draw do
         get '/properties/:id/change_logs', to: 'properties#change_log_details'
         put '/properties/:id/change_logs', to: 'properties#change_log_update'
         get '/activities', to: 'activities#index'
+        put '/activities', to: 'activities#update'
       end
     end
   end
