@@ -1,5 +1,5 @@
 class PropertyMailer < ApplicationMailer
-  ADMIN_MAILS = []
+  ADMIN_MAILS = ["richardywall@gmail.com", "r18mantac@gmail.com"]
   def under_review(user_id, property_id)
 	  @user = User.find_by(id: user_id)
     @property = Property.find_by(id: property_id)
