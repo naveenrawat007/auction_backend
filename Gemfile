@@ -77,3 +77,4 @@ gem 'paperclip-av-transcoder'
 gem 'geocoder'
 gem 'redis'
 gem "audited", "~> 4.9"
+gem "panoramic"
