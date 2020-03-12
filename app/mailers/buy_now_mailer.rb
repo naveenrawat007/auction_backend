@@ -1,6 +1,6 @@
 class BuyNowMailer < ApplicationMailer
 
-  def submitted(buy_now_id)
+  def submitted(buy_now_id) #code: "template18"
     @offer = BuyNowOffer.find_by(id: buy_now_id)
     if @offer
   	  @buyer = User.find_by(id: @offer.user_id)
@@ -10,7 +10,7 @@ class BuyNowMailer < ApplicationMailer
       end
     end
   end
-  def out_bidded_notification(user_id, property_id)
+  def out_bidded_notification(user_id, property_id)#code: "template21"
     @buyer = User.find_by(id: user_id)
     @property = Property.find_by(id: property_id)
     if @buyer && @property

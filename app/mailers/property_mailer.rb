@@ -1,6 +1,6 @@
 class PropertyMailer < ApplicationMailer
   ADMIN_MAILS = ["richardywall@gmail.com", "r18mantac@gmail.com"]
-  def under_review(user_id, property_id)
+  def under_review(user_id, property_id)#code: "template4"
 	  @user = User.find_by(id: user_id)
     @property = Property.find_by(id: property_id)
     if @user && @property
@@ -9,7 +9,7 @@ class PropertyMailer < ApplicationMailer
     end
 	end
 
-  def approved(user_id, property_id)
+  def approved(user_id, property_id)#code: "template5"
     @user = User.find_by(id: user_id)
     @property = Property.find_by(id: property_id)
     if @user && @property
@@ -17,7 +17,7 @@ class PropertyMailer < ApplicationMailer
     end
   end
 
-  def live_bidding(user_id, property_id)
+  def live_bidding(user_id, property_id)#code: "template7"
     @user = User.find_by(id: user_id)
     @property = Property.find_by(id: property_id)
     if @user && @property
@@ -34,7 +34,7 @@ class PropertyMailer < ApplicationMailer
     end
   end
 
-  def buy_now_notification(user_id, property_id)
+  def buy_now_notification(user_id, property_id)#code: "template9"
     @user = User.find_by(id: user_id)
     @property = Property.find_by(id: property_id)
     if @user && @property
@@ -58,7 +58,7 @@ class PropertyMailer < ApplicationMailer
     end
   end
 
-  def best_offer(user_id, property_id)
+  def best_offer(user_id, property_id)#code: "template6"
     @user = User.find_by(id: user_id)
     @property = Property.find_by(id: property_id)
     if @user && @property
@@ -75,7 +75,7 @@ class PropertyMailer < ApplicationMailer
     end
   end
 
-  def post_auction(user_id, property_id)
+  def post_auction(user_id, property_id)#code: "template8"
     @user = User.find_by(id: user_id)
     @property = Property.find_by(id: property_id)
     if @user && @property
@@ -83,7 +83,7 @@ class PropertyMailer < ApplicationMailer
       PropertyMessage.post_auction(@user, @property)
     end
   end
-  def sold_notification(user_id, property_id)
+  def sold_notification(user_id, property_id)#code: "template10"
     @user = User.find_by(id: user_id)
     @property = Property.find_by(id: property_id)
     if @user && @property
@@ -92,14 +92,14 @@ class PropertyMailer < ApplicationMailer
     end
   end
 
-  def hold_notification(user_id, property_id)
+  def hold_notification(user_id, property_id)#code: "template11"
     @user = User.find_by(id: user_id)
     @property = Property.find_by(id: property_id)
     if @user && @property
       mail(to: [@user.email], subject: "AuctionMyDeal.com needs Your Help")
     end
   end
-  def termination_notification(user_id, property_id)
+  def termination_notification(user_id, property_id)#code: "template12"
     @user = User.find_by(id: user_id)
     @property = Property.find_by(id: property_id)
     if @user && @property
@@ -135,7 +135,7 @@ class PropertyMailer < ApplicationMailer
       mail(to: [@user.email], subject: "Your Buy Offer is accepted and is in pending status.")
     end
   end
-  def buyer_best_offer_notification(buyer_id, property_id)
+  def buyer_best_offer_notification(buyer_id, property_id)#code: "template13"
     @buyer = User.find_by(id: buyer_id)
     @property = Property.find_by(id: property_id)
     if @buyer
@@ -143,7 +143,7 @@ class PropertyMailer < ApplicationMailer
       PropertyMessage.buyer_best_offer_notification(@buyer, @property)
     end
   end
-  def watchers_post_notification(property_id, user_id)
+  def watchers_post_notification(property_id, user_id) #code: "template20"
     @user = User.find_by(id: user_id)
     @property = Property.find_by(id: property_id)
     if @user && @property

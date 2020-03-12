@@ -1,5 +1,5 @@
 class BestOfferMailer < ApplicationMailer
-  def not_accepted(offer_id)
+  def not_accepted(offer_id)#code: "template14"
     @offer = BestOffer.find_by(id: offer_id)
     if @offer
   	  @buyer = User.find_by(id: @offer.user_id)
@@ -9,7 +9,7 @@ class BestOfferMailer < ApplicationMailer
       end
     end
 	end
-  def out_bidded(offer_id)
+  def out_bidded(offer_id)#template15
     @offer = BestOffer.find_by(id: offer_id)
     if @offer
   	  @buyer = User.find_by(id: @offer.user_id)

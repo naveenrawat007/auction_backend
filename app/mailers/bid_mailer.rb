@@ -1,5 +1,5 @@
 class BidMailer < ApplicationMailer
-  def out_bidded(bid_id)
+  def out_bidded(bid_id)#code: "template16"
     @offer = Bid.find_by(id: bid_id)
     if @offer
   	  @buyer = User.find_by(id: @offer.user_id)
@@ -10,7 +10,7 @@ class BidMailer < ApplicationMailer
     end
 	end
 
-  def submitted(bid_id)
+  def submitted(bid_id)#code: "template17"
     @offer = Bid.find_by(id: bid_id)
     if @offer
   	  @buyer = User.find_by(id: @offer.user_id)
@@ -21,7 +21,7 @@ class BidMailer < ApplicationMailer
     end
   end
 
-  def highest_bidder_notification(bid_id)
+  def highest_bidder_notification(bid_id)#code: "template19"
     @offer = Bid.find_by(id: bid_id)
     if @offer
   	  @buyer = User.find_by(id: @offer.user_id)
@@ -32,7 +32,7 @@ class BidMailer < ApplicationMailer
     end
   end
 
-  def termination_notification(user_id, property_id)
+  def termination_notification(user_id, property_id)#code: "template22"
     @buyer = User.find_by(id: user_id)
     @property = Property.find_by(id: property_id)
     if @buyer && @property
@@ -40,7 +40,7 @@ class BidMailer < ApplicationMailer
     end
   end
 
-  def withdrawn_notification(user_id, property_id)
+  def withdrawn_notification(user_id, property_id)#code: "template23"
     @buyer = User.find_by(id: user_id)
     @property = Property.find_by(id: property_id)
     if @buyer && @property
