@@ -60,6 +60,9 @@ Rails.application.routes.draw do
         put '/properties/:id/change_logs', to: 'properties#change_log_update'
         get '/activities', to: 'activities#index'
         put '/activities', to: 'activities#update'
+
+        get '/mailer_templates', to: 'notification_mailer_templates#index'
+        put '/mailer_templates/:id', to: 'notification_mailer_templates#update'
       end
     end
   end
