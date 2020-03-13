@@ -16,15 +16,15 @@ module Api
           template = NotificationMessageTemplate.find(params[:id])
           if template
             template.update(template_params)
-            render json: {messages: "Template Updated Successfully", status: 200}, status: 200
+            render json: {message: "Template Updated Successfully", status: 200}, status: 200
           else
-            render json: {messages: "Template not found", status: 400}, status: 200
+            render json: {message: "Template not found", status: 400}, status: 200
           end
         end
 
         private
         def template_params
-          params.require(:template).permit(:body)
+          params.require(:template).permit(:body, :title)
         end
       end
     end
