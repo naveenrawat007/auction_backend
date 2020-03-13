@@ -17,6 +17,7 @@ class ApplicationMailer < ActionMailer::Base
       'auction_start_time' => auction_start_time,
       'auction_bidding_ending_at' => auction_bidding_ending_at,
       'buyer_first_name' => buyer_first_name,
+      'chat_room_path' => chat_room_path,
     }
   end
 
@@ -46,5 +47,8 @@ class ApplicationMailer < ActionMailer::Base
   end
   def buyer_first_name
     return  @buyer.first_name if @buyer
+  end
+  def chat_room_path
+    return "#{APP_CONFIG['site_url']}/user/chat"
   end
 end
