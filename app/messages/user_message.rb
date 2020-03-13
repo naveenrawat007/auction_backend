@@ -1,14 +1,21 @@
-class UserMessage
-  def self.welcome(user)
+class UserMessage < MainMessage
+  def self.welcome(user) #code: "template2"
     begin
-      message = "Thank you for registering as a free member at www.AuctionMyDeal.com!  Your account has been verified and we look forward to helping you grow your real estate investment business in 2020 and beyond."
+      message = self.manage_body(NotificationMessageTemplate.find_by(code: "template2").body, user)
       MessageSender.send("+1#{user.phone_number}", message)
     rescue StandardError => e
     end
   end
-  def self.forget_password(user)
+  def self.verify_code(user) #code: "template1"
     begin
-      message = "We heard you need a password reset. Click the link below and you'll be redirected to a secure site from which you can set a new password. \n #{APP_CONFIG['site_url']}/new_password?reset_token=#{user.auth_token} \n If you didn't try to reset your password then ignore this email. \n Best Regards, \n Your Support Team @ \n AuctionMyDeal.com"
+      message = self.manage_body(NotificationMessageTemplate.find_by(code: "template1").body, user)
+      MessageSender.send_code("+1#{user.phone_number}", message)
+    rescue StandardError => e
+    end
+  end
+  def self.forget_password(user) #code: "template3"
+    begin
+      message = self.manage_body(NotificationMessageTemplate.find_by(code: "template3").body, user)
       MessageSender.send("+1#{user.phone_number}", message)
     rescue StandardError => e
     end
