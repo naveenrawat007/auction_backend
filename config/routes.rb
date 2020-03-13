@@ -63,6 +63,9 @@ Rails.application.routes.draw do
 
         get '/mailer_templates', to: 'notification_mailer_templates#index'
         put '/mailer_templates/:id', to: 'notification_mailer_templates#update'
+
+        get '/message_templates', to: 'notification_message_templates#index'
+        put '/message_templates/:id', to: 'notification_message_templates#update'
       end
     end
   end
