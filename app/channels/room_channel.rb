@@ -10,14 +10,13 @@ class RoomChannel < ApplicationCable::Channel
   def read(data)
     message_id = data['message']
     message = Message.find_by(id: message_id)
-    puts "#{data}"
     if message.user_id != data['sender'] && get_sender(data['sender']).is_admin == false
       message.update(recipient_read: true)
     else
-      puts message.chat_room.property.owner.id == data['sender']
       if message.chat_room.property.owner.id != data['sender']
-        puts "recipient_readed the msg!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
         Sidekiq::Client.enqueue_to_in("default", Time.now + 30.seconds, MessageNotificationWorker, message.chat_room.property.owner.id, message_id)
+      else
+        Sidekiq::Client.enqueue_to_in("default", Time.now + 30.seconds, UrgentMessageNotificationWorker, data['sender'], message_id)
       end
     end
   end
