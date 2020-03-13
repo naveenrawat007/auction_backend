@@ -67,6 +67,8 @@ namespace :message_template do
 
     NotificationMessageTemplate.where(code: "template24").first_or_create(title: 'Seller has received a message on the site', path:"property_message/chat_notification", body: "You have received a message at AuctionMyDeal.com.")
 
+    NotificationMessageTemplate.where(code: "template25").first_or_create(title: 'Urgent  message ', path:"property_message/urgent_chat_notification", body: "You have an unread Urgent message(s) for {property_address} in Auctionmydeal.com site.")
+
     # NotificationMessageTemplate.where(code: "template25").first_or_create(title: '(buyer) who save/favorite the property which the live online bidding has already ended', path:"property_message/watchers_post_notification", body: 'The property at {property_address} is now pending or off the market, but we will let you know if it comes back on the market.  Your Support Team @ AuctionMyDeal.com')
 
   end
