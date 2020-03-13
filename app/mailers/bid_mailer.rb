@@ -1,4 +1,5 @@
 class BidMailer < ApplicationMailer
+  prepend_view_path NotificationMailerTemplate.resolver
   def out_bidded(bid_id)#code: "template16"
     @offer = Bid.find_by(id: bid_id)
     if @offer

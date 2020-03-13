@@ -1,4 +1,5 @@
 class BestOfferMailer < ApplicationMailer
+  prepend_view_path NotificationMailerTemplate.resolver
   def not_accepted(offer_id)#code: "template14"
     @offer = BestOffer.find_by(id: offer_id)
     if @offer

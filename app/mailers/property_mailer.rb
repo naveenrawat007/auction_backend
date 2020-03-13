@@ -1,4 +1,5 @@
 class PropertyMailer < ApplicationMailer
+  prepend_view_path NotificationMailerTemplate.resolver
   ADMIN_MAILS = ["richardywall@gmail.com", "r18mantac@gmail.com"]
   def under_review(user_id, property_id)#code: "template4"
 	  @user = User.find_by(id: user_id)
@@ -158,6 +159,15 @@ class PropertyMailer < ApplicationMailer
     if @user && @property
       mail(to: ADMIN_MAILS, subject: "Request to Terminate #{@property.status}")
       PropertyMessage.request_termination_notification(@user, @property)
+    end
+  end
+
+  def urgent_chat_notification(user_id, property_id) #code: "template24"
+    @user = User.find_by(id: user_id)
+    @property = Property.find_by(id: property_id)
+    if @user
+      mail(to: @user.email, subject: "AuctionMyDeal.com has an Urgent message for YOU!")
+      PropertyMessage.urgent_chat_notification(@user, @property)
     end
   end
 end

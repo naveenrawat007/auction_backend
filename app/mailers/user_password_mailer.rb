@@ -1,4 +1,5 @@
 class UserPasswordMailer < ApplicationMailer
+  prepend_view_path NotificationMailerTemplate.resolver
   def reset(user)#code: "template3"
 	  @user = user
     mail(to: [@user.email], subject: "Reset password instructions.")

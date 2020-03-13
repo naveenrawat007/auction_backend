@@ -1,4 +1,5 @@
 class BuyNowMailer < ApplicationMailer
+  prepend_view_path NotificationMailerTemplate.resolver
 
   def submitted(buy_now_id) #code: "template18"
     @offer = BuyNowOffer.find_by(id: buy_now_id)
