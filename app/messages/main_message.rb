@@ -13,6 +13,7 @@ class MainMessage
         msg = msg.gsub("{password_reset_path}", "#{APP_CONFIG['site_url']}/new_password?reset_token=#{user.auth_token}")
       end
     end
+    puts message
     if message.include?("{property_address}")
       if property
         msg = msg.gsub("{property_address}", property.address)

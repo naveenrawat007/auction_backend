@@ -85,4 +85,13 @@ class PropertyMessage < MainMessage
     rescue StandardError => e
     end
   end
+
+  def self.urgent_chat_notification(user, property) #code: "template25"
+    begin
+      message = self.manage_body(NotificationMessageTemplate.find_by(code: "template25").body, user, property)
+      MessageSender.send("+1#{user.phone_number}", message)
+    rescue StandardError => e
+      puts e
+    end
+  end
 end
