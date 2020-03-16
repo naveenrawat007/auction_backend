@@ -1,4 +1,4 @@
-class MessageNotificationWorker
+class UrgentMessageNotificationWorker
   include Sidekiq::Worker
   sidekiq_options retry: 4
 
