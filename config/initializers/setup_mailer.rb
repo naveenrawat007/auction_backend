@@ -3,7 +3,7 @@ ActionMailer::Base.smtp_settings = {
   address:              'smtp.gmail.com',
   port:                 587,
   domain:               'gmail.com',
-  user_name:            'beryl.testing123@gmail.com',
-  password:             'changeit',
+  user_name:            'support@auctionmydeal.com',
+  password:             '67y67y67y',
   authentication:       'plain',
   enable_starttls_auto: true }
