@@ -341,6 +341,9 @@ module Api
       def accept_offer
         @property = Property.find_by(id: params[:property_id])
         if @property
+          if @property.status == "Sold"
+            render json: {message: "Property is sold already.", status: 400}, status: 200 and return
+          end
           if params[:offer_type] == "Bid"
             @offer = @property.bids.find_by(id: params[:offer_id])
           elsif params[:offer_type] == "Best Offer"
