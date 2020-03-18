@@ -45,9 +45,10 @@ module Api
           end
         elsif params[:type] == "buy_now"
           if params[:search_str].blank? == false
-            @properties = @current_user.buy_now_offered_properties.where("lower(address) LIKE :search OR lower(headliner) LIKE :search", search: "%#{params[:search_str].downcase}%").order(created_at: :desc).paginate(page: params[:page], per_page: 10)
+            @properties = @current_user.buy_now_offered_properties.where("lower(address) LIKE :search OR lower(headliner) LIKE :search", search: "%#{params[:search_str].downcase}%").select("DISTINCT ON (properties.id) properties.*").paginate(page: params[:page], per_page: 10)
           else
-            @properties = @current_user.buy_now_offered_properties.order(created_at: :desc).paginate(page: params[:page], per_page: 10)
+            @properties = @current_user.buy_now_offered_properties.select("DISTINCT ON (properties.id) properties.*").paginate(page: params[:page], per_page: 10)
+            # @properties = Property.includes(:buy_now_offers).where(buy_now_offers: {user: @current_user}).paginate(page: params[:page], per_page: 10)
           end
         else
           show_chat = true
