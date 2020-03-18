@@ -108,9 +108,12 @@ class PropertyMailer < ApplicationMailer
       PropertyMessage.termination_notification(@user, @property)
     end
   end
-  def share_link(email, link)
+  def share_link(email, link, property_id)
     @link = link
-    mail(to: [email], subject: "Property is Shared.")
+    @property = Property.find_by(id: property_id)
+    if @property
+      mail(to: [email], subject: "Property is Shared.")
+    end
   end
   def bid_accept(owner_id, property_id, user_id)
     @owner = User.find_by(id: owner_id)

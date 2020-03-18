@@ -5,7 +5,7 @@ class PropertyShareLinkWorker
   def perform(email, property_id, link)
     property = Property.find_by(id: property_id)
     if property
-      PropertyMailer.share_link(email, link).deliver
+      PropertyMailer.share_link(email, link, property.id).deliver
     end
   end
 end
