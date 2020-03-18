@@ -111,4 +111,10 @@ class Property < ApplicationRecord
       ""
     end
   end
+
+  def get_highest_buy_now
+    if self.buy_now_offers.blank? == false
+      self.buy_now_offers.maximum(:amount)
+    end
+  end
 end

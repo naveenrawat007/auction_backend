@@ -23,6 +23,7 @@ class UserPropertySerializer < ActiveModel::Serializer
     data[:highest_bid] = object.highest_bid
     data[:unique_address] = object.unique_address
     data[:thumbnail_img] = get_thumbnail
+    data[:highest_buy_now] = object.get_highest_buy_now
     data[:sold_amount] = object.sold_property_record ? object.sold_property_record.offer.amount : ""
     if self.instance_options[:serializer_options]
       data[:bids] = ActiveModelSerializers::SerializableResource.new(object.bids, each_serializer: BidSerializer, serializer_options: {chat: self.instance_options[:serializer_options][:chat]})
