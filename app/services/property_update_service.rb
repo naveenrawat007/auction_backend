@@ -247,6 +247,7 @@ class PropertyUpdateService
 
   def admin_property_change_log_update_process!
     if @property.update(property_update_params)
+      @property = PropertyTimeService.new(@property).set_property_timing_admin
       if params[:property][:open_house_dates]
         if open_house_dates_permitter.blank? == false
           @property.open_house_dates = open_house_dates_permitter
