@@ -5,14 +5,15 @@ class TestMailSendOutWorker
   def perform(mailer_template_id, email)
     mailer_template = NotificationMailerTemplate.find_by(id: mailer_template_id)
     if mailer_template
-      user_id = User.first.id
+      user_id = User.find_by(is_admin: true).id
       property_id = Property.last.id
+      offer_id = nil
       if mailer_template.code = "template1"
-        UserVerificationMailer.verify_code(User.first, email).deliver
+        UserVerificationMailer.verify_code(User.find_by(is_admin: true), email).deliver
       elsif mailer_template.code = "template2"
-        UserVerificationMailer.welcome(User.first, email).deliver
+        UserVerificationMailer.welcome(User.find_by(is_admin: true), email).deliver
       elsif mailer_template.code = "template3"
-        UserPasswordMailer.reset(User.first, email).deliver
+        UserPasswordMailer.reset(User.find_by(is_admin: true), email).deliver
       elsif mailer_template.code = "template4"
         PropertyMailer.under_review(user_id, property_id, email).deliver
       elsif mailer_template.code = "template5"
@@ -34,9 +35,9 @@ class TestMailSendOutWorker
       elsif mailer_template.code = "template13"
         PropertyMailer.buyer_best_offer_notification(user_id, property_id, email).deliver
       elsif mailer_template.code = "template14"
-        BestOfferMailer.not_accepted(offer_id, email).deliver
+        BestOfferMailer.not_accepted(offer_id, email, user_id, property_id).deliver
       elsif mailer_template.code = "template15"
-        BestOfferMailer.out_bidded(offer_id, email).deliver
+        BestOfferMailer.out_bidded(offer_id, email, user_id, property_id).deliver
       elsif mailer_template.code = "template16"
         BidMailer.out_bidded(user_id, property_id, email).deliver
       elsif mailer_template.code = "template17"
@@ -56,7 +57,6 @@ class TestMailSendOutWorker
       elsif mailer_template.code = "template24"
         PropertyMailer.urgent_chat_notification(user_id, property_id, email).deliver
       end
-
     end
   end
 end
