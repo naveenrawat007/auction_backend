@@ -1,29 +1,41 @@
 class PropertyMailer < ApplicationMailer
   prepend_view_path NotificationMailerTemplate.resolver
   ADMIN_MAILS = ["richardywall@gmail.com", "r18mantac@gmail.com"]
-  def under_review(user_id, property_id)#code: "template4"
+  def under_review(user_id, property_id, test_email=nil)#code: "template4"
 	  @user = User.find_by(id: user_id)
     @property = Property.find_by(id: property_id)
     if @user && @property
-      mail(to: [@user.email], subject: "Property is Submitted for review.")
-      PropertyMessage.under_review(@user, @property)
+      if test_email
+        mail(to: [test_email], subject: "Property is Submitted for review.")
+      else
+        mail(to: [@user.email], subject: "Property is Submitted for review.")
+        PropertyMessage.under_review(@user, @property)
+      end
     end
 	end
 
-  def approved(user_id, property_id)#code: "template5"
+  def approved(user_id, property_id, test_email=nil)#code: "template5"
     @user = User.find_by(id: user_id)
     @property = Property.find_by(id: property_id)
     if @user && @property
-      mail(to: [@user.email], subject: "Property is approved for bidding.")
+      if test_email
+        mail(to: [test_email], subject: "Property is approved for bidding.")
+      else
+        mail(to: [@user.email], subject: "Property is approved for bidding.")
+      end
     end
   end
 
-  def live_bidding(user_id, property_id)#code: "template7"
+  def live_bidding(user_id, property_id, test_email=nil)#code: "template7"
     @user = User.find_by(id: user_id)
     @property = Property.find_by(id: property_id)
     if @user && @property
-      mail(to: [@user.email], subject: "Property is Live for online bidding.")
-      PropertyMessage.live_bidding(@user, @property)
+      if test_email
+        mail(to: [test_email], subject: "Property is Live for online bidding.")
+      else
+        mail(to: [@user.email], subject: "Property is Live for online bidding.")
+        PropertyMessage.live_bidding(@user, @property)
+      end
     end
   end
 
@@ -35,12 +47,16 @@ class PropertyMailer < ApplicationMailer
     end
   end
 
-  def buy_now_notification(user_id, property_id)#code: "template9"
+  def buy_now_notification(user_id, property_id, test_email=nil)#code: "template9"
     @user = User.find_by(id: user_id)
     @property = Property.find_by(id: property_id)
     if @user && @property
-      mail(to: [@user.email], subject: "You Win Your “Buy Now” Price…:)")
-      PropertyMessage.buy_now_notification(@user, @property)
+      if test_email
+        mail(to: [test_email], subject: "You Win Your “Buy Now” Price…:)")
+      else
+        mail(to: [@user.email], subject: "You Win Your “Buy Now” Price…:)")
+        PropertyMessage.buy_now_notification(@user, @property)
+      end
     end
   end
 
@@ -59,12 +75,16 @@ class PropertyMailer < ApplicationMailer
     end
   end
 
-  def best_offer(user_id, property_id)#code: "template6"
+  def best_offer(user_id, property_id, test_email=nil)#code: "template6"
     @user = User.find_by(id: user_id)
     @property = Property.find_by(id: property_id)
     if @user && @property
-      mail(to: [@user.email], subject: "Your Property at #{@property.address} is Approved.")
-      PropertyMessage.best_offer(@user, @property)
+      if test_email
+        mail(to: [test_email], subject: "Your Property at #{@property.address} is Approved.")
+      else
+        mail(to: [@user.email], subject: "Your Property at #{@property.address} is Approved.")
+        PropertyMessage.best_offer(@user, @property)
+      end
     end
   end
 
@@ -76,36 +96,52 @@ class PropertyMailer < ApplicationMailer
     end
   end
 
-  def post_auction(user_id, property_id)#code: "template8"
+  def post_auction(user_id, property_id, test_email=nil)#code: "template8"
     @user = User.find_by(id: user_id)
     @property = Property.find_by(id: property_id)
     if @user && @property
-      mail(to: [@user.email], subject: "Property's auction period is over.")
-      PropertyMessage.post_auction(@user, @property)
+      if test_email
+        mail(to: [test_email], subject: "Property's auction period is over.")
+      else
+        mail(to: [@user.email], subject: "Property's auction period is over.")
+        PropertyMessage.post_auction(@user, @property)
+      end
     end
   end
-  def sold_notification(user_id, property_id)#code: "template10"
+  def sold_notification(user_id, property_id, test_email=nil)#code: "template10"
     @user = User.find_by(id: user_id)
     @property = Property.find_by(id: property_id)
     if @user && @property
-      mail(to: [@user.email], subject: "Way to go #{@user.first_name}...:)")
-      PropertyMessage.sold_notification(@user, @property)
+      if test_email
+        mail(to: [@user.email], subject: "Way to go #{@user.first_name}...:)")
+      else
+        mail(to: [@user.email], subject: "Way to go #{@user.first_name}...:)")
+        PropertyMessage.sold_notification(@user, @property)
+      end
     end
   end
 
-  def hold_notification(user_id, property_id)#code: "template11"
+  def hold_notification(user_id, property_id, test_email=nil)#code: "template11"
     @user = User.find_by(id: user_id)
     @property = Property.find_by(id: property_id)
     if @user && @property
-      mail(to: [@user.email], subject: "AuctionMyDeal.com needs Your Help")
+      if test_email
+        mail(to: [test_email], subject: "AuctionMyDeal.com needs Your Help")
+      else
+        mail(to: [@user.email], subject: "AuctionMyDeal.com needs Your Help")
+      end
     end
   end
-  def termination_notification(user_id, property_id)#code: "template12"
+  def termination_notification(user_id, property_id, test_email=nil)#code: "template12"
     @user = User.find_by(id: user_id)
     @property = Property.find_by(id: property_id)
     if @user && @property
-      mail(to: [@user.email], subject: "AuctionMyDeal.com is here to help You!")
-      PropertyMessage.termination_notification(@user, @property)
+      if test_email
+        mail(to: [test_email], subject: "AuctionMyDeal.com is here to help You!")
+      else
+        mail(to: [@user.email], subject: "AuctionMyDeal.com is here to help You!")
+        PropertyMessage.termination_notification(@user, @property)
+      end
     end
   end
   def share_link(email, link, property_id)
@@ -139,20 +175,28 @@ class PropertyMailer < ApplicationMailer
       mail(to: [@user.email], subject: "Your Buy Offer is accepted and is in pending status.")
     end
   end
-  def buyer_best_offer_notification(buyer_id, property_id)#code: "template13"
+  def buyer_best_offer_notification(buyer_id, property_id, test_email=nil)#code: "template13"
     @buyer = User.find_by(id: buyer_id)
     @property = Property.find_by(id: property_id)
     if @buyer
-      mail(to: [@buyer.email], subject: " Thank you for Your Best Offer on #{@property.address}!")
-      PropertyMessage.buyer_best_offer_notification(@buyer, @property)
+      if test_email
+        mail(to: [test_email], subject: " Thank you for Your Best Offer on #{@property.address}!")
+      else
+        mail(to: [@buyer.email], subject: " Thank you for Your Best Offer on #{@property.address}!")
+        PropertyMessage.buyer_best_offer_notification(@buyer, @property)
+      end
     end
   end
-  def watchers_post_notification(property_id, user_id) #code: "template20"
+  def watchers_post_notification(property_id, user_id, test_email=nil) #code: "template20"
     @user = User.find_by(id: user_id)
     @property = Property.find_by(id: property_id)
     if @user && @property
-      mail(to: [@user.email], subject: "#{@property.address} is Now Under Contract @ AuctionMyDeal.com")
-      PropertyMessage.watchers_post_notification(@user, @property)
+      if test_email
+        mail(to: [test_email], subject: "#{@property.address} is Now Under Contract @ AuctionMyDeal.com")
+      else
+        mail(to: [@user.email], subject: "#{@property.address} is Now Under Contract @ AuctionMyDeal.com")
+        PropertyMessage.watchers_post_notification(@user, @property)
+      end
     end
   end
 
@@ -165,12 +209,16 @@ class PropertyMailer < ApplicationMailer
     end
   end
 
-  def urgent_chat_notification(user_id, property_id) #code: "template24"
+  def urgent_chat_notification(user_id, property_id, test_email=nil) #code: "template24"
     @user = User.find_by(id: user_id)
     @property = Property.find_by(id: property_id)
     if @user
-      mail(to: @user.email, subject: "AuctionMyDeal.com has an Urgent message for YOU!")
-      PropertyMessage.urgent_chat_notification(@user, @property)
+      if test_email
+        mail(to: test_email, subject: "AuctionMyDeal.com has an Urgent message for YOU!")
+      else
+        mail(to: @user.email, subject: "AuctionMyDeal.com has an Urgent message for YOU!")
+        PropertyMessage.urgent_chat_notification(@user, @property)
+      end
     end
   end
 end
