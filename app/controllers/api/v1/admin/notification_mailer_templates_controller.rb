@@ -22,6 +22,20 @@ module Api
           end
         end
 
+        def send_test_mail
+          mailer_template = NotificationMailerTemplate.find_by(id: params[:id])
+          if mailer_template
+            if params[:emial].blank? == false
+              Sidekiq::Client.enqueue_to_in("default", Time.now, TestMailSendOutWorker, mailer_template.id, params[:email])
+              render json: {message: "Mail has been sent.", status: 200}, status: 200
+            else
+              render json: {message: "Email is blank.", status: 400}, status: 200
+            end
+          else
+            render json: {message: "Mail Template is found.", status: 400}, status: 200
+          end
+        end
+
         private
         def template_params
           params.require(:template).permit(:body, :title)
