@@ -6,7 +6,7 @@ class PropertyTimeService
     @property = property
  	end
 
-  def set_property_timing_admin(property)
+  def set_property_timing_admin
     if property.best_offer == true
       if property.best_offer_auction_started_at.blank? == false
         property.best_offer_auction_started_at = property.best_offer_auction_started_at.beginning_of_day + 8.hours
