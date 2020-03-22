@@ -6,7 +6,7 @@ class ApplicationMailer < ActionMailer::Base
   def liquid_assigns
     {
       'user_first_name' => user_first_name,
-      'user_verification_code' => @user.verification_code,
+      'user_verification_code' => user_verification_code,
       'new_property_path' => "#{APP_CONFIG['site_url']}/property/new",
       'reset_password_path' => reset_password_path,
       'property_address' => property_address,
@@ -25,6 +25,7 @@ class ApplicationMailer < ActionMailer::Base
     return @user.first_name if @user
   end
   def user_verification_code
+    puts @user
     return @user.verification_code if @user
   end
   def reset_password_path
