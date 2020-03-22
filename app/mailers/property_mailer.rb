@@ -113,7 +113,7 @@ class PropertyMailer < ApplicationMailer
     @property = Property.find_by(id: property_id)
     if @user && @property
       if test_email
-        mail(to: [@user.email], subject: "Way to go #{@user.first_name}...:)")
+        mail(to: [test_email], subject: "Way to go #{@user.first_name}...:)")
       else
         mail(to: [@user.email], subject: "Way to go #{@user.first_name}...:)")
         PropertyMessage.sold_notification(@user, @property)
