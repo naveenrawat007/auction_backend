@@ -37,8 +37,8 @@ module Api
               message.content = "I have submitted Best Offer in your property at #{@property.address} for #{number_to_currency(@best_offer.amount)} and check proof of funds."
               message.user_id = @current_user.id
               message.save
-              if @best_offer.fund_proofs.blank? == false
-                message.attachments.create(file: open("#{APP_CONFIG['backend_site_url']}/#{@best_offer.fund_proofs.first.file.url}",'rb'))
+              if params[:best_offer][:fund_proof].blank? == false
+                message.attachments.create(file: params[:best_offer][:fund_proof])
               end
               #end
               render json: {chat_room: ChatRoomSerializer.new(@chat_room), property: PropertySerializer.new(@property), message: "Best Offer Submitted.", status: 201 }, status: 200

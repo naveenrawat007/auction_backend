@@ -47,8 +47,8 @@ module Api
                 message.content = "I have submitted Bid in your property at #{@property.address} for #{number_to_currency(@bid.amount)} and check proof of funds."
                 message.user_id = @current_user.id
                 message.save
-                if @bid.fund_proofs.blank? == false
-                  message.attachments.create(file: open("#{APP_CONFIG['backend_site_url']}/#{@bid.fund_proofs.first.file.url}",'rb'))
+                if params[:bid][:fund_proof].blank? == false
+                  message.attachments.create(file: params[:bid][:fund_proof])
                 end
                 #end
                 render json: {property: PropertySerializer.new(@property), message: "Bid Created.", status: 201 }, status: 200
