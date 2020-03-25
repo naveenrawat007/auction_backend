@@ -23,7 +23,7 @@ module ApplicationHelper
   def post_auction(property)
     @property = property
     delete_job(@property.post_auction_worker_jid)
-    @property.post_auction_worker_jid = Sidekiq::Client.enqueue_to_in("default", @property.auction_bidding_ending_at, PropertyPostAuctionWorker, @property.id)
+    @property.post_auction_worker_jid = Sidekiq::Client.enqueue_to_in("default", @property.auction_bidding_ending_at + self.sniper_length.minutes, PropertyPostAuctionWorker, @property.id)
     @property.save
   end
 

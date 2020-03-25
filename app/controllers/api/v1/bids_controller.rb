@@ -24,7 +24,6 @@ module Api
                   @property.sniper_length += 3 #count of time duration increasing in minutes
                   @property.save
                   post_auction(@property)
-                  @property.post_auction_worker_jid = post_auction_worker_jid
                   @property.save
                 end
                 Sidekiq::Client.enqueue_to_in("default", Time.now , PropertyBidNotificationWorker, @property.id, @bid.id)
