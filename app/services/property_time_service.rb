@@ -22,17 +22,17 @@ class PropertyTimeService
     if property.auction_started_at.blank? == false
       property.auction_started_at = property.auction_started_at.beginning_of_day + 8.hours
       property.auction_bidding_ending_at = (property.auction_started_at + property.auction_length.to_i.days).beginning_of_day - 4.hours
+      live_auction(property)
     end
     if property.auction_bidding_ending_at == false || property.auction_length.blank? == false
       property.auction_bidding_ending_at = (property.auction_started_at + property.auction_length.to_i.days).beginning_of_day - 4.hours
+      post_auction(property)
     end
     if property.auction_ending_at.blank? == false
       if property.auction_ending_at.to_i != property.auction_ending_at.end_of_day.to_i
         property.auction_ending_at = property.auction_ending_at.end_of_day
       end
     end
-    live_auction(property)
-    post_auction(property)
     return property
   end
 

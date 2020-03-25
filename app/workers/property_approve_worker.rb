@@ -1,4 +1,5 @@
 class PropertyApproveWorker
+  include ApplicationHelper
   include Sidekiq::Worker
   sidekiq_options retry: 4
 
@@ -13,15 +14,14 @@ class PropertyApproveWorker
           if property.auction_started_at.blank? == false
             if property.best_offer == true
               if property.best_offer_auction_started_at.blank? == false
-                property.best_offer_live_auction_worker_jid = Sidekiq::Client.enqueue_to_in("default", property.best_offer_auction_started_at , PropertyBestOfferWorker, property.id)
+                best_offer_live_auction(property)
               end
               if property.best_offer_auction_ending_at.blank? == false
-                property.best_offer_post_auction_worker_jid = Sidekiq::Client.enqueue_to_in("default", property.best_offer_auction_ending_at , PropertyBestOfferPostAuctionWorker, property.id)
+                best_offer_post_auction(property)
               end
             end
-            property.live_auction_worker_jid = Sidekiq::Client.enqueue_to_in("default", property.auction_started_at , PropertyLiveWorker, property.id)
-            property.post_auction_worker_jid = Sidekiq::Client.enqueue_to_in("default", property.auction_bidding_ending_at, PropertyPostAuctionWorker, property.id)
-            property.save
+            live_auction(property)
+            post_auction(property)
           else
             property.status = "Hold"
             property.save
