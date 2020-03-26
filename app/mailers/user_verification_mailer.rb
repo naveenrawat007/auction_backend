@@ -9,7 +9,7 @@ class UserVerificationMailer < ApplicationMailer
       UserMessage.verify_code(@user)
     end
 	end
-  def welcome(user, test_email) #code: "template2"
+  def welcome(user, test_email=nil) #code: "template2"
     @user = user
     if test_email
       mail(to: test_email, subject: "Welcome to AuctionMyDeal.com… 😊")
