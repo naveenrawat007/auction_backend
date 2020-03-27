@@ -9,7 +9,7 @@ class PropertyBestOfferPostAuctionWorker
         if property.status == "Best Offer"
           property.status = "Post Auction"
           property.save
-          PropertyMailer.best_offer_ended(property.owner_id, property.id).deliver
+          # PropertyMailer.best_offer_ended(property.owner_id, property.id).deliver
         end
       end
     end

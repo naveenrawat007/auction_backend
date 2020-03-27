@@ -1,4 +1,5 @@
 class PropertyMailer < ApplicationMailer
+  #the mailer action which donot have code infront of them are not sent and are commented in respective calls
   prepend_view_path NotificationMailerTemplate.resolver
   ADMIN_MAILS = ["richardywall@gmail.com", "r18mantac@gmail.com"]
   def under_review(user_id, property_id, test_email=nil)#code: "template4"

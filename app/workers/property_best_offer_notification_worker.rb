@@ -5,7 +5,7 @@ class PropertyBestOfferNotificationWorker
   def perform(property_id)
     property = Property.find_by(id: property_id)
     if property
-      PropertyMailer.best_offer_notification(property.owner_id, property.id).deliver
+      # PropertyMailer.best_offer_notification(property.owner_id, property.id).deliver
     end
   end
 end

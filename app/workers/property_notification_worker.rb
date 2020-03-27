@@ -9,7 +9,7 @@ class PropertyNotificationWorker
       elsif property.status == "Terminated"
         PropertyMailer.termination_notification(property.owner_id, property.id).deliver
       else
-        PropertyMailer.status_notification(property.owner_id, property.id).deliver
+        # PropertyMailer.status_notification(property.owner_id, property.id).deliver
       end
     end
   end
