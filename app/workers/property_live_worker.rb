@@ -2,10 +2,10 @@ class PropertyLiveWorker
   include Sidekiq::Worker
   sidekiq_options retry: 4
 
-  def perform(property_id)
+  def perform(property_id, pass = false)
     property = Property.find_by(id: property_id)
     if property
-      if property.live_auction_worker_jid == self.jid || property.live_auction_worker_jid.blank? == true
+      if property.live_auction_worker_jid == self.jid || property.live_auction_worker_jid.blank? == true || pass
         if (property.status == "Approve" || property.status == "Best Offer" || property.status == "Post Auction")
           property.status = "Live Online Bidding"
           property.save
