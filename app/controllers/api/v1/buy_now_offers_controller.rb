@@ -16,7 +16,7 @@ module Api
                 @buy_now.amount = params[:buy_now][:amount]
                 @buy_now.buy_option = buy_option_permitter
                 @buy_now.save
-                if @buy_now.offer_detail
+                if !@buy_now.offer_detail
                   @offer_detail = @buy_now.build_offer_detail(offer_detail_params)
                 else
                   @offer_detail = @buy_now.offer_detail
@@ -65,6 +65,19 @@ module Api
               @buy_now.amount = params[:buy_now][:amount]
               @buy_now.buy_option = buy_option_permitter
               @buy_now.save
+              if !@buy_now.offer_detail
+                @offer_detail = @buy_now.build_offer_detail(offer_detail_params)
+              else
+                @offer_detail = @buy_now.offer_detail
+                @offer_detail.update(offer_detail_params)
+              end
+              @offer_detail.save
+              if !(params[:bid][:business_documents].blank?)
+                @offer_detail.business_documents.destroy_all
+                params[:bid][:business_documents].each do |document|
+                  @offer_detail.business_documents.create(file: document)
+                end
+              end
               CreateActivityService.new(@buy_now, "buy_now_submission").process!
               @property.status = "Pending"
               @property.save

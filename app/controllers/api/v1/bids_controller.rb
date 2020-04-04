@@ -18,7 +18,7 @@ module Api
                 @bid.amount = params[:bid][:amount]
                 @bid.buy_option = buy_option_permitter
                 @bid.save
-                if @bid.offer_detail
+                if !@bid.offer_detail
                   @offer_detail = @bid.build_offer_detail(offer_detail_params)
                 else
                   @offer_detail = @bid.offer_detail

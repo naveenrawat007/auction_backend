@@ -16,7 +16,7 @@ module Api
               @best_offer.amount = params[:best_offer][:amount]
               @best_offer.buy_option = buy_option_permitter
               @best_offer.save
-              if @best_offer.offer_detail
+              if !@best_offer.offer_detail
                 @offer_detail = @best_offer.build_offer_detail(offer_detail_params)
               else
                 @offer_detail = @best_offer.offer_detail
