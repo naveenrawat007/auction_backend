@@ -16,6 +16,19 @@ module Api
               @best_offer.amount = params[:best_offer][:amount]
               @best_offer.buy_option = buy_option_permitter
               @best_offer.save
+              if @best_offer.offer_detail
+                @offer_detail = @best_offer.build_offer_detail(offer_detail_params)
+              else
+                @offer_detail = @best_offer.offer_detail
+                @offer_detail.update(offer_detail_params)
+              end
+              @offer_detail.save
+              if !(params[:bid][:business_documents].blank?)
+                @offer_detail.business_documents.destroy_all
+                params[:bid][:business_documents].each do |document|
+                  @offer_detail.business_documents.create(file: document)
+                end
+              end
               CreateActivityService.new(@best_offer, "offer_submission").process!
               Sidekiq::Client.enqueue_to_in("default", Time.now , PropertyBestOfferNotificationWorker, @property.id)
               Sidekiq::Client.enqueue_to_in("default", Time.now , BuyerBestOfferNotificationWorker, @property.id, @current_user.id)
@@ -53,6 +66,9 @@ module Api
       private
       def buy_option_permitter
         JSON.parse(params[:best_offer][:buy_option])
+      end
+      def offer_detail_params
+        params.require(:best_offer).permit(:user_first_name, :user_middle_name, :user_last_name, :user_email, :user_phone_no, :self_buy_property, :realtor_first_name, :realtor_last_name, :realtor_license, :realtor_company, :realtor_phone_no, :realtor_email, :purchase_property_as, :internet_transaction_fee, :total_due, :promo_code, :property_closing_date, :hold_bid_days, :business_document_text)
       end
     end
   end
