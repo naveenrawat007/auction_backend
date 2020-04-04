@@ -5,6 +5,30 @@ module Api
       before_action :get_user, only: [:show]
       prepend_before_action :current_user, only: [:update]
 
+      def offer_detail
+        if @current_user.is_admin?
+          @property = Property.find_by(id: params[:id])
+        else
+          @property = @current_user.owned_properties.find_by(id: params[:id])
+        end
+        if @property
+          if params[:offer_type] == "bid"
+            @offer = Bid.find_by(id: params[:offer_id])
+          elsif (params[:offer_type] == "buy_now") || (params[:offer_type] == "best_buy_now")
+            @offer = BuyNowOffer.find_by(id: params[:offer_id])
+          elsif params[:offer_type] == "best_offer"
+            @offer = BestOffer.find_by(id: params[:offer_id])
+          end
+          if @offer
+            render json: {offer: OfferSerializer.new(@offer), property: PropertySerializer.new(@property), status: 200}, status: 200
+          else
+            render json: {message: "offer not found.", status: 404 }, status: 200
+          end
+        else
+          render json: {message: "This property does not exists", status: 404 }, status: 200
+        end
+      end
+
       def public_index
         params[:page] ||= 1
         if params[:status].blank? == true
