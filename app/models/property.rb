@@ -92,6 +92,14 @@ class Property < ApplicationRecord
     24.hours
   end
 
+  def self.purchase_property_as_options
+    ["Business", "Individual"]
+  end
+
+  def self.hold_bid_days_options
+    [3,5,7,10]
+  end
+
   def highest_bid
     if self.bids.blank? == false
       self.bids.maximum(:amount)
