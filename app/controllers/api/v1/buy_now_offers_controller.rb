@@ -23,9 +23,9 @@ module Api
                   @offer_detail.update(offer_detail_params)
                 end
                 @offer_detail.save
-                if !(params[:bid][:business_documents].blank?)
+                if !(params[:buy_now][:business_documents].blank?)
                   @offer_detail.business_documents.destroy_all
-                  params[:bid][:business_documents].each do |document|
+                  params[:buy_now][:business_documents].each do |document|
                     @offer_detail.business_documents.create(file: document)
                   end
                 end
@@ -72,9 +72,9 @@ module Api
                 @offer_detail.update(offer_detail_params)
               end
               @offer_detail.save
-              if !(params[:bid][:business_documents].blank?)
+              if !(params[:buy_now][:business_documents].blank?)
                 @offer_detail.business_documents.destroy_all
-                params[:bid][:business_documents].each do |document|
+                params[:buy_now][:business_documents].each do |document|
                   @offer_detail.business_documents.create(file: document)
                 end
               end
