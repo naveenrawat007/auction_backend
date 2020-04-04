@@ -4,6 +4,7 @@ class BidSerializer < ActiveModel::Serializer
     data[:id] = object.id
     data[:amount] = object.amount
     data[:type] = "Bid"
+    data[:type_code] = "bid"
     data[:user] = object.user ? object.user.first_name : ""
     data[:user_name] = object.user ? "#{object.user.first_name} #{object.user.last_name}" : ""
     data[:time] = object.updated_at.strftime("%m/%d/%Y | %l:%M%p")
