@@ -21,6 +21,11 @@ class OfferDetailSerializer < ActiveModel::Serializer
     data[:property_closing_date] = object.property_closing_date
     data[:hold_bid_days] = object.hold_bid_days
     data[:business_document_text] = object.business_document_text
+    data[:business_documents] = documents
     data
+  end
+
+  def documents
+    object.business_documents.order(:created_at).map{|i| APP_CONFIG['backend_site_url'] + i.file.url}
   end
 end
