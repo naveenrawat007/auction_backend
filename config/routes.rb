@@ -50,6 +50,9 @@ Rails.application.routes.draw do
       get 'user/chat_rooms/:id/messages', to: 'chat_rooms#show_messages'
       post 'user/chat_rooms/:id/messages', to: 'chat_rooms#create_messages'
       get 'property/:id/offer/:offer_type/:offer_id', to: 'properties#offer_detail'
+
+      post '/subscriber', to: 'subscribers#create'
+
       namespace 'admin' do
         get '/chat_rooms', to: 'chat_rooms#index'
         get '/chat_rooms/:id/messages', to: 'chat_rooms#show_messages'
