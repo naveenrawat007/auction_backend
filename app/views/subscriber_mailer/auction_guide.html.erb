@@ -1,4 +1,15 @@
-<h2>Hello</h2>
- <p><%=@name%></p>
+<b>
+  Hello <%= @user.first_name %>,
+</b>
+
 <p>Please download this pdf to know more about Auction</p><br>
-<h4>Thanks</h4>
+<p style="font-size: 13px; margin: 0px;">
+  Your Support Team @
+</p>
+<p style="font-size: 13px; margin: 0px;">
+  AuctionMyDeal.com
+</p>
+
+<p style="font-size: 13px;">
+  P.S.: Please let us know if you have any questions or suggestions? <%= link_to "Click HERE", "#{APP_CONFIG['site_url']}/help-and-faq", style: 'color: #28608f;' %>
+</p>
