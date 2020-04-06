@@ -19,6 +19,15 @@ module Api
         render json: {users: ActiveModelSerializers::SerializableResource.new(@users, each_serializer: UserSerializer), statuses: User.status, status: 200, meta: {current_page: @users.current_page, total_pages: @users.total_pages} }
       end
 
+      def subscribers_list
+        if params[:search_str].blank? == false
+          @subscribers = Subscriber.where("lower(name) LIKE :search OR lower(email) LIKE :search OR phone_no::Text LIKE :search ", search: "%#{params[:search_str].downcase}%").order(created_at: :desc).paginate(page: params[:page], per_page: 10)
+        else
+          @subscribers = Subscriber.all.order(created_at: :desc).paginate(page: params[:page], per_page: 10)
+        end
+        render json: {subscribers: ActiveModelSerializers::SerializableResource.new(@subscribers, each_serializer: SubscriberSerializer), status: 200, meta: {current_page: @subscribers.current_page, total_pages: @subscribers.total_pages} }
+      end
+
 
       def update_status
         @user = User.find_by(id: params[:user][:id])
