@@ -6,6 +6,7 @@ module Api
         subscriber = Subscriber.new(subscriber_params)
         if subscriber.save
           render json: {status: 201, message: "Thanks for sharing your details with us. We emailed you the guide download link."}
+          Sidekiq::Client.enqueue_to_in("default",Time.now, SubscriberWorker, params[:subscriber][:email], params[:subscriber][:name])
         else
           render json: {status: 400, message: "Subscriber not created"}
         end
