@@ -106,11 +106,11 @@ module Api
         end
 
         def sold_property
-          if params[:property][:offer_type] == "Bid"
+          if params[:property][:offer_type] == "bid"
             @offer = Bid.find_by(id: params[:property]["offer_id"])
-          elsif (params[:property][:offer_type] == "Best / Buy Now" || params[:property][:offer_type] == "Buy Now")
+          elsif (params[:property][:offer_type] == "best_buy_now" || params[:property][:offer_type] == "buy_now")
             @offer = BuyNowOffer.find_by(id: params[:property]["offer_id"])
-          elsif params[:property][:offer_type] == "Best Offer"
+          elsif params[:property][:offer_type] == "best_offer"
             @offer = BestOffer.find_by(id: params[:property]["offer_id"])
           end
           @property = @offer.property
@@ -121,7 +121,7 @@ module Api
             sold_property_record.offer = @offer
             sold_property_record.save
             @property.status = "Sold"
-            Sidekiq::Client.enqueue_to_in("default", Time.now , PropertySoldNotificationWorker, property.id)
+            Sidekiq::Client.enqueue_to_in("default", Time.now , PropertySoldNotificationWorker, @property.id)
             @property.save
             render json: {message: "Status changed to Sold", status: 200}, status: 200
           else
