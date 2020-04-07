@@ -45,6 +45,7 @@ class PropertySerializer < ActiveModel::Serializer
     data[:rental_description] = object.rental_description ? object.rental_description : ""
     data[:seller_price] = object.seller_price ? object.seller_price : ""
     data[:buy_now_price] = object.buy_now_price ? object.buy_now_price : ""
+    data[:property_closing_amount] = object.property_closing_amount ? object.property_closing_amount : ""
     data[:auction_started_at] = object.auction_started_at ? object.auction_started_at : ""
     data[:auction_length] = object.auction_length ? object.auction_length : ""
     data[:auction_bidding_started_at] = object.auction_started_at ? object.auction_started_at : ""
