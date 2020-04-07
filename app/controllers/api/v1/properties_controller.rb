@@ -295,17 +295,24 @@ module Api
           if @property.status == "Sold"
             render json: {message: "Property is sold already.", status: 400}, status: 200 and return
           end
-          if params[:offer_type] == "Bid"
+          if params[:offer_type] == "bid"
             @offer = @property.bids.find_by(id: params[:offer_id])
-          elsif params[:offer_type] == "Best Offer"
+          elsif params[:offer_type] == "best_offer"
             @offer = @property.best_offers.find_by(id: params[:offer_id])
-          elsif (params[:offer_type] == "Buy Now" || params[:offer_type] == "Best / Buy Now")
+          elsif (params[:offer_type] == "buy_now" || params[:offer_type] == "best_buy_now")
             @offer = @property.buy_now_offers.find_by(id: params[:offer_id])
           end
           if params[:accepted] == "false"
             if @offer.accepted != false
               @offer.accepted = false
               @offer.save
+              if (params[:offer_type] == "buy_now" || params[:offer_type] == "best_buy_now")
+                if @property.buy_now_offers.where(accepted: true).count == 0
+                  @property.status = "Under Review"
+                  @property.save
+                  Sidekiq::Client.enqueue_to_in("default", Time.now, PropertyApproveWorker, @property.id)
+                end
+              end
             end
             render json: {accepted: false, message: "Offer rejected.", status: 200}, status: 200
           else
