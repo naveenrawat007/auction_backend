@@ -11,8 +11,12 @@ class PropertyPostAuctionWorker
           #   property.sniper = false
           #   property.save
           # else
-            if property.bids.blank? == true
-              property.status = "Post Auction"
+            if property.bids.blank?
+              if property.buy_now_offers.where(accepted: true).count == 0
+                property.status = "Under Review"
+              else
+                property.status = "Post Auction"
+              end
             else
               property.status = "Pending"
               begin
