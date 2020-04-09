@@ -8,7 +8,6 @@ class TestMailSendOutWorker
       user_id = User.find_by(is_admin: true).id
       property_id = Property.last.id
       offer_id = nil
-      puts mailer_template.code
       if mailer_template.code == "template1"
         UserVerificationMailer.verify_code(User.find_by(is_admin: true), email).deliver
       elsif mailer_template.code == "template2"
@@ -57,6 +56,11 @@ class TestMailSendOutWorker
         BidMailer.withdrawn_notification(user_id, property_id, email).deliver
       elsif mailer_template.code == "template24"
         PropertyMailer.urgent_chat_notification(user_id, property_id, email).deliver
+      elsif mailer_template.code == "template25"
+        SubscriberMailer.auction_guide(user_id, email).deliver
+      elsif mailer_template.code == "template26"
+        link = "temp_link"
+        PropertyMailer.share_link(user_id, link, property_id, email).deliver
       end
     end
   end
