@@ -152,13 +152,10 @@ module Api
         if @property
           @property.total_views += 1
           @property.save
-          if @property.lat.blank? == false && @property.long.blank? == false
+          if !@property.lat.blank? && !@property.long.blank?
             @near_properties = Property.where(status: ["Live Online Bidding", "Best Offer"]).near([@property.lat, @property.long], 50000, units: :km).limit(4)
-            if @near_properties.length < 4
-              @near_properties = Property.where(status: ["Live Online Bidding", "Best Offer"]).where.not(id: @near_properties.ids).order(address: :asc).limit(4-@near_properties.length)
-            end
           else
-            @near_properties = Property.where(status: ["Live Online Bidding", "Best Offer"]).order(address: :asc).limit(4)
+            @near_properties = Property.where(status: ["Live Online Bidding", "Best Offer"]).where.not(id: [@property.id]).order(address: :asc).limit(4)
           end
           @seller_pay_types = SellerPayType.all.order(:created_at)
           @show_instructions_types = ShowInstructionsType.all.order(:created_at)
