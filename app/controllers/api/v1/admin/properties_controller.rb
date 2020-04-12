@@ -120,7 +120,13 @@ module Api
             sold_property_record.user_id = @offer.user_id
             sold_property_record.offer = @offer
             sold_property_record.save
+            @offer.update(accepted: true)
             @property.status = "Sold"
+            if params[:property][:sold_date]
+              @property.sold_date = params[:property][:sold_date]
+            else
+              @property.sold_date = Time.now
+            end
             Sidekiq::Client.enqueue_to_in("default", Time.now , PropertySoldNotificationWorker, @property.id)
             @property.save
             render json: {message: "Status changed to Sold", status: 200}, status: 200

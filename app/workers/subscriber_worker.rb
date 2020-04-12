@@ -2,8 +2,8 @@ class SubscriberWorker
   include Sidekiq::Worker
   sidekiq_options retry: 4
 
-  def perform(email, name)
-    SubscriberMailer.auction_guide(email, name).deliver
+  def perform(id)
+    SubscriberMailer.auction_guide(id).deliver
   end
 
 end

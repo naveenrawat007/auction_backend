@@ -145,11 +145,15 @@ class PropertyMailer < ApplicationMailer
       end
     end
   end
-  def share_link(email, link, property_id)
+  def share_link(email, link, property_id, test_email=nil) #code: "template26"
     @link = link
     @property = Property.find_by(id: property_id)
     if @property
-      mail(to: [email], subject: "Property is Shared.")
+      if test_email
+        mail(to: [test_email], subject: "Auction My deal has a property for you.")
+      else
+        mail(to: [email], subject: "Auction My deal has a property for you.")
+      end
     end
   end
   def bid_accept(owner_id, property_id, user_id)

@@ -210,25 +210,30 @@ class PropertyUpdateService
         change_logs[:landlord_deal] = @landlord_deal.changes
       end
     end
-    if params[:images].blank? == false
-      if @property.change_log
-        @change_log = @property.change_log
-      else
-        @change_log = @property.create_change_log(details: change_logs)
-      end
-      params[:images].each do |image|
-        @change_log.photos.create(image: image)
-      end
-      change_logs[:images] = @change_log.photos.order(:created_at).map{|i| APP_CONFIG['backend_site_url'] + i.image.url}
+    if @property.change_log
+      @change_log = @property.change_log
+    else
+      @change_log = @property.create_change_log(details: change_logs)
     end
-    if params[:video].blank? == false
-      if @property.change_log
-        @change_log = @property.change_log
+    unless params[:images] == nil
+      if params[:images].blank? == false
+        @change_log.photos.destroy_all
+        params[:images].each do |image|
+          @change_log.photos.create(image: image)
+        end
+        change_logs[:images] = "added"
       else
-        @change_log = @property.create_change_log(details: change_logs)
+        change_logs[:images] = "removed"
       end
-      @change_log.videos.create(video: params[:video])
-      change_logs[:video_url] = APP_CONFIG['backend_site_url'] + @change_log.videos.first.video.url
+    end
+    unless params[:video] == nil
+      if params[:video].blank? == false
+        @change_log.videos.destroy_all
+        @change_log.videos.create(video: params[:video])
+        change_logs[:video_url] = "added"
+      else
+        change_logs[:video_url] = "removed"
+      end
     end
     if change_logs.blank? == false
       if @property.change_log
@@ -271,15 +276,28 @@ class PropertyUpdateService
       if params[:property][:buy_option]
         @property.buy_option = buy_option_permitter
       end
+      @change_log = @property.change_log
       if params[:property][:images]
-        @property.photos.destroy_all
-        params[:property][:images].each do |img_url|
-          @property.photos.create(image: open(img_url,'rb'))
+        if params[:property][:images] == "added"
+          @property.photos.destroy_all
+          @change_log.photos.update(imageable: @property)
+          change_logs = @change_log.details
+          change_logs["images"] = "updated"
+          @change_log.update(details: change_logs)
         end
+        # params[:property][:images].each do |img_url|
+        #   @property.photos.create(image: open(img_url,'rb'))
+        # end
       end
       if params[:property][:video_url]
-        @property.videos.destroy_all
-        @property.videos.create(video: open(params[:property][:video_url], 'rb'))
+        if params[:property][:video_url] == "added"
+          @property.videos.destroy_all
+          @change_log.videos.first.update(resource: @property)
+          change_logs = @change_log.details
+          change_logs["video_url"] = "updated"
+          @change_log.update(details: change_logs)
+        end
+        # @property.videos.create(video: open(params[:property][:video_url], 'rb'))
       end
       if @property.deal_analysis_type == "Rehab & Flip Deal"
         if params[:property][:profit_potential].blank? == false

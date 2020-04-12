@@ -38,6 +38,7 @@ class UnderReviewPropertySerializer < ActiveModel::Serializer
     data[:requested_timer] = requested_timer
     data[:sold_to] = object.property_buyer ? object.property_buyer.full_name : ""
     data[:sold_amount] = object.sold_property_record ? object.sold_property_record.offer.amount : ""
+    data[:sold_date] = object.sold_date
     if self.instance_options[:serializer_options]
       if self.instance_options[:serializer_options][:status] == "Under Review"
         if object.change_log
