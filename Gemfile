@@ -79,3 +79,4 @@ gem 'redis'
 gem "audited", "~> 4.9"
 gem "panoramic"
 gem 'liquid-rails'
+gem 'stripe'
