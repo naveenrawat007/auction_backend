@@ -2,7 +2,7 @@ class AuthorizePaymentsService
 
   def initialize(card_token, amount)
     @card_token = card_token
-    @amount = amount
+    @amount = (amount.to_f * 100).to_i
   end
 
   def call
