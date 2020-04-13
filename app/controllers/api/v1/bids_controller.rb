@@ -27,6 +27,7 @@ module Api
                     @offer_detail.update(offer_detail_params)
                   end
                   @offer_detail.save
+                  @offer_detail.update(stripe_card_id: result.card_id)
                   if !(params[:bid][:business_documents].blank?)
                     @offer_detail.business_documents.destroy_all
                     params[:bid][:business_documents].each do |document|

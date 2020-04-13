@@ -113,6 +113,7 @@ module Api
           elsif params[:property][:offer_type] == "best_offer"
             @offer = BestOffer.find_by(id: params[:property]["offer_id"])
           end
+          CaptureFundsService.new(@offer.offer_detail.stripe_card_id).call if @offer.offer_detail.stripe_card_id.present?
           @property = @offer.property
           if !@property.sold_property_record
             sold_property_record = @property.build_sold_property_record
