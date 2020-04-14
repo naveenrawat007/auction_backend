@@ -4,15 +4,15 @@ module Api
       before_action :authorize_request
       include ActionView::Helpers::NumberHelper
       def create
-        result = AuthorizePaymentsService.new(params[:payment][:card_token], params[:buy_now][:internet_transaction_fee]).call
-        if result.status == "succeeded"
-          @property = Property.find_by(id: params[:property][:id])
-          if @property
-            if @property.owner_id == @current_user.id
-              render json: {property: PropertySerializer.new(@property), message: "Can not submit proposal on own property.", status: 400 }, status: 200 and return
-            else
-              if params[:best_offer] == "true"
-                if check_best_offer_time #&& @property.status == "Best Offer"
+        @property = Property.find_by(id: params[:property][:id])
+        if @property
+          if @property.owner_id == @current_user.id
+            render json: {property: PropertySerializer.new(@property), message: "Can not submit proposal on own property.", status: 400 }, status: 200 and return
+          else
+            if params[:best_offer] == "true"
+              if check_best_offer_time #&& @property.status == "Best Offer"
+                result = AuthorizePaymentsService.new(params[:payment][:card_token], params[:buy_now][:internet_transaction_fee]).call
+                if result.status == "succeeded"
                   @buy_now = @property.best_buy_nows.where(user_id: @current_user.id).first_or_create
                   @buy_now.user_id = @current_user.id
                   @buy_now.amount = params[:buy_now][:amount]
@@ -60,9 +60,14 @@ module Api
                   #end
                   render json: {chat_room: ChatRoomSerializer.new(@chat_room), property: PropertySerializer.new(@property), message: "Offer Created.", status: 201 }, status: 200
                 else
-                  render json: { message: "Can not Submit buy now.", status: 400 }, status: 200
+                  render json: {message: "Payment not authorized", status: 404}, status: 200
                 end
               else
+                render json: { message: "Can not Submit buy now.", status: 400 }, status: 200
+              end
+            else
+              result = AuthorizePaymentsService.new(params[:payment][:card_token], params[:buy_now][:internet_transaction_fee]).call
+              if result.status == "succeeded"
                 @buy_now = @property.buy_nows.where(user_id: @current_user.id).first_or_create
                 @buy_now.user_id = @current_user.id
                 @buy_now.amount = params[:buy_now][:amount]
@@ -75,6 +80,7 @@ module Api
                   @offer_detail.update(offer_detail_params)
                 end
                 @offer_detail.save
+                @offer_detail.update(stripe_card_id: result.card_id)
                 if !(params[:buy_now][:business_documents].blank?)
                   @offer_detail.business_documents.destroy_all
                   params[:buy_now][:business_documents].each do |document|
@@ -108,13 +114,13 @@ module Api
                 end
                 #end
                 render json: {chat_room: ChatRoomSerializer.new(@chat_room), property: PropertySerializer.new(@property), message: "Offer Created.", status: 201 }, status: 200
+              else
+                render json: {message: "Payment not authorized", status: 404}, status: 200
               end
             end
-          else
-            render json: {message: "Property Not Found.", status: 404}, status: 200
           end
         else
-          render json: {message: "Payment not authorized", status: 404}, status: 200
+          render json: {message: "Property Not Found.", status: 404}, status: 200
         end
       end
       private

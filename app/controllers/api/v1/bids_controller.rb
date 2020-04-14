@@ -5,16 +5,16 @@ module Api
       include ApplicationHelper
       include ActionView::Helpers::NumberHelper
       def create
-        result = AuthorizePaymentsService.new(params[:payment][:card_token], params[:bid][:internet_transaction_fee]).call
-        if result.status == "succeeded"
-          @property = Property.find_by(id: params[:property][:id])
-          if @property
-            if @property.owner_id == @current_user.id
-              render json: {property: PropertySerializer.new(@property), message: "Can not submit proposal on own property.", status: 400 }, status: 200 and return
-            else
-              hightest_bid_offer = @property.highest_bid
-              if @property.auction_bidding_ending_at > Time.now
-                if params[:bid][:amount].to_f > hightest_bid_offer.to_f
+        @property = Property.find_by(id: params[:property][:id])
+        if @property
+          if @property.owner_id == @current_user.id
+            render json: {property: PropertySerializer.new(@property), message: "Can not submit proposal on own property.", status: 400 }, status: 200 and return
+          else
+            hightest_bid_offer = @property.highest_bid
+            if @property.auction_bidding_ending_at > Time.now
+              if params[:bid][:amount].to_f > hightest_bid_offer.to_f
+                result = AuthorizePaymentsService.new(params[:payment][:card_token], params[:bid][:internet_transaction_fee]).call
+                if result.status == "succeeded"
                   @bid = @property.bids.where(user_id: @current_user.id).first_or_create
                   @bid.user_id = @current_user.id
                   @bid.amount = params[:bid][:amount]
@@ -68,17 +68,17 @@ module Api
                   #end
                   render json: {property: PropertySerializer.new(@property), message: "Bid Created.", status: 201 }, status: 200
                 else
-                  render json: {message: "This amount is less than last Submitted bid.", status: 404 }, status: 200
+                  render json: {message: "Payment not authorized", status: 404}, status: 200
                 end
               else
-                render json: {message: "Auction time period is over.", status: 404 }, status: 200
+                render json: {message: "This amount is less than last Submitted bid.", status: 404 }, status: 200
               end
+            else
+              render json: {message: "Auction time period is over.", status: 404 }, status: 200
             end
-          else
-            render json: {message: "Property Not Found.", status: 404}, status: 200
           end
         else
-          render json: {message: "Payment not authorized", status: 404}, status: 200
+          render json: {message: "Property Not Found.", status: 404}, status: 200
         end
       end
       private

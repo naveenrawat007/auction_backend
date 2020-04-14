@@ -4,15 +4,15 @@ module Api
       before_action :authorize_request
       include ActionView::Helpers::NumberHelper
       def create
-        result = AuthorizePaymentsService.new(params[:payment][:card_token], params[:best_offer][:internet_transaction_fee]).call
-        if result.status == "succeeded"
-          @property = Property.find_by(id: params[:property][:id])
-          if @property
-            if @property.owner_id == @current_user.id
-              render json: {property: PropertySerializer.new(@property), message: "Can not submit proposal on own property.", status: 400 }, status: 200 and return
-            else
-              hightest_best_offer = @property.best_offer_price
-              if params[:best_offer][:amount].to_f > hightest_best_offer.to_f
+        @property = Property.find_by(id: params[:property][:id])
+        if @property
+          if @property.owner_id == @current_user.id
+            render json: {property: PropertySerializer.new(@property), message: "Can not submit proposal on own property.", status: 400 }, status: 200 and return
+          else
+            hightest_best_offer = @property.best_offer_price
+            if params[:best_offer][:amount].to_f > hightest_best_offer.to_f
+              result = AuthorizePaymentsService.new(params[:payment][:card_token], params[:best_offer][:internet_transaction_fee]).call
+              if result.status == "succeeded"
                 @best_offer = @property.best_offers.where(user_id: @current_user.id).first_or_create
                 @best_offer.user_id = @current_user.id
                 @best_offer.amount = params[:best_offer][:amount]
@@ -59,14 +59,14 @@ module Api
                 #end
                 render json: {chat_room: ChatRoomSerializer.new(@chat_room), property: PropertySerializer.new(@property), message: "Best Offer Submitted.", status: 201 }, status: 200
               else
-                render json: {message: "This amount is less than last Submitted Offer.", status: 400}, status: 200
+                render json: {message: "Payment not authorized", status: 404}, status: 200
               end
+            else
+              render json: {message: "This amount is less than last Submitted Offer.", status: 400}, status: 200
             end
-          else
-            render json: {message: "Property Not Found.", status: 404}, status: 200
           end
         else
-          render json: {message: "Payment not authorized", status: 404}, status: 200
+          render json: {message: "Property Not Found.", status: 404}, status: 200
         end
       end
       private
