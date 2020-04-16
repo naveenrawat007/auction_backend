@@ -6,7 +6,11 @@ class AuthorizePaymentsService
   end
 
   def call
-    hold_funds()
+    if amount > 0
+      hold_funds()
+    else
+      continue_with_out_charge()
+    end
   end
 
   private
@@ -24,6 +28,10 @@ class AuthorizePaymentsService
 
     OpenStruct.new(card_id: charge.id, status: charge.status)
 
+  end
+
+  def continue_with_out_charge
+    OpenStruct.new(card_id: "", status: "succeeded")
   end
 
 end
