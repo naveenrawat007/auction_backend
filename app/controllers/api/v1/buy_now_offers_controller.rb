@@ -13,6 +13,9 @@ module Api
               if check_best_offer_time #&& @property.status == "Best Offer"
                 result = AuthorizePaymentsService.new(params[:payment][:card_token], params[:buy_now][:internet_transaction_fee]).call
                 if result.status == "succeeded"
+                  if !(params[:buy_now][:promo_code].blank?) && params[:buy_now][:internet_transaction_fee].to_i == 0
+                    PromoCodeService.new(@current_user).update_availed_code(params[:buy_now][:promo_code])
+                  end
                   @buy_now = @property.best_buy_nows.where(user_id: @current_user.id).first_or_create
                   @buy_now.user_id = @current_user.id
                   @buy_now.amount = params[:buy_now][:amount]
@@ -68,6 +71,9 @@ module Api
             else
               result = AuthorizePaymentsService.new(params[:payment][:card_token], params[:buy_now][:internet_transaction_fee]).call
               if result.status == "succeeded"
+                if !(params[:buy_now][:promo_code].blank?) && params[:buy_now][:internet_transaction_fee].to_i == 0
+                  PromoCodeService.new(@current_user).update_availed_code(params[:buy_now][:promo_code])
+                end
                 @buy_now = @property.buy_nows.where(user_id: @current_user.id).first_or_create
                 @buy_now.user_id = @current_user.id
                 @buy_now.amount = params[:buy_now][:amount]

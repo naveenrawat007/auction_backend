@@ -15,6 +15,9 @@ module Api
               if params[:bid][:amount].to_f > hightest_bid_offer.to_f
                 result = AuthorizePaymentsService.new(params[:payment][:card_token], params[:bid][:internet_transaction_fee]).call
                 if result.status == "succeeded"
+                  if !(params[:bid][:promo_code].blank?) && params[:bid][:internet_transaction_fee].to_i == 0
+                    PromoCodeService.new(@current_user).update_availed_code(params[:bid][:promo_code])
+                  end
                   @bid = @property.bids.where(user_id: @current_user.id).first_or_create
                   @bid.user_id = @current_user.id
                   @bid.amount = params[:bid][:amount]
