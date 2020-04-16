@@ -4,11 +4,15 @@ module Api
       before_action :authorize_request
 
       def apply_code
-        promo_code = @current_user.new(promo_code_params)
-        if promo_code.save
-
+        code = PromoCode.find_by(promo_code: params[:promo_code][:promo_code])
+        if code
+          render json: {status: 200, message: "Promo Code Applied"}
         else
-          render json: {status: 400, message: "Subscriber not created"}
+          if !@current_user.promo_code.present?
+            render json: {status: 200, message: "Promo Code Applied"}
+          else
+            render json: {status: 400, message: "Promo Code already applied"}
+          end
         end
       end
 
