@@ -54,6 +54,7 @@ Rails.application.routes.draw do
 
       post '/subscriber', to: 'subscribers#create'
       post 'promo_codes/apply', to: 'promo_codes#apply_code'
+      get 'promo_codes', to: 'promo_codes#show'
 
       namespace 'admin' do
         get '/chat_rooms', to: 'chat_rooms#index'
