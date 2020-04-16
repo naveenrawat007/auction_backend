@@ -14,6 +14,8 @@ class User < ApplicationRecord
   has_many :best_buy_nows, -> { where(best_offer: true) }, class_name: "BuyNowOffer"
   has_many :buy_now_offers, dependent: :destroy
   has_many :buy_now_offered_properties, through: :buy_now_offers, source: :property
+  has_one :promo_code
+  # has_many :promo_codes, -> { where(is_admin: true)}
 
   has_many :user_watch_properties, dependent: :destroy
   has_many :watch_properties, through: :user_watch_properties, source: :property

@@ -53,6 +53,7 @@ Rails.application.routes.draw do
       get 'property/:id/offer/:offer_type/:offer_id', to: 'properties#offer_detail'
 
       post '/subscriber', to: 'subscribers#create'
+      post 'promo_codes/apply', to: 'promo_codes#apply_code'
 
       namespace 'admin' do
         get '/chat_rooms', to: 'chat_rooms#index'

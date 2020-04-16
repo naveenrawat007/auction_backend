@@ -20,6 +20,9 @@ class UserSerializer < ActiveModel::Serializer
     data[:type_attributes] = object.type_attributes
     data[:is_admin] = object.is_admin
     data[:status] = object.status
+    data[:promo_code] = object.promo_code ? object.promo_code.promo_code : ""
+    data[:code_availed] = object.promo_code ? object.promo_code.availed : false
+    data[:has_promo_code] = object.promo_code ? true : false
     data
   end
   def user_image
