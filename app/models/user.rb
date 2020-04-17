@@ -15,7 +15,7 @@ class User < ApplicationRecord
   has_many :buy_now_offers, dependent: :destroy
   has_many :buy_now_offered_properties, through: :buy_now_offers, source: :property
   has_one :promo_code
-  # has_many :promo_codes, -> { where(is_admin: true)}
+  has_many :admin_promo_codes, class_name: "PromoCode", foreign_key: "user_id"
 
   has_many :user_watch_properties, dependent: :destroy
   has_many :watch_properties, through: :user_watch_properties, source: :property

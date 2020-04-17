@@ -57,6 +57,9 @@ Rails.application.routes.draw do
       get 'promo_codes', to: 'promo_codes#show'
 
       namespace 'admin' do
+        get '/promo_codes', to: 'promo_codes#index'
+        post '/promo_codes', to: 'promo_codes#create'
+
         get '/chat_rooms', to: 'chat_rooms#index'
         get '/chat_rooms/:id/messages', to: 'chat_rooms#show_messages'
         post '/chat_rooms/:id/messages', to: 'chat_rooms#create_messages'
