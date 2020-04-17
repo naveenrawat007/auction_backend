@@ -35,7 +35,7 @@ class PromoCodeService
   end
 
   def update_availed_code(code)
-    promo_code = PromoCode.find_by(promo_code: generated_code)
+    promo_code = PromoCode.find_by(promo_code: code)
     if promo_code
       promo_code.update(availed: true)
     end
