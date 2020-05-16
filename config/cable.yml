@@ -1,6 +1,6 @@
 development:
   adapter: redis
-  url: <%= ENV.fetch("REDIS_URL") { "redis://192.168.1.21:6379" } %>
+  url: <%= ENV.fetch("REDIS_URL") { "redis://localhost:6379" } %>
   channel_prefix: auction-chat_development
 
 test:
